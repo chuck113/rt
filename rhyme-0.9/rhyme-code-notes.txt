@@ -1,0 +1,52 @@
+RhymeWord is a sting with the number of syllables
+datum is a holder for something
+RhymeWordList holds a word and a pointer to another RhymeWordList
+
+struct RhymeWord *buildWord(char *word, int length, int syllables)
+
+
+
+makedb.c actually makes the data structues in the files, holds a tree of WordEntries
+There is one tree structure holding a rhymekey, a stack of words that rhyme. The tree is orgainised in alphabetical order of rhyme keys so each node in the tree is a rhyme key 
+
+rhyme.c.displyRhymes (395)
+calls getRhymes(wordToDatum(pronounciation))
+
+getRhymes (245) finds a key as a RhymeWord in the wordFile (without syllables - why?) then fetches a valus from the rhymeFile (toreturn = parseWordList(value.dptr, 0, value.dsize);)  which are all the words to return.
+
+assignSyllabels
+
+
+dict.c.stringToWordEntry, returns WordEntry, calculates no of syllables and sets a rhymekey
+syllabels are stringParts that end in a number, the primary stress, they key of a rhyme, is the syllabel with a 0 after it
+
+dict.c.addToEntryTree (135)
+
+
+
+struct WordEntry {
+  char *string;  /*this is the complete string, since the parts do not make copies of it*/
+  struct StringPart *word;
+  struct StringPart *phonemes;
+  struct StringPart *rhymekey;
+  int syllables;
+  struct WordEntry *alternate; /*the alternate pronunciation(s)*/
+};
+
+struct WordEntryStack {
+  struct WordEntry *entry;
+  struct WordEntryStack *next;
+};
+
+struct WordEntryTree {
+  struct StringPart *rhymekey;
+  struct WordEntryStack *rhymes;
+  struct WordEntryTree *lesser;
+  struct WordEntryTree *greater;
+};
+
+struct StringPart {
+  char *string;
+  int length;
+  struct StringPart *next;
+};

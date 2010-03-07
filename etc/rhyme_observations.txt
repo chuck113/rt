@@ -1,0 +1,12 @@
+two rhymes can appear in one line
+rhymes can appear over more than one line
+rhymes can end in words like grazin' and dialin', should replace in' by ing and check for rhymes
+
+List(city, every) in I riiide on the bus, head to the city every day
+CITY  S IH1 T IY0
+EVERY  EH1 V ER0 IY0
+
+List(foxy, lady) in I dream I'm on an island with that foxy lady too
+
+(rhymes time): They really (hawk) but we just (walk) because we have no time,    And in the city it's a pity cos we just can't hide
+

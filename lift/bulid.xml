@@ -1,0 +1,96 @@
+<project name="liftdemo" default="war">
+
+    <target name="init" description="Initialize all properties and paths">
+
+ <property name="root.dir" value="../"/>
+ <property name="home.dir" value="."/>
+
+ <property name="build.dir" value="${root.dir}/build"/>
+ <property name="class.dir" value="${build.dir}/class"/>
+ <property name="scala.src.dir" value="${root.dir}/src/scala"/>
+ <property name="war.build.dir" value="${build.dir}/war"/>
+ <property name="war.lib.dir" value="${war.build.dir}/WEB-INF/lib"/>
+ <property name="war.file" value="${build.dir}/liftdemo.war"/>
+ <property name="web.xml" value="${build.dir}/web/rt/web.xml"/>
+
+ <!-- Location of scala files -->
+ <property name="scala.dir" value="C:/java/scala-2.7.7.final"/>
+ <property name="scala-compiler.jar" value="${scala.dir}/lib/scala-compiler.jar"/>
+ <property name="scala-library.jar" value="${scala.dir}/lib/scala-library.jar"/>
+
+ <!-- Location of Liftweb files -->
+ <!--<property name="liftweb.dir" value="${home.dir}/net/liftweb/1.0"/>-->
+ <property name="lift-util.jar" value="${home.dir}/lib/lift-util-1.0.3.jar"/>
+ <property name="lift-webkit.jar" value="${home.dir}/lib/lift-webkit-1.0.3.jar"/>
+
+ <!-- A couple of other libraries are required -->
+ <property name="log4j.jar" value="${home.dir}/lib/log4j-1.2.15.jar"/>
+ <property name="fileupload.jar" value="${home.dir}/lib/commons-fileupload-1.2.jar"/>
+
+ <path id="scala.classpath">
+     <pathelement location="${scala-compiler.jar}"/>
+     <pathelement location="${scala-library.jar}"/>
+ </path>
+
+ <path id="compile.classpath">
+     <path refid="scala.classpath"/>
+     <pathelement location="${lift-util.jar}"/>
+     <pathelement location="${lift-webkit.jar}"/>
+ </path>
+
+ <!-- define the "scalac" ant task -->
+ <taskdef resource="scala/tools/ant/antlib.xml">
+     <classpath refid="scala.classpath"/>
+ </taskdef>
+    </target>
+
+    <target name="clean" depends="init">
+ <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="mkdirs" depends="init">
+ <mkdir dir="${build.dir}"/>
+ <mkdir dir="${class.dir}"/>
+    </target>
+
+    <target name="compile" depends="init,mkdirs"
+     description="Compile scala files">
+ <scalac
+     srcdir="${scala.src.dir}"
+     destdir="${class.dir}"
+     addparams="-g:vars"
+     classpathref="compile.classpath"
+     force="changed"
+     deprecation="on"
+ >
+     <include name="**/*.scala"/>
+ </scalac>
+    </target>
+
+    <target name="war" depends="init,compile">
+ <!-- First make an image directory in war.build.dir -->
+ <copy todir="${war.build.dir}">
+     <fileset dir="src/webapp" includes="**/*.html"/>
+ </copy>
+ <mkdir dir="${war.build.dir}/WEB-INF"/>
+
+ <copy todir="${war.lib.dir}" file="${scala-library.jar}"/>
+ <copy todir="${war.lib.dir}" file="${lift-util.jar}"/>
+ <copy todir="${war.lib.dir}" file="${lift-webkit.jar}"/>
+ <copy todir="${war.lib.dir}" file="${log4j.jar}"/>
+ <copy todir="${war.lib.dir}" file="${fileupload.jar}"/>
+
+ <copy todir="${war.build.dir}/WEB-INF/classes">
+     <fileset dir="${class.dir}" includes="**/*.class"/>
+ </copy>
+
+ <!-- Put everything from our war directory into a war file -->
+ <war
+     destfile="${war.file}"
+     webxml="${web.xml}"
+ >
+     <fileset dir="${war.build.dir}" includes="**/*"/>
+ </war>
+    </target>
+
+</project>

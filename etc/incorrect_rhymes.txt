@@ -1,0 +1,6 @@
+FIRE, WATER
+ONE, DONE
+NONE, GUN
+ONE, GUN
+HUTT, WHAT
+REMEMBER, BLENDER // illcommunication 01, 

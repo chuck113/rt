@@ -1,0 +1,7 @@
+- Ensure words ending in in' or in that have an equivalent work ending in ing are treated with ing
+- 'ing's don't rhyme well anyway: List(Mowing, Nothing) in Like I'm Mowing A Lawn I Go Off Like Nothing Can Phase Me,
+ seems like we need to take the ing off and rhyme the resulting words?
+
+- words ending in 'y' are very bad, consider missing all words that end in y out or investigate why: 
+List(city, every) in I riiide on the bus, head to the city every day
+List(foxy, lady) in I dream I'm on an island with that foxy lady too
