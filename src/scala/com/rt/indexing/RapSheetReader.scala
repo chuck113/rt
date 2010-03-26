@@ -45,13 +45,32 @@ class RapSheetReader(lines: List[String], songMetaData: SongMetaData){
   def findRhymesSimple(song: Song): Map[String, List[RhymeLines]] = {
     song.verses.foldLeft(Map[String, List[RhymeLines]]()) {
       (outerMap, verse) => {
-        rhymeFinder.findRhymesInLines(verse.lines.filter(isAllowedWord)).elements.foldLeft(Map[String, List[RhymeLines]]()) {
-          (innerMap, ints) => {
-            innerMap(ints._1) = getRhymesFromVerse(verse, ints._2)
+        val filtered:List[String] = verse.lines.filter(isAllowedWord)
+        val foundRhymes:Map[String, List[List[Int]]] = rhymeFinder.findRhymesInLines(filtered)
+        foundRhymes.elements.foldLeft(Map[String, List[RhymeLines]]()) {
+          (innerMap, foundRhymesEntry) => {
+            //innerMap(foundRhymesEntry._1) = getRhymesFromVerse(verse, foundRhymesEntry._2)
+            //innerMap(foundRhymesEntry._1) = new RhymeLines(this.songMetaData, getStrings(filtered, foundRhymesEntry._2))
+            innerMap(foundRhymesEntry._1) = getRhymesFromStrings(filtered, foundRhymesEntry._2)
           }
         }
       }
     }
+  }
+
+  def getRhymesFromStrings(strings: List[String], lineNumbers: List[List[Int]]): List[RhymeLines] = {
+    lineNumbers.foldLeft(List[RhymeLines]()) {
+      (result, ints) => {
+        //result + getLinesFromVerse(verse, ints)
+        result + new RhymeLines(this.songMetaData, getStrings(strings, ints))
+      }
+    }
+  }
+
+  def getStrings(strings:List[String], lineNumbers:List[Int]):List[String]={
+    lineNumbers.foldLeft(List[String]()){(list, i) => {
+      list + strings(i)
+    }}
   }
 
   def getRhymesFromVerse(verse: Verse, lines: List[List[Int]]): List[RhymeLines] = {

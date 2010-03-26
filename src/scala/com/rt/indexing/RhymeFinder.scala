@@ -36,6 +36,7 @@ class RhymeFinder{
         //if ((word != lastWord) && rhymeMap.contains(word) && rhymeMap.contains(lastWord)) {
         if (compareWordsOnRhyme(wordUppercase, lastWordUppercase)) {
           println("findMultiLineRhymes for "+wordUppercase+" and "+lastWordUppercase+" with line "+line)
+          //println("findMultiLineRhymes adding )
           resultIndex(wordUppercase.toLowerCase()) = resultIndex.getOrElse(wordUppercase, List[List[Int]]()) ::: List(List(iter.count - 1, iter.count))
           resultIndex(lastWordUppercase.toLowerCase()) = resultIndex.getOrElse(lastWordUppercase, List[List[Int]]()) ::: List(List(iter.count - 1, iter.count))
           lastWordUppercase = null

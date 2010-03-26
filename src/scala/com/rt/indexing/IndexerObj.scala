@@ -8,15 +8,6 @@ import com.rt.ohhla.OhhlaConfig
 import com.rt.dto.DataMapper
 import java.io.{FileFilter, FileInputStream, FileOutputStream, File}
 import persistence.Constants
-import collection.mutable.LinkedList
-
-/**
- * Created by IntelliJ IDEA.
- * User: ck
- * Date: 09-Feb-2010
- * Time: 18:09:36
- * To change this template use File | Settings | File Templates.
- */
 
 object IndexerObj{
   val indexer = new Indexer()

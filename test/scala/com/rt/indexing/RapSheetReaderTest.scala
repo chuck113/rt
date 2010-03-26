@@ -1,8 +1,8 @@
 package com.rt.indexing
 
-import org.junit.Test
 import java.lang.String
 import collection.immutable.Map
+import org.junit.{Assert, Test}
 
 
 class RapSheetReaderTest   {
@@ -14,6 +14,9 @@ class RapSheetReaderTest   {
       println(rhyme._1+" = "+rhyme._2)
     })
 
+    val lines1: List[String] = rhymes("frozen")(0).lines
+    Assert.assertEquals("This rhythmatic explosion, is what your frame of mind has chosen", lines1(0))
+    Assert.assertEquals("I'll leave your brain stimulated, niggaz is frozen", lines1(1))
     println()
 
     val trackFile = """C:\data\projects\rapAttack\rapAttack\rhyme-0.9\olhha\Nas\Illmatic\10.txt"""
@@ -21,6 +24,11 @@ class RapSheetReaderTest   {
     rhymes2.foreach(rhyme =>{
       println(rhyme._1+" = "+rhyme._2)
     })
+
+    println("frozen lines are: "+rhymes2("frozen"))
+    val list: List[String] = rhymes2("frozen")(0).lines
+    Assert.assertEquals("This rhythmatic explosion, is what your frame of mind has chosen", list(0))
+    Assert.assertEquals("I'll leave your brain stimulated, niggaz is frozen", list(1))
   }
 
   def lyrics():List[String]={
