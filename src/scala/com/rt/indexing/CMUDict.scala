@@ -1,14 +1,16 @@
-package indexing
+package com.rt.indexing
 
 import util.IO
 
-/**
- * Created by IntelliJ IDEA.
- * User: ck
- * Date: 10-Feb-2010
- * Time: 12:32:18
- * To change this template use File | Settings | File Templates.
- */
+object CMUDict{
+
+  private val rhymeMap = new CMUDict().makeRhymeMap();
+
+  //TODO make this do more work, ie actually calculate rhymes
+  def getRhymeMap():Map[String, String] ={
+    rhymeMap
+  }
+}
 
 class CMUDict {
 

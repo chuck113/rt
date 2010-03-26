@@ -1,0 +1,660 @@
+ 
+
+   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Top 100 Rap Albums of All Time (REVISED) - Rate Your Music</title> 
+    <style type="text/css">
+      a.headerbutton { padding-right: 5px; border-right: #999 1px solid; color:#44a; text-decoration:none; }
+		
+		a.breadcrumbbutton { text-decoration:none; font-size:x-small; padding-top: 3px; padding-bottom:3px;
+	                     margin-right:4px; padding-left: 6px; padding-right:6px; background:#fcfcfc; border:#ccc 1px solid;
+	                     -moz-border-radius: 5px; -webkit-border-radius: 5px; color:#333; }
+      a.breadcrumbbutton:after {content:' >';} 									
+
+      .breadcrumb {
+         float:left;
+         padding:7px;
+         padding-left:2%;
+         font-size:x-small;
+      }
+      .submenu { float:right;
+                 width:auto;
+                 text-align:right;
+                 background:#f8f8f8;
+                 -moz-border-radius-bottomleft: 5px;
+                 -webkit-border-bottom-left-radius: 5px;
+                 border-left: 1px solid #999;
+                 border-bottom: 1px solid #999;
+                 padding:7px;
+                 padding-left:2%;
+                 padding-right:2%;
+                 font-size:x-small;
+                 text-align:right; }
+                 
+      .submenu_ext { background:white; }
+
+      .breadcrumb h1 {
+         display: inline;
+         font-weight: bold;
+         font-size: 1.2em;
+         margin: 0px;
+      }
+      </style>
+   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
+
+
+	<link rel="stylesheet" href="/css/default.css" type="text/css"/>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+   <meta name="description" content="" />
+   <meta name="keywords" content="rate your music, rate music, rate albums, music catalog, music catalogue, social software, album reviews, music lists, community, music recommendations, concert listings, record labels, venues, shows" />
+</head>
+
+<body>
+<div id="wrapper">
+
+<div id="top" style="height:22px;color:white;font-size:9px;font-weight:bold;">
+<!-- <div style="text-align:right;"><a href="/misc/fundraiser"><img src="/images/fundraiser.png" alt="Support RYM!" title="Support RYM through your subscription!" /><br /></a>Today is the last day to donate and receive permanent subscription status</div> -->
+</div>
+
+
+	<div id="navtop"><ul>
+		<li><a title="Front Page"  href="/" ><img src="http://static.rateyourmusic.com/images/rstar.gif" alt="" />rym</a></li>
+		<li><a title="Find Music"   href="/find/" >find</a></li>
+		
+		<li><a title="Read and make lists"  href="/lists/" >lists</a></li>
+		<li><a title="View top charts by year, location, genre and more!"  href="/customchart" >charts</a></li>
+
+		<li><a title="Message Boards and Member Directory"    href="/community/" >community</a></li>
+
+		<li><a  href="/account/login"  >log in / sign up</a></li>		
+	</ul>
+
+	<form method="get" action="/search">
+		<fieldset id="searchbox"><input id="searchfield" type="text" maxlength="80" name="searchterm"/>
+		<select  id="searchlist" name="searchtype">
+		        <optgroup label="Music">
+			<option value="a" selected="selected" >Artist</option>
+			<option value="l"  >All Releases</option>
+			<option value="y"  >V/A Releases</option>
+			<option value="j"  >Catalog No.</option>
+
+			<option value="s"  >List</option>
+			<option value="v" >Review</option>
+			<option value="genre">Genre</option>
+			<option value="u" >User</option>
+			<option value="b">Label</option>
+			</optgroup><optgroup label="Film">
+			<option value="A"  >Person</option>
+			<option value="F" >Title</option>
+			<option value="R"  >Release</option>
+			</optgroup>
+		</select>
+		<input id="searchgo" type="submit" value="&gt;"/>
+		</fieldset>
+	</form>
+
+</div>
+
+<!-- trick --><div style="clear:both;"></div>
+
+
+ 
+ <!-- ~~~~~~~~ begin content! ~~~~~~~~~~~~~~~ -->
+ <div id="content" style="border-top:none;">    <div id="searchsuggestions" style="visibility:hidden;position:absolute;" ></div> 
+
+<script type="text/javascript" src="/sourced/basereq.js"></script>
+<script type="text/javascript" src="/sourced/position.js"></script>
+
+<script type="text/javascript" src="/sourced/favorite.js"></script>
+<script type="text/javascript" src="/sourced/autosuggest.js?pre=descriptor&type=s&context=l"></script>
+ 
+<script type="text/javascript">
+
+ var token = ''; var currentId = 50185;
+  
+   function doFlag ( assoc_id, type, flag, polarity ) {
+
+      hideflag();
+      did('flagimg_' + assoc_id + '_' + type).src = 'http://static.rateyourmusic.com/images/loading.gif';
+      sendRequest('FlagItem|' + token + '|' + assoc_id + '|' + type + '|' + flag + '|' + polarity);
+   }
+
+
+   var flagAssocId = 0;
+   var flagType = 's';
+   var currentFlag = '';
+
+   function flagItem(assoc_id, type, event) { 
+      if ( did('flag_' + assoc_id + '_' + type).className != 'flag0' )
+      {
+          doFlag ( assoc_id, flagType, '', 0 );
+          return;
+      }
+
+     var fl = document.getElementById('flag');
+   
+     var pageX, pageY;
+   
+     if (event.pageX) {
+         pageX = event.pageX;
+     } else { 
+         pageX = event.clientX + document.documentElement.scrollLeft;
+     }
+     if (event.pageY )
+     {
+         pageY = event.pageY;
+     } else {  
+         pageY = event.clientY +  document.documentElement.scrollTop;
+     }
+   
+     fl.style.top = pageY + 'px';
+     fl.style.left = pageX+ 'px';
+     fl.style.visibility='visible';
+     flagAssocId = assoc_id;
+   
+   }
+
+   function hideflag() {
+    document.getElementById('flag').style.visibility='hidden';
+   }
+
+
+ </script>
+
+
+
+<div id="flag" class="mbflag">
+  <form method="submit" class="mbflag_form" onSubmit = "return false;" action="">
+   <h5>Flag this review:</h5>
+   <input id="type"  type="hidden" name="type" value="q" />
+   <input id="context" type="hidden" name="context" value="f" />
+   <input id="tag" type="hidden" name="tag" value="" />
+
+   <input type="button" onclick="doFlag(flagAssocId, flagType, '+excellent', 1);" value="+ excellent" /> <br />
+   
+   <br />
+   <input type="button" onclick="doFlag(flagAssocId, flagType, '-uninteresting', -1);" value="- uninteresting" /> <br />
+   <input type="button" onclick="doFlag(flagAssocId, flagType, '-spam', -1);" value="- spam/off-topic" /> <br />
+   <input type="button" onclick="doFlag(flagAssocId, flagType, '-offensive', -1);" value="- offensive" /> <br />
+   <input type="button" onclick="doFlag(flagAssocId, flagType, '-prohibited', -1);" value="- prohibited" /> <br />
+   <br />
+   <input type="button" onclick="hideflag();" value="cancel" /> <br />
+  </form>
+</div><div id="breadcrumb"><ul> <li><a href="/~coolfun">coolfun <b>&gt;</b></a></li><li><a href="/list/coolfun">lists <b>&gt;</b></a></li><li class="currentlong">Top 100 Rap Albums of All Time (REVISED)</li></ul></div>
+   <div class="clear"></div><div class="clear"> </div><div class="warning">
+  <a href="/account/signup">Sign up</a> or <a href="/account/login">Log in </a> to catalog your music and film collection, receive recommendations, and create and share your own lists </div><div class="clear"> </div>
+
+
+
+
+
+
+&nbsp;&nbsp; <div class="clear"> </div>
+<table class="mbgen"> 
+<tr><td style="padding:20px;">
+<h4>A list by <a class="user" href = "/~coolfun">coolfun</a></h4>
+<p style="color:#bbb">[List50185] | <a class="flag0" title="flag" id="flag_50185_s" href="javascript:void(0);" onClick="javascript:flagItem('50185', 's', event);" ><img id="flagimg_50185_s" src="http://static.rateyourmusic.com/images/flage.gif" width="18" height="18" /></a> | <a class="fav0" title="add/remove favorite" id="link_50185_s_f" href="javascript:void(0);" onClick="javascript:toggleFav('50185', 's', 'f');" ><img id="fav_50185_s_f" src="http://static.rateyourmusic.com/images/hearte.gif" width="18" height="18" /></a><a class="fav1" href="/favorited/50185_s_f"><span id="favtext_50185_s_f" class="smallgray">+11</span></a> </p>
+  <div style="float:left;padding-right:15px;padding-bottom:15px;"><a href="/release/album/nas/illmatic/"><img style="border:0px;" width="280" alt="Illmatic" title="Illmatic" src="http://static.rateyourmusic.com/album_images/6a5ec81e3103492043296dc427aaf225/11082.jpg" /></a></div>
+  
+
+
+
+</td> <td style="vertical-align:top;width:320px;"><h4><img id="loading" src="/images/blank.gif"> Comments</h4>  </td> </tr></table><div class="spreadtheword"><a title="Tweet this" href="http://twitter.com/home?status=Top+100+Rap+Albums+of+All+Time+%28REVISED%29%3a+http%3a%2f%2frym%2efm%2f%2dBc"><img src="http://static.rateyourmusic.com/images/twitter.png" alt="Twitter" border="0"></a>&nbsp;|&nbsp;<a title="Share on Facebook" href="http://www.facebook.com/share.php?u=http%3a%2f%2frateyourmusic%2ecom%2flist%2fcoolfun%2ftop%5f100%5frap%5falbums%5fof%5fall%5ftime%5f%5frevised%5f%2f"><img src="http://static.rateyourmusic.com/images/facebook.png" alt="Facebook" border="0"></a>&nbsp;|&nbsp;<a title="Save To del.icio.us" href="http://del.icio.us/post?url=http%3a%2f%2frateyourmusic%2ecom%2flist%2fcoolfun%2ftop%5f100%5frap%5falbums%5fof%5fall%5ftime%5f%5frevised%5f%2f;title=Top+100+Rap+Albums+of+All+Time+%28REVISED%29 - Rate Your Music"><img src="http://static.rateyourmusic.com/images/delicious.gif" alt="del.icio.us" border="0"></a>&nbsp;|&nbsp;
+    <a title="Submit To Digg" href="http://digg.com/submit?phase=2&url=http%3a%2f%2frateyourmusic%2ecom%2flist%2fcoolfun%2ftop%5f100%5frap%5falbums%5fof%5fall%5ftime%5f%5frevised%5f%2f" ><img src="http://static.rateyourmusic.com/images/digg.gif" alt="Digg" border="0"></a>&nbsp;|&nbsp;
+    <a title="Submit to Stumbleupon" href="http://www.stumbleupon.com/submit?url=http%3a%2f%2frateyourmusic%2ecom%2flist%2fcoolfun%2ftop%5f100%5frap%5falbums%5fof%5fall%5ftime%5f%5frevised%5f%2f;u=Top+100+Rap+Albums+of+All+Time+%28REVISED%29 - Rate Your Music" ><img src="http://static.rateyourmusic.com/images/stumbleupon.png" alt="Stumbleupon" border="0"></a>&nbsp;|&nbsp;
+    <a title="Save to Reddit" href="http://reddit.com/submit?url=http%3a%2f%2frateyourmusic%2ecom%2flist%2fcoolfun%2ftop%5f100%5frap%5falbums%5fof%5fall%5ftime%5f%5frevised%5f%2f;title=Top+100+Rap+Albums+of+All+Time+%28REVISED%29%20-%20Rate%20Your%20Music" ><img src="http://static.rateyourmusic.com/images/reddit_btn.gif" alt="Reddit" border="0"></a>
+  
+</div>
+<div style="text-align:center;"><script src="http://adn.ebay.com/files/js/min/ebay_activeContent-min.js"></script> <script src="http://adn.ebay.com/cb?programId=1&campId=5336232189&toolId=10026&customId=custombanner&keyword=the+source+best+100+rap+albums&width=728&height=90&font=3&textColor=333366&linkColor=333333&arrowColor=FFAF5E&color1=63769A&color2=FFFFFF"></script></div> 
+
+
+<div class="medium" style="padding:10px; text-align:center"></div>
+
+<table id="user_list"><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145870" /></a>1</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/nas/illmatic/"><img style="border:0px;" width="150" alt="Illmatic" title="Illmatic" src="http://static.rateyourmusic.com/album_images/s11082.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist3037]" href="/artist/nas" class="list_artist">Nas</a></h4>
+                                     <h5><a title="[Album11082]" href="/release/album/nas/illmatic/" class="list_album">Illmatic</a></a>
+                        <span class="rel_date">(1994)</span></h5><br />Often considered the best rap album. &nbsp;So fluid, creative, and intelligent and that&#39;s just the lyrics. &nbsp;Nas flows at an incredible speed spouting a large vocabulary about life on the streets. &nbsp;Takes a few listens but the payoff is huge. &nbsp;Highly recommended.</td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145876" /></a>2</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/wu_tang_clan/enter_the_wu_tang__36_chambers_/"><img style="border:0px;" width="150" alt="Enter the Wu-Tang (36 Chambers)" title="Enter the Wu-Tang (36 Chambers)" src="http://static.rateyourmusic.com/album_images/s11014.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist1809]" href="/artist/wu_tang_clan" class="list_artist">Wu-Tang Clan</a></h4>
+                                     <h5><a title="[Album11014]" href="/release/album/wu_tang_clan/enter_the_wu_tang__36_chambers_/" class="list_album">Enter the Wu-Tang (36 Chambers)</a></a>
+                        <span class="rel_date">(1993)</span></h5><br />Just a fierce barage of excellent rap technique and production. &nbsp;Often, skits in rap albums fall short but in this case, they do much to strengthen the album&#39;s mood and overall charm, two facets of that are large components of why this album is so great. &nbsp;You are introduced to so many scenerios and characters that you instantly fall in love with the hard hitting style of the album.<br /><br /><strong class="rymfmt">Production:10</strong>Cemented RZA as the best producer on the East Coast.<br /><strong class="rymfmt">Lyrics:</strong> 8. &nbsp;Very innovative and fun.<br /><strong class="rymfmt">Delivery/Flow:9</strong>Every rapper in the Tang is unique and talented and you get a lot of different styles that make the whole flow of the album that much better.</td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145881" /></a>3</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/the_notorious_b_i_g_/ready_to_die/"><img style="border:0px;" width="150" alt="Ready to Die" title="Ready to Die" src="http://static.rateyourmusic.com/album_images/s9079.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist2574]" href="/artist/the_notorious_b_i_g_" class="list_artist">The Notorious B.I.G.</a></h4>
+                                     <h5><a title="[Album9079]" href="/release/album/the_notorious_b_i_g_/ready_to_die/" class="list_album">Ready to Die</a></a>
+                        <span class="rel_date">(1994)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145943" /></a>4</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/public_enemy/it_takes_a_nation_of_millions_to_hold_us_back/"><img style="border:0px;" width="150" alt="It Takes a Nation of Millions to Hold Us Back" title="It Takes a Nation of Millions to Hold Us Back" src="http://static.rateyourmusic.com/album_images/s7299.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist1807]" href="/artist/public_enemy" class="list_artist">Public Enemy</a></h4>
+                                     <h5><a title="[Album7299]" href="/release/album/public_enemy/it_takes_a_nation_of_millions_to_hold_us_back/" class="list_album">It Takes a Nation of Millions to Hold Us Back</a></a>
+                        <span class="rel_date">(1988)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145879" /></a>5</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/eric_b__and_rakim/paid_in_full/"><img style="border:0px;" width="150" alt="Paid In Full" title="Paid In Full" src="http://static.rateyourmusic.com/album_images/s10834.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist2925]" href="/artist/eric_b__and_rakim" class="list_artist">Eric B. &amp; Rakim</a></h4>
+                                     <h5><a title="[Album10834]" href="/release/album/eric_b__and_rakim/paid_in_full/" class="list_album">Paid In Full</a></a>
+                        <span class="rel_date">(1987)</span></h5><br />Man, where do I even start. &nbsp;Let&#39;s just say that rap can be split into two different eras, at least in it&#39;s initial stages. &nbsp;Before PIF and After. &nbsp;With one of the best DJ&#39;s of the time in both raw talent and his later influences and arguably the best rapper of his time, Rakim. &nbsp;In the way John Coltrane could touch one spirtually through his long and beutiful musical exhibitions, Rakim does here with his worldplay and metaphoric, mulitple-layred rhymes. &nbsp;Just nasty and unparalled at that point. &nbsp;Infleuned many in many different ways, most notably Nas. &nbsp;Put the two talents together and you get Paid In Full, the best rap album of the 1980s. <br /><br />Production: &nbsp;9. &nbsp;Eric B. is the Mo&#39;fuckin President. <br />Lyrics: 10. &nbsp;Rakim is a top 4 MC if not the best. <br />Delivery/Flow:10. &nbsp;Rakim basically invented flow.</td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145921" /></a>6</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/dr__dre/the_chronic/"><img style="border:0px;" width="150" alt="The Chronic" title="The Chronic" src="http://static.rateyourmusic.com/album_images/s7216.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist1674]" href="/artist/dr__dre" class="list_artist">Dr. Dre</a></h4>
+                                     <h5><a title="[Album7216]" href="/release/album/dr__dre/the_chronic/" class="list_album">The Chronic</a></a>
+                        <span class="rel_date">(1992)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145978" /></a>7</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/outkast/aquemini/"><img style="border:0px;" width="150" alt="Aquemini" title="Aquemini" src="http://static.rateyourmusic.com/album_images/s7381.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist250]" href="/artist/outkast" class="list_artist">OutKast</a></h4>
+                                     <h5><a title="[Album7381]" href="/release/album/outkast/aquemini/" class="list_album">Aquemini</a></a>
+                        <span class="rel_date">(1998)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1147149" /></a>8</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/gza_genius/liquid_swords/"><img style="border:0px;" width="150" alt="Liquid Swords" title="Liquid Swords" src="http://static.rateyourmusic.com/album_images/s22312.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist6556]" href="/artist/gza_genius" class="list_artist">GZA/Genius</a></h4>
+                                     <h5><a title="[Album22312]" href="/release/album/gza_genius/liquid_swords/" class="list_album">Liquid Swords</a></a>
+                        <span class="rel_date">(1995)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145928" /></a>9</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/n_w_a/straight_outta_compton/"><img style="border:0px;" width="150" alt="Straight Outta Compton" title="Straight Outta Compton" src="http://static.rateyourmusic.com/album_images/s11140.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist3060]" href="/artist/n_w_a" class="list_artist">N.W.A</a></h4>
+                                     <h5><a title="[Album11140]" href="/release/album/n_w_a/straight_outta_compton/" class="list_album">Straight Outta Compton</a></a>
+                        <span class="rel_date">(1988)</span></h5><br />Influenced rap in both its emergence as a storytelling genre as well as a more raunchy genre. &nbsp;Had brilliant personality, much like polar opposite of the time, Public Enemy that captivated the country, from the streets of Watts to the middle America. &nbsp;Easy&#39;s flair, Ice Cube&#39;s mic skill/writing, Ren&#39;s raps, and Dre&#39;s Production were in top form here and the album would eventually catipult them all to different degrees of success. &nbsp;Just a fun album, with some of rap&#39;s most memorable and influencial tracks. &nbsp;Made being real okay.</td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145968" /></a>10</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/a_tribe_called_quest/the_low_end_theory/"><img style="border:0px;" width="150" alt="The Low End Theory" title="The Low End Theory" src="http://static.rateyourmusic.com/album_images/s7406.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist1859]" href="/artist/a_tribe_called_quest" class="list_artist">A Tribe Called Quest</a></h4>
+                                     <h5><a title="[Album7406]" href="/release/album/a_tribe_called_quest/the_low_end_theory/" class="list_album">The Low End Theory</a></a>
+                        <span class="rel_date">(1991)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145993" /></a>11</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/de_la_soul/3_feet_high_and_rising/"><img style="border:0px;" width="150" alt="3 Feet High and Rising" title="3 Feet High and Rising" src="http://static.rateyourmusic.com/album_images/s9134.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist2589]" href="/artist/de_la_soul" class="list_artist">De La Soul</a></h4>
+                                     <h5><a title="[Album9134]" href="/release/album/de_la_soul/3_feet_high_and_rising/" class="list_album">3 Feet High and Rising</a></a>
+                        <span class="rel_date">(1989)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145913" /></a>12</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/ice_cube/amerikkkas_most_wanted/"><img style="border:0px;" width="150" alt="AmeriKKKa&#39;s Most Wanted" title="AmeriKKKa&#39;s Most Wanted" src="http://static.rateyourmusic.com/album_images/s30881.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist787]" href="/artist/ice_cube" class="list_artist">Ice Cube</a></h4>
+                                     <h5><a title="[Album30881]" href="/release/album/ice_cube/amerikkkas_most_wanted/" class="list_album">AmeriKKKa&#39;s Most Wanted</a></a>
+                        <span class="rel_date">(1990)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463341" /></a>13</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/jeru_the_damaja/the_sun_rises_in_the_east/"><img style="border:0px;" width="150" alt="The Sun Rises in the East" title="The Sun Rises in the East" src="http://static.rateyourmusic.com/album_images/s12924.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist3622]" href="/artist/jeru_the_damaja" class="list_artist">Jeru the Damaja</a></h4>
+                                     <h5><a title="[Album12924]" href="/release/album/jeru_the_damaja/the_sun_rises_in_the_east/" class="list_album">The Sun Rises in the East</a></a>
+                        <span class="rel_date">(1994)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463337" /></a>14</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/boogie_down_productions/by_all_means_necessary/"><img style="border:0px;" width="150" alt="By All Means Necessary" title="By All Means Necessary" src="http://static.rateyourmusic.com/album_images/s11146.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist3062]" href="/artist/boogie_down_productions" class="list_artist">Boogie Down Productions</a></h4>
+                                     <h5><a title="[Album11146]" href="/release/album/boogie_down_productions/by_all_means_necessary/" class="list_album">By All Means Necessary</a></a>
+                        <span class="rel_date">(1988)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463348" /></a>15</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/kool_g_rap_and_dj_polo/road_to_the_riches/"><img style="border:0px;" width="150" alt="Road to the Riches" title="Road to the Riches" src="http://static.rateyourmusic.com/album_images/s40238.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist55006]" href="/artist/kool_g_rap_and_dj_polo" class="list_artist">Kool G Rap &amp; DJ Polo</a></h4>
+                                     <h5><a title="[Album40238]" href="/release/album/kool_g_rap_and_dj_polo/road_to_the_riches/" class="list_album">Road to the Riches</a></a>
+                        <span class="rel_date">(1989)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145925" /></a>16</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/jay_z/reasonable_doubt/"><img style="border:0px;" width="150" alt="Reasonable Doubt" title="Reasonable Doubt" src="http://static.rateyourmusic.com/album_images/s25613.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist525]" href="/artist/jay_z" class="list_artist">Jay-Z</a></h4>
+                                     <h5><a title="[Album25613]" href="/release/album/jay_z/reasonable_doubt/" class="list_album">Reasonable Doubt</a></a>
+                        <span class="rel_date">(1996)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463338" /></a>17</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/boogie_down_productions/criminal_minded/"><img style="border:0px;" height="150" alt="Criminal Minded" title="Criminal Minded" src="http://static.rateyourmusic.com/album_images/s11144.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist3062]" href="/artist/boogie_down_productions" class="list_artist">Boogie Down Productions</a></h4>
+                                     <h5><a title="[Album11144]" href="/release/album/boogie_down_productions/criminal_minded/" class="list_album">Criminal Minded</a></a>
+                        <span class="rel_date">(1987)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463342" /></a>18</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/main_source/breaking_atoms/"><img style="border:0px;" width="150" alt="Breaking Atoms" title="Breaking Atoms" src="http://static.rateyourmusic.com/album_images/s49481.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist13818]" href="/artist/main_source" class="list_artist">Main Source</a></h4>
+                                     <h5><a title="[Album49481]" href="/release/album/main_source/breaking_atoms/" class="list_album">Breaking Atoms</a></a>
+                        <span class="rel_date">(1991)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463343" /></a>19</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/the_pharcyde/bizarre_ride_ii_the_pharcyde/"><img style="border:0px;" width="150" alt="Bizarre Ride II The Pharcyde" title="Bizarre Ride II The Pharcyde" src="http://static.rateyourmusic.com/album_images/s8679.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist2456]" href="/artist/the_pharcyde" class="list_artist">The Pharcyde</a></h4>
+                                     <h5><a title="[Album8679]" href="/release/album/the_pharcyde/bizarre_ride_ii_the_pharcyde/" class="list_album">Bizarre Ride II The Pharcyde</a></a>
+                        <span class="rel_date">(1992)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145927" /></a>20</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/snoop_dogg/doggystyle/"><img style="border:0px;" width="150" alt="Doggystyle" title="Doggystyle" src="http://static.rateyourmusic.com/album_images/s3572.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist296]" href="/artist/snoop_dogg" class="list_artist">Snoop Dogg</a></h4>
+                                     <h5><a title="[Album3572]" href="/release/album/snoop_dogg/doggystyle/" class="list_album">Doggystyle</a></a>
+                        <span class="rel_date">(1993)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145933" /></a>21</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/run_d_m_c_/raising_hell/"><img style="border:0px;" height="150" alt="Raising Hell" title="Raising Hell" src="http://static.rateyourmusic.com/album_images/s10309.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist2892]" href="/artist/run_d_m_c_" class="list_artist">Run-D.M.C.</a></h4>
+                                     <h5><a title="[Album10309]" href="/release/album/run_d_m_c_/raising_hell/" class="list_album">Raising Hell</a></a>
+                        <span class="rel_date">(1986)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1147145" /></a>22</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/a_tribe_called_quest/midnight_marauders/"><img style="border:0px;" width="150" alt="Midnight Marauders" title="Midnight Marauders" src="http://static.rateyourmusic.com/album_images/s8862.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist1859]" href="/artist/a_tribe_called_quest" class="list_artist">A Tribe Called Quest</a></h4>
+                                     <h5><a title="[Album8862]" href="/release/album/a_tribe_called_quest/midnight_marauders/" class="list_album">Midnight Marauders</a></a>
+                        <span class="rel_date">(1993)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1147152" /></a>23</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/raekwon/only_built_4_cuban_linx___/"><img style="border:0px;" width="150" alt="Only Built 4 Cuban Linx..." title="Only Built 4 Cuban Linx..." src="http://static.rateyourmusic.com/album_images/s27682.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist7876]" href="/artist/raekwon" class="list_artist">Raekwon</a></h4>
+                                     <h5><a title="[Album27682]" href="/release/album/raekwon/only_built_4_cuban_linx___/" class="list_album">Only Built 4 Cuban Linx...</a></a>
+                        <span class="rel_date">(1995)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463336" /></a>24</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/epmd/strictly_business/"><img style="border:0px;" width="150" alt="Strictly Business" title="Strictly Business" src="http://static.rateyourmusic.com/album_images/s31354.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist8949]" href="/artist/epmd" class="list_artist">EPMD</a></h4>
+                                     <h5><a title="[Album31354]" href="/release/album/epmd/strictly_business/" class="list_album">Strictly Business</a></a>
+                        <span class="rel_date">(1988)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145939" /></a>25</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/black_star/mos_def_and_talib_kweli_are_black_star/"><img style="border:0px;" width="150" alt="Mos Def &amp; Talib Kweli Are Black Star" title="Mos Def &amp; Talib Kweli Are Black Star" src="http://static.rateyourmusic.com/album_images/s78164.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist2802]" href="/artist/black_star" class="list_artist">Black Star</a></h4>
+                                     <h5><a title="[Album78164]" href="/release/album/black_star/mos_def_and_talib_kweli_are_black_star/" class="list_album">Mos Def &amp; Talib Kweli Are Black Star</a></a>
+                        <span class="rel_date">(1998)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145954" /></a>26</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/mobb_deep/the_infamous___/"><img style="border:0px;" width="150" alt="The Infamous..." title="The Infamous..." src="http://static.rateyourmusic.com/album_images/s22562.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist6630]" href="/artist/mobb_deep" class="list_artist">Mobb Deep</a></h4>
+                                     <h5><a title="[Album22562]" href="/release/album/mobb_deep/the_infamous___/" class="list_album">The Infamous...</a></a>
+                        <span class="rel_date">(1995)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1151429" /></a>27</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/ultramagnetic_mcs/critical_beatdown/"><img style="border:0px;" height="150" alt="Critical Beatdown" title="Critical Beatdown" src="http://static.rateyourmusic.com/album_images/s19144.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist5625]" href="/artist/ultramagnetic_mcs" class="list_artist">Ultramagnetic MC&#39;s</a></h4>
+                                     <h5><a title="[Album19144]" href="/release/album/ultramagnetic_mcs/critical_beatdown/" class="list_album">Critical Beatdown</a></a>
+                        <span class="rel_date">(1988)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1147136" /></a>28</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/beastie_boys/pauls_boutique/"><img style="border:0px;" width="150" alt="Paul&#39;s Boutique" title="Paul&#39;s Boutique" src="http://static.rateyourmusic.com/album_images/s515.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist74]" href="/artist/beastie_boys" class="list_artist">Beastie Boys</a></h4>
+                                     <h5><a title="[Album515]" href="/release/album/beastie_boys/pauls_boutique/" class="list_album">Paul&#39;s Boutique</a></a>
+                        <span class="rel_date">(1989)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1188363" /></a>29</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/dj_shadow/endtroducing______f1/"><img style="border:0px;" width="150" alt="Endtroducing....." title="Endtroducing....." src="http://static.rateyourmusic.com/album_images/s2612.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist798]" href="/artist/dj_shadow" class="list_artist">DJ Shadow</a></h4>
+                                     <h5><a title="[Album2612]" href="/release/album/dj_shadow/endtroducing______f1/" class="list_album">Endtroducing.....</a></a>
+                        <span class="rel_date">(1996)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145986" /></a>30</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/2pac/me_against_the_world/"><img style="border:0px;" width="150" alt="Me Against the World" title="Me Against the World" src="http://static.rateyourmusic.com/album_images/s7121.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist1083]" href="/artist/2pac" class="list_artist">2Pac</a></h4>
+                                     <h5><a title="[Album7121]" href="/release/album/2pac/me_against_the_world/" class="list_album">Me Against the World</a></a>
+                        <span class="rel_date">(1995)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463413" /></a>31</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/pete_rock_and_c_l__smooth/mecca_and_the_soul_brother/"><img style="border:0px;" width="150" alt="Mecca and the Soul Brother" title="Mecca and the Soul Brother" src="http://static.rateyourmusic.com/album_images/s47973.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist13399]" href="/artist/pete_rock_and_c_l__smooth" class="list_artist">Pete Rock &amp; C.L. Smooth</a></h4>
+                                     <h5><a title="[Album47973]" href="/release/album/pete_rock_and_c_l__smooth/mecca_and_the_soul_brother/" class="list_album">Mecca and the Soul Brother</a></a>
+                        <span class="rel_date">(1992)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1151146" /></a>32</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/public_enemy/fear_of_a_black_planet/"><img style="border:0px;" width="150" alt="Fear of a Black Planet" title="Fear of a Black Planet" src="http://static.rateyourmusic.com/album_images/s7300.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist1807]" href="/artist/public_enemy" class="list_artist">Public Enemy</a></h4>
+                                     <h5><a title="[Album7300]" href="/release/album/public_enemy/fear_of_a_black_planet/" class="list_album">Fear of a Black Planet</a></a>
+                        <span class="rel_date">(1990)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1147143" /></a>33</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/the_d_o_c_/no_one_can_do_it_better/"><img style="border:0px;" width="150" alt="No One Can Do It Better" title="No One Can Do It Better" src="http://static.rateyourmusic.com/album_images/s35041.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist10134]" href="/artist/the_d_o_c_" class="list_artist">The D.O.C.</a></h4>
+                                     <h5><a title="[Album35041]" href="/release/album/the_d_o_c_/no_one_can_do_it_better/" class="list_album">No One Can Do It Better</a></a>
+                        <span class="rel_date">(1989)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3500972" /></a>34</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/black_moon/enta_da_stage/"><img style="border:0px;" width="150" alt="Enta da Stage" title="Enta da Stage" src="http://static.rateyourmusic.com/album_images/s46428.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist12975]" href="/artist/black_moon" class="list_artist">Black Moon</a></h4>
+                                     <h5><a title="[Album46428]" href="/release/album/black_moon/enta_da_stage/" class="list_album">Enta da Stage</a></a>
+                        <span class="rel_date">(1993)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463350" /></a>35</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/big_l/lifestylez_ov_da_poor_and_dangerous/"><img style="border:0px;" width="150" alt="Lifestylez ov da Poor &amp; Dangerous" title="Lifestylez ov da Poor &amp; Dangerous" src="http://static.rateyourmusic.com/album_images/s47550.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist13267]" href="/artist/big_l" class="list_artist">Big L</a></h4>
+                                     <h5><a title="[Album47550]" href="/release/album/big_l/lifestylez_ov_da_poor_and_dangerous/" class="list_album">Lifestylez ov da Poor &amp; Dangerous</a></a>
+                        <span class="rel_date">(1995)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463381" /></a>36</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/ghostface_killah/ironman/"><img style="border:0px;" width="150" alt="Ironman" title="Ironman" src="http://static.rateyourmusic.com/album_images/s11164.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist2817]" href="/artist/ghostface_killah" class="list_artist">Ghostface Killah</a></h4>
+                                     <h5><a title="[Album11164]" href="/release/album/ghostface_killah/ironman/" class="list_album">Ironman</a></a>
+                        <span class="rel_date">(1996)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463397" /></a>37</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/o_c_/word___life/"><img style="border:0px;" width="150" alt="Word...Life" title="Word...Life" src="http://static.rateyourmusic.com/album_images/s81487.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist20685]" href="/artist/o_c_" class="list_artist">O.C.</a></h4>
+                                     <h5><a title="[Album81487]" href="/release/album/o_c_/word___life/" class="list_album">Word...Life</a></a>
+                        <span class="rel_date">(1994)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463358" /></a>38</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/deltron_3030/deltron_3030/"><img style="border:0px;" width="150" alt="Deltron 3030" title="Deltron 3030" src="http://static.rateyourmusic.com/album_images/s9858.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist2763]" href="/artist/deltron_3030" class="list_artist">Deltron 3030</a></h4>
+                                     <h5><a title="[Album9858]" href="/release/album/deltron_3030/deltron_3030/" class="list_album">Deltron 3030</a></a>
+                        <span class="rel_date">(2000)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145958" /></a>39</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/reflection_eternal/train_of_thought_f1/"><img style="border:0px;" width="150" alt="Train of Thought" title="Train of Thought" src="http://static.rateyourmusic.com/album_images/s12150.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist81595]" href="/artist/reflection_eternal" class="list_artist">Reflection Eternal</a></h4>
+                                     <h5><a title="[Album12150]" href="/release/album/reflection_eternal/train_of_thought_f1/" class="list_album">Train of Thought</a></a>
+                        <span class="rel_date">(2000)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145941" /></a>40</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/kanye_west/the_college_dropout/"><img style="border:0px;" width="150" alt="The College Dropout" title="The College Dropout" src="http://static.rateyourmusic.com/album_images/s94103.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist23380]" href="/artist/kanye_west" class="list_artist">Kanye West</a></h4>
+                                     <h5><a title="[Album94103]" href="/release/album/kanye_west/the_college_dropout/" class="list_album">The College Dropout</a></a>
+                        <span class="rel_date">(2004)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145961" /></a>41</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/lauryn_hill/the_miseducation_of_lauryn_hill/"><img style="border:0px;" width="150" alt="The Miseducation of Lauryn Hill" title="The Miseducation of Lauryn Hill" src="http://static.rateyourmusic.com/album_images/s3556.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist1133]" href="/artist/lauryn_hill" class="list_artist">Lauryn Hill</a></h4>
+                                     <h5><a title="[Album3556]" href="/release/album/lauryn_hill/the_miseducation_of_lauryn_hill/" class="list_album">The Miseducation of Lauryn Hill</a></a>
+                        <span class="rel_date">(1998)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463379" /></a>42</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/the_roots/illadelph_halflife/"><img style="border:0px;" height="150" alt="Illadelph Halflife" title="Illadelph Halflife" src="http://static.rateyourmusic.com/album_images/s2668.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist818]" href="/artist/the_roots" class="list_artist">The Roots</a></h4>
+                                     <h5><a title="[Album2668]" href="/release/album/the_roots/illadelph_halflife/" class="list_album">Illadelph Halflife</a></a>
+                        <span class="rel_date">(1996)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463354" /></a>43</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/brand_nubian/one_for_all/"><img style="border:0px;" width="150" alt="One for All" title="One for All" src="http://static.rateyourmusic.com/album_images/s30986.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist8847]" href="/artist/brand_nubian" class="list_artist">Brand Nubian</a></h4>
+                                     <h5><a title="[Album30986]" href="/release/album/brand_nubian/one_for_all/" class="list_album">One for All</a></a>
+                        <span class="rel_date">(1990)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145975" /></a>44</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/slick_rick/the_great_adventures_of_slick_rick/"><img style="border:0px;" width="150" alt="The Great Adventures of Slick Rick" title="The Great Adventures of Slick Rick" src="http://static.rateyourmusic.com/album_images/s46368.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist11847]" href="/artist/slick_rick" class="list_artist">Slick Rick</a></h4>
+                                     <h5><a title="[Album46368]" href="/release/album/slick_rick/the_great_adventures_of_slick_rick/" class="list_album">The Great Adventures of Slick Rick</a></a>
+                        <span class="rel_date">(1988)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1147148" /></a>45</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/ice_cube/death_certificate/"><img style="border:0px;" height="150" alt="Death Certificate" title="Death Certificate" src="http://static.rateyourmusic.com/album_images/s18940.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist787]" href="/artist/ice_cube" class="list_artist">Ice Cube</a></h4>
+                                     <h5><a title="[Album18940]" href="/release/album/ice_cube/death_certificate/" class="list_album">Death Certificate</a></a>
+                        <span class="rel_date">(1991)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463339" /></a>46</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/gang_starr/hard_to_earn/"><img style="border:0px;" width="150" alt="Hard to Earn" title="Hard to Earn" src="http://static.rateyourmusic.com/album_images/s40809.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist3842]" href="/artist/gang_starr" class="list_artist">Gang Starr</a></h4>
+                                     <h5><a title="[Album40809]" href="/release/album/gang_starr/hard_to_earn/" class="list_album">Hard to Earn</a></a>
+                        <span class="rel_date">(1994)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1151444" /></a>47</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/big_daddy_kane/long_live_the_kane/"><img style="border:0px;" width="150" alt="Long Live the Kane" title="Long Live the Kane" src="http://static.rateyourmusic.com/album_images/s12172.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist3357]" href="/artist/big_daddy_kane" class="list_artist">Big Daddy Kane</a></h4>
+                                     <h5><a title="[Album12172]" href="/release/album/big_daddy_kane/long_live_the_kane/" class="list_album">Long Live the Kane</a></a>
+                        <span class="rel_date">(1988)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145953" /></a>48</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/jay_z/the_blueprint/"><img style="border:0px;" width="150" alt="The Blueprint" title="The Blueprint" src="http://static.rateyourmusic.com/album_images/s2309.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist525]" href="/artist/jay_z" class="list_artist">Jay-Z</a></h4>
+                                     <h5><a title="[Album2309]" href="/release/album/jay_z/the_blueprint/" class="list_album">The Blueprint</a></a>
+                        <span class="rel_date">(2001)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463393" /></a>49</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/jeru_the_damaja/wrath_of_the_math/"><img style="border:0px;" width="150" alt="Wrath of the Math" title="Wrath of the Math" src="http://static.rateyourmusic.com/album_images/s30721.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist3622]" href="/artist/jeru_the_damaja" class="list_artist">Jeru the Damaja</a></h4>
+                                     <h5><a title="[Album30721]" href="/release/album/jeru_the_damaja/wrath_of_the_math/" class="list_album">Wrath of the Math</a></a>
+                        <span class="rel_date">(1996)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145988" /></a>50</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/mos_def/black_on_both_sides/"><img style="border:0px;" width="150" alt="Black on Both Sides" title="Black on Both Sides" src="http://static.rateyourmusic.com/album_images/s9684.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist2699]" href="/artist/mos_def" class="list_artist">Mos Def</a></h4>
+                                     <h5><a title="[Album9684]" href="/release/album/mos_def/black_on_both_sides/" class="list_album">Black on Both Sides</a></a>
+                        <span class="rel_date">(1999)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463422" /></a>51</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/redman/whut__thee_album/"><img style="border:0px;" width="150" alt="Whut? Thee Album" title="Whut? Thee Album" src="http://static.rateyourmusic.com/album_images/s37789.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist6906]" href="/artist/redman" class="list_artist">Redman</a></h4>
+                                     <h5><a title="[Album37789]" href="/release/album/redman/whut__thee_album/" class="list_album">Whut? Thee Album</a></a>
+                        <span class="rel_date">(1992)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1147150" /></a>52</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/dead_prez/lets_get_free/"><img style="border:0px;" height="150" alt="Lets Get Free" title="Lets Get Free" src="http://static.rateyourmusic.com/album_images/s30523.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist2777]" href="/artist/dead_prez" class="list_artist">Dead Prez</a></h4>
+                                     <h5><a title="[Album30523]" href="/release/album/dead_prez/lets_get_free/" class="list_album">Lets Get Free</a></a>
+                        <span class="rel_date">(2000)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1147151" /></a>53</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/common/resurrection/"><img style="border:0px;" width="150" alt="Resurrection" title="Resurrection" src="http://static.rateyourmusic.com/album_images/s8859.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist2501]" href="/artist/common" class="list_artist">Common</a></h4>
+                                     <h5><a title="[Album8859]" href="/release/album/common/resurrection/" class="list_album">Resurrection</a></a>
+                        <span class="rel_date">(1994)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1151117" /></a>54</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/outkast/atliens/"><img style="border:0px;" width="150" alt="ATLiens" title="ATLiens" src="http://static.rateyourmusic.com/album_images/s7380.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist250]" href="/artist/outkast" class="list_artist">OutKast</a></h4>
+                                     <h5><a title="[Album7380]" href="/release/album/outkast/atliens/" class="list_album">ATLiens</a></a>
+                        <span class="rel_date">(1996)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463349" /></a>55</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/beastie_boys/check_your_head/"><img style="border:0px;" width="150" alt="Check Your Head" title="Check Your Head" src="http://static.rateyourmusic.com/album_images/s516.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist74]" href="/artist/beastie_boys" class="list_artist">Beastie Boys</a></h4>
+                                     <h5><a title="[Album516]" href="/release/album/beastie_boys/check_your_head/" class="list_album">Check Your Head</a></a>
+                        <span class="rel_date">(1992)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3467504" /></a>56</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/organized_konfusion/stress__the_extinction_agenda/"><img style="border:0px;" width="150" alt="Stress: The Extinction Agenda" title="Stress: The Extinction Agenda" src="http://static.rateyourmusic.com/album_images/s12445.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist3457]" href="/artist/organized_konfusion" class="list_artist">Organized Konfusion</a></h4>
+                                     <h5><a title="[Album12445]" href="/release/album/organized_konfusion/stress__the_extinction_agenda/" class="list_album">Stress: The Extinction Agenda</a></a>
+                        <span class="rel_date">(1994)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145937" /></a>57</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/2pac/all_eyez_on_me/"><img style="border:0px;" width="150" alt="All Eyez on Me" title="All Eyez on Me" src="http://static.rateyourmusic.com/album_images/s7385.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist1083]" href="/artist/2pac" class="list_artist">2Pac</a></h4>
+                                     <h5><a title="[Album7385]" href="/release/album/2pac/all_eyez_on_me/" class="list_album">All Eyez on Me</a></a>
+                        <span class="rel_date">(1996)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463407" /></a>58</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/masta_ace/disposable_arts/"><img style="border:0px;" width="150" alt="Disposable Arts" title="Disposable Arts" src="http://static.rateyourmusic.com/album_images/s11072.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist3034]" href="/artist/masta_ace" class="list_artist">Masta Ace</a></h4>
+                                     <h5><a title="[Album11072]" href="/release/album/masta_ace/disposable_arts/" class="list_album">Disposable Arts</a></a>
+                        <span class="rel_date">(2001)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463351" /></a>59</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/big_pun/capital_punishment/"><img style="border:0px;" width="150" alt="Capital Punishment" title="Capital Punishment" src="http://static.rateyourmusic.com/album_images/s61171.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist16458]" href="/artist/big_pun" class="list_artist">Big Pun</a></h4>
+                                     <h5><a title="[Album61171]" href="/release/album/big_pun/capital_punishment/" class="list_album">Capital Punishment</a></a>
+                        <span class="rel_date">(1998)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463353" /></a>60</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/black_sheep/a_wolf_in_sheeps_clothing/"><img style="border:0px;" width="150" alt="A Wolf in Sheep&#39;s Clothing" title="A Wolf in Sheep&#39;s Clothing" src="http://static.rateyourmusic.com/album_images/s21044.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist6261]" href="/artist/black_sheep" class="list_artist">Black Sheep</a></h4>
+                                     <h5><a title="[Album21044]" href="/release/album/black_sheep/a_wolf_in_sheeps_clothing/" class="list_album">A Wolf in Sheep&#39;s Clothing</a></a>
+                        <span class="rel_date">(1991)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1151100" /></a>61</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/fugees/the_score/"><img style="border:0px;" height="150" alt="The Score" title="The Score" src="http://static.rateyourmusic.com/album_images/s8969.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist2535]" href="/artist/fugees" class="list_artist">Fugees</a></h4>
+                                     <h5><a title="[Album8969]" href="/release/album/fugees/the_score/" class="list_album">The Score</a></a>
+                        <span class="rel_date">(1996)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463363" /></a>62</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/dr__octagon/dr__octagonecologyst/"><img style="border:0px;" width="150" alt="Dr. Octagonecologyst" title="Dr. Octagonecologyst" src="http://static.rateyourmusic.com/album_images/s8676.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist2455]" href="/artist/dr__octagon" class="list_artist">Dr. Octagon</a></h4>
+                                     <h5><a title="[Album8676]" href="/release/album/dr__octagon/dr__octagonecologyst/" class="list_album">Dr. Octagonecologyst</a></a>
+                        <span class="rel_date">(1996)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463376" /></a>63</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/kool_g_rap_and_dj_polo/wanted__dead_or_alive/"><img style="border:0px;" width="150" alt="Wanted: Dead or Alive" title="Wanted: Dead or Alive" src="http://static.rateyourmusic.com/album_images/s40239.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist55006]" href="/artist/kool_g_rap_and_dj_polo" class="list_artist">Kool G Rap &amp; DJ Polo</a></h4>
+                                     <h5><a title="[Album40239]" href="/release/album/kool_g_rap_and_dj_polo/wanted__dead_or_alive/" class="list_album">Wanted: Dead or Alive</a></a>
+                        <span class="rel_date">(1990)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145984" /></a>64</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/the_roots/things_fall_apart/"><img style="border:0px;" width="150" alt="Things Fall Apart" title="Things Fall Apart" src="http://static.rateyourmusic.com/album_images/s2667.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist818]" href="/artist/the_roots" class="list_artist">The Roots</a></h4>
+                                     <h5><a title="[Album2667]" href="/release/album/the_roots/things_fall_apart/" class="list_album">Things Fall Apart</a></a>
+                        <span class="rel_date">(1999)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463356" /></a>65</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/company_flow/funcrusher_plus/"><img style="border:0px;" width="150" alt="Funcrusher Plus" title="Funcrusher Plus" src="http://static.rateyourmusic.com/album_images/s47971.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist13398]" href="/artist/company_flow" class="list_artist">Company Flow</a></h4>
+                                     <h5><a title="[Album47971]" href="/release/album/company_flow/funcrusher_plus/" class="list_album">Funcrusher Plus</a></a>
+                        <span class="rel_date">(1997)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463359" /></a>66</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/de_la_soul/de_la_soul_is_dead/"><img style="border:0px;" width="150" alt="De La Soul Is Dead" title="De La Soul Is Dead" src="http://static.rateyourmusic.com/album_images/s10829.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist2589]" href="/artist/de_la_soul" class="list_artist">De La Soul</a></h4>
+                                     <h5><a title="[Album10829]" href="/release/album/de_la_soul/de_la_soul_is_dead/" class="list_album">De La Soul Is Dead</a></a>
+                        <span class="rel_date">(1991)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463408" /></a>67</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/masta_ace/a_long_hot_summer/"><img style="border:0px;" width="150" alt="A Long Hot Summer" title="A Long Hot Summer" src="http://static.rateyourmusic.com/album_images/s177783.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist3034]" href="/artist/masta_ace" class="list_artist">Masta Ace</a></h4>
+                                     <h5><a title="[Album177783]" href="/release/album/masta_ace/a_long_hot_summer/" class="list_album">A Long Hot Summer</a></a>
+                        <span class="rel_date">(2004)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463365" /></a>68</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/geto_boys/grip_it__on_that_other_level/"><img style="border:0px;" width="150" alt="Grip It! On That Other Level" title="Grip It! On That Other Level" src="http://static.rateyourmusic.com/album_images/s32758.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist2561]" href="/artist/geto_boys" class="list_artist">Geto Boys</a></h4>
+                                     <h5><a title="[Album32758]" href="/release/album/geto_boys/grip_it__on_that_other_level/" class="list_album">Grip It! On That Other Level</a></a>
+                        <span class="rel_date">(1989)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463360" /></a>69</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/the_disposable_heroes_of_hiphoprisy/hypocrisy_is_the_greatest_luxury/"><img style="border:0px;" width="150" alt="Hypocrisy Is the Greatest Luxury" title="Hypocrisy Is the Greatest Luxury" src="http://static.rateyourmusic.com/album_images/s12922.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist3620]" href="/artist/the_disposable_heroes_of_hiphoprisy" class="list_artist">The Disposable Heroes of Hiphoprisy</a></h4>
+                                     <h5><a title="[Album12922]" href="/release/album/the_disposable_heroes_of_hiphoprisy/hypocrisy_is_the_greatest_luxury/" class="list_album">Hypocrisy Is the Greatest Luxury</a></a>
+                        <span class="rel_date">(1992)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463364" /></a>70</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/gang_starr/daily_operation/"><img style="border:0px;" width="150" alt="Daily Operation" title="Daily Operation" src="http://static.rateyourmusic.com/album_images/s13494.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist3842]" href="/artist/gang_starr" class="list_artist">Gang Starr</a></h4>
+                                     <h5><a title="[Album13494]" href="/release/album/gang_starr/daily_operation/" class="list_album">Daily Operation</a></a>
+                        <span class="rel_date">(1992)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1147144" /></a>71</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/run_d_m_c_/run_d_m_c_/"><img style="border:0px;" height="150" alt="Run-D.M.C." title="Run-D.M.C." src="http://static.rateyourmusic.com/album_images/s10787.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist2892]" href="/artist/run_d_m_c_" class="list_artist">Run-D.M.C.</a></h4>
+                                     <h5><a title="[Album10787]" href="/release/album/run_d_m_c_/run_d_m_c_/" class="list_album">Run-D.M.C.</a></a>
+                        <span class="rel_date">(1984)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463414" /></a>72</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/pete_rock_and_c_l__smooth/the_main_ingredient/"><img style="border:0px;" width="150" alt="The Main Ingredient" title="The Main Ingredient" src="http://static.rateyourmusic.com/album_images/s47974.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist13399]" href="/artist/pete_rock_and_c_l__smooth" class="list_artist">Pete Rock &amp; C.L. Smooth</a></h4>
+                                     <h5><a title="[Album47974]" href="/release/album/pete_rock_and_c_l__smooth/the_main_ingredient/" class="list_album">The Main Ingredient</a></a>
+                        <span class="rel_date">(1994)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463371" /></a>73</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/jungle_brothers/done_by_the_forces_of_nature/"><img style="border:0px;" width="150" alt="Done by the Forces of Nature" title="Done by the Forces of Nature" src="http://static.rateyourmusic.com/album_images/s14097.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist4081]" href="/artist/jungle_brothers" class="list_artist">Jungle Brothers</a></h4>
+                                     <h5><a title="[Album14097]" href="/release/album/jungle_brothers/done_by_the_forces_of_nature/" class="list_album">Done by the Forces of Nature</a></a>
+                        <span class="rel_date">(1989)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463385" /></a>74</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/krs_one/return_of_the_boom_bap/"><img style="border:0px;" width="150" alt="Return of the Boom Bap" title="Return of the Boom Bap" src="http://static.rateyourmusic.com/album_images/s9953.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist2776]" href="/artist/krs_one" class="list_artist">KRS-One</a></h4>
+                                     <h5><a title="[Album9953]" href="/release/album/krs_one/return_of_the_boom_bap/" class="list_album">Return of the Boom Bap</a></a>
+                        <span class="rel_date">(1993)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463432" /></a>75</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/showbiz_and_a_g_/runaway_slave/"><img style="border:0px;" height="150" alt="Runaway Slave" title="Runaway Slave" src="http://static.rateyourmusic.com/album_images/s178474.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist42253]" href="/artist/showbiz_and_a_g_" class="list_artist">Showbiz &amp; A.G.</a></h4>
+                                     <h5><a title="[Album178474]" href="/release/album/showbiz_and_a_g_/runaway_slave/" class="list_album">Runaway Slave</a></a>
+                        <span class="rel_date">(1992)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463400" /></a>76</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/nas/the_lost_tapes/"><img style="border:0px;" height="150" alt="The Lost Tapes" title="The Lost Tapes" src="http://static.rateyourmusic.com/album_images/s27234.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist3037]" href="/artist/nas" class="list_artist">Nas</a></h4>
+                                     <h5><a title="[Album27234]" href="/release/album/nas/the_lost_tapes/" class="list_album">The Lost Tapes</a></a>
+                        <span class="rel_date">(2002)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463366" /></a>77</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/ghostface_killah/supreme_clientele/"><img style="border:0px;" width="150" alt="Supreme Clientele" title="Supreme Clientele" src="http://static.rateyourmusic.com/album_images/s10027.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist2817]" href="/artist/ghostface_killah" class="list_artist">Ghostface Killah</a></h4>
+                                     <h5><a title="[Album10027]" href="/release/album/ghostface_killah/supreme_clientele/" class="list_album">Supreme Clientele</a></a>
+                        <span class="rel_date">(2000)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463373" /></a>78</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/kool_g_rap_and_dj_polo/live_and_let_die/"><img style="border:0px;" width="150" alt="Live and Let Die" title="Live and Let Die" src="http://static.rateyourmusic.com/album_images/s40240.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist55006]" href="/artist/kool_g_rap_and_dj_polo" class="list_artist">Kool G Rap &amp; DJ Polo</a></h4>
+                                     <h5><a title="[Album40240]" href="/release/album/kool_g_rap_and_dj_polo/live_and_let_die/" class="list_album">Live and Let Die</a></a>
+                        <span class="rel_date">(1992)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463425" /></a>79</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/ras_kass/soul_on_ice/"><img style="border:0px;" width="150" alt="Soul on Ice" title="Soul on Ice" src="http://static.rateyourmusic.com/album_images/s11166.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist3063]" href="/artist/ras_kass" class="list_artist">Ras Kass</a></h4>
+                                     <h5><a title="[Album11166]" href="/release/album/ras_kass/soul_on_ice/" class="list_album">Soul on Ice</a></a>
+                        <span class="rel_date">(1996)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463415" /></a>80</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/scarface/mr__scarface_is_back/"><img style="border:0px;" width="150" alt="Mr. Scarface Is Back" title="Mr. Scarface Is Back" src="http://static.rateyourmusic.com/album_images/s32763.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist8704]" href="/artist/scarface" class="list_artist">Scarface</a></h4>
+                                     <h5><a title="[Album32763]" href="/release/album/scarface/mr__scarface_is_back/" class="list_album">Mr. Scarface Is Back</a></a>
+                        <span class="rel_date">(1991)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463429" /></a>81</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/souls_of_mischief/93_til_infinity/"><img style="border:0px;" width="150" alt="93 &#39;Til Infinity" title="93 &#39;Til Infinity" src="http://static.rateyourmusic.com/album_images/s11068.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist3032]" href="/artist/souls_of_mischief" class="list_artist">Souls of Mischief</a></h4>
+                                     <h5><a title="[Album11068]" href="/release/album/souls_of_mischief/93_til_infinity/" class="list_album">93 &#39;Til Infinity</a></a>
+                        <span class="rel_date">(1993)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145965" /></a>82</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/eminem/the_slim_shady_lp/"><img style="border:0px;" width="150" alt="The Slim Shady LP" title="The Slim Shady LP" src="http://static.rateyourmusic.com/album_images/s2313.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist521]" href="/artist/eminem" class="list_artist">Eminem</a></h4>
+                                     <h5><a title="[Album2313]" href="/release/album/eminem/the_slim_shady_lp/" class="list_album">The Slim Shady LP</a></a>
+                        <span class="rel_date">(1999)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463405" /></a>83</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/masta_ace/take_a_look_around/"><img style="border:0px;" width="150" alt="Take a Look Around" title="Take a Look Around" src="http://static.rateyourmusic.com/album_images/s707828.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist3034]" href="/artist/masta_ace" class="list_artist">Masta Ace</a></h4>
+                                     <h5><a title="[Album707828]" href="/release/album/masta_ace/take_a_look_around/" class="list_album">Take a Look Around</a></a>
+                        <span class="rel_date">(1990)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145991" /></a>84</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/common/be/"><img style="border:0px;" height="150" alt="Be" title="Be" src="http://static.rateyourmusic.com/album_images/s269139.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist2501]" href="/artist/common" class="list_artist">Common</a></h4>
+                                     <h5><a title="[Album269139]" href="/release/album/common/be/" class="list_album">Be</a></a>
+                        <span class="rel_date">(2005)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463419" /></a>85</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/the_roots/do_you_want_more_______/"><img style="border:0px;" width="150" alt="Do You Want More?!!!??!" title="Do You Want More?!!!??!" src="http://static.rateyourmusic.com/album_images/s11046.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist818]" href="/artist/the_roots" class="list_artist">The Roots</a></h4>
+                                     <h5><a title="[Album11046]" href="/release/album/the_roots/do_you_want_more_______/" class="list_album">Do You Want More?!!!??!</a></a>
+                        <span class="rel_date">(1995)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463431" /></a>86</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/smif_n_wessun/dah_shinin/"><img style="border:0px;" width="150" alt="Dah Shinin&#39;" title="Dah Shinin&#39;" src="http://static.rateyourmusic.com/album_images/s49490.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist13822]" href="/artist/smif_n_wessun" class="list_artist">Smif-n-Wessun</a></h4>
+                                     <h5><a title="[Album49490]" href="/release/album/smif_n_wessun/dah_shinin/" class="list_album">Dah Shinin&#39;</a></a>
+                        <span class="rel_date">(1995)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463438" /></a>87</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/cunninlynguists/a_piece_of_strange/"><img style="border:0px;" width="150" alt="A Piece of Strange" title="A Piece of Strange" src="http://static.rateyourmusic.com/album_images/s391158.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist17478]" href="/artist/cunninlynguists" class="list_artist">CunninLynguists</a></h4>
+                                     <h5><a title="[Album391158]" href="/release/album/cunninlynguists/a_piece_of_strange/" class="list_album">A Piece of Strange</a></a>
+                        <span class="rel_date">(2005)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3650791" /></a>88</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/eric_b__and_rakim/let_the_rhythm_hit_em/"><img style="border:0px;" width="150" alt="Let the Rhythm Hit &#39;Em" title="Let the Rhythm Hit &#39;Em" src="http://static.rateyourmusic.com/album_images/s11089.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist2925]" href="/artist/eric_b__and_rakim" class="list_artist">Eric B. &amp; Rakim</a></h4>
+                                     <h5><a title="[Album11089]" href="/release/album/eric_b__and_rakim/let_the_rhythm_hit_em/" class="list_album">Let the Rhythm Hit &#39;Em</a></a>
+                        <span class="rel_date">(1990)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463411" /></a>89</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/immortal_technique/revolutionary_vol__2/"><img style="border:0px;" width="150" alt="Revolutionary Vol. 2" title="Revolutionary Vol. 2" src="http://static.rateyourmusic.com/album_images/s125395.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist30262]" href="/artist/immortal_technique" class="list_artist">Immortal Technique</a></h4>
+                                     <h5><a title="[Album125395]" href="/release/album/immortal_technique/revolutionary_vol__2/" class="list_album">Revolutionary Vol. 2</a></a>
+                        <span class="rel_date">(2003)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463434" /></a>90</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/viktor_vaughn/vaudeville_villain/"><img style="border:0px;" width="150" alt="Vaudeville Villain" title="Vaudeville Villain" src="http://static.rateyourmusic.com/album_images/s103098.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist25333]" href="/artist/viktor_vaughn" class="list_artist">Viktor Vaughn</a></h4>
+                                     <h5><a title="[Album103098]" href="/release/album/viktor_vaughn/vaudeville_villain/" class="list_album">Vaudeville Villain</a></a>
+                        <span class="rel_date">(2003)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463426" /></a>91</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/public_enemy/apocalypse_91___the_enemy_strikes_black/"><img style="border:0px;" height="150" alt="Apocalypse 91...The Enemy Strikes Black" title="Apocalypse 91...The Enemy Strikes Black" src="http://static.rateyourmusic.com/album_images/s7301.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist1807]" href="/artist/public_enemy" class="list_artist">Public Enemy</a></h4>
+                                     <h5><a title="[Album7301]" href="/release/album/public_enemy/apocalypse_91___the_enemy_strikes_black/" class="list_album">Apocalypse 91...The Enemy Strikes Black</a></a>
+                        <span class="rel_date">(1991)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item3463435" /></a>92</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/x_clan/to_the_east__blackwards/"><img style="border:0px;" width="150" alt="To the East, Blackwards" title="To the East, Blackwards" src="http://static.rateyourmusic.com/album_images/s80229.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist20393]" href="/artist/x_clan" class="list_artist">X Clan</a></h4>
+                                     <h5><a title="[Album80229]" href="/release/album/x_clan/to_the_east__blackwards/" class="list_album">To the East, Blackwards</a></a>
+                        <span class="rel_date">(1990)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1145898" /></a>93</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/jay_z/the_black_album/"><img style="border:0px;" width="150" alt="The Black Album" title="The Black Album" src="http://static.rateyourmusic.com/album_images/s96442.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist525]" href="/artist/jay_z" class="list_artist">Jay-Z</a></h4>
+                                     <h5><a title="[Album96442]" href="/release/album/jay_z/the_black_album/" class="list_album">The Black Album</a></a>
+                        <span class="rel_date">(2003)</span></h5><br />When you take the man with the best rap resume ever and put him together with the best producers in the country, guys like Just Blayze, Rick Rubin, Kanye West, and Pharrell, you are going to get a classic and an album I feel is very underrated. &nbsp;Many pass it off as just good mainly because it sounds very pop but I feel that&#39;s a terrible way to look at the album. &nbsp;It&#39;s a career retrospective that gets pretty personal, much more than other rap albums, and is very honest. &nbsp;The claims he makes here, he backs them up. &nbsp;He basically asks everyone to look what he&#39;s done, compare it to the rest, and see that noone has beaten his combination of consistancy, chart dominance, flow, choice of production, and overall presence as a rapper.<br /><br /><strong class="rymfmt">Production:</strong> &nbsp;9. &nbsp;All the big names are here.<br /><strong class="rymfmt">Lyrics:</strong> &nbsp;8. &nbsp;Very well written album making many boasts.<br /><strong class="rymfmt">Delivery/Flow:</strong> &nbsp;8. &nbsp;Arguablly the best flow of any rapper ever and if not that, then right up there with the Biggies and Slick Ricks..</td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1151223" /></a>94</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/eric_b__and_rakim/follow_the_leader/"><img style="border:0px;" width="150" alt="Follow the Leader" title="Follow the Leader" src="http://static.rateyourmusic.com/album_images/s10411.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist2925]" href="/artist/eric_b__and_rakim" class="list_artist">Eric B. &amp; Rakim</a></h4>
+                                     <h5><a title="[Album10411]" href="/release/album/eric_b__and_rakim/follow_the_leader/" class="list_album">Follow the Leader</a></a>
+                        <span class="rel_date">(1988)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1151220" /></a>95</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/madvillain/madvillainy/"><img style="border:0px;" width="150" alt="Madvillainy" title="Madvillainy" src="http://static.rateyourmusic.com/album_images/s142671.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist32019]" href="/artist/madvillain" class="list_artist">Madvillain</a></h4>
+                                     <h5><a title="[Album142671]" href="/release/album/madvillain/madvillainy/" class="list_album">Madvillainy</a></a>
+                        <span class="rel_date">(2004)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1147159" /></a>96</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/kanye_west/late_registration/"><img style="border:0px;" width="150" alt="Late Registration" title="Late Registration" src="http://static.rateyourmusic.com/album_images/s218218.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist23380]" href="/artist/kanye_west" class="list_artist">Kanye West</a></h4>
+                                     <h5><a title="[Album218218]" href="/release/album/kanye_west/late_registration/" class="list_album">Late Registration</a></a>
+                        <span class="rel_date">(2005)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1151105" /></a>97</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/digable_planets/reachin__a_new_refutation_of_time_and_space_/"><img style="border:0px;" width="150" alt="Reachin&#39; (A New Refutation of Time and Space)" title="Reachin&#39; (A New Refutation of Time and Space)" src="http://static.rateyourmusic.com/album_images/s5446.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist1668]" href="/artist/digable_planets" class="list_artist">Digable Planets</a></h4>
+                                     <h5><a title="[Album5446]" href="/release/album/digable_planets/reachin__a_new_refutation_of_time_and_space_/" class="list_album">Reachin&#39; (A New Refutation of Time and Space)</a></a>
+                        <span class="rel_date">(1993)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1147157" /></a>98</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/dr__dre/2001/"><img style="border:0px;" height="150" alt="2001" title="2001" src="http://static.rateyourmusic.com/album_images/s5458.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist1674]" href="/artist/dr__dre" class="list_artist">Dr. Dre</a></h4>
+                                     <h5><a title="[Album5458]" href="/release/album/dr__dre/2001/" class="list_album">2001</a></a>
+                        <span class="rel_date">(1999)</span></h5></td></tr><tr class="trodd"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1151141" /></a>99</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/common/like_water_for_chocolate/"><img style="border:0px;" width="150" alt="Like Water for Chocolate" title="Like Water for Chocolate" src="http://static.rateyourmusic.com/album_images/s8861.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist2501]" href="/artist/common" class="list_artist">Common</a></h4>
+                                     <h5><a title="[Album8861]" href="/release/album/common/like_water_for_chocolate/" class="list_album">Like Water for Chocolate</a></a>
+                        <span class="rel_date">(2000)</span></h5></td></tr><tr class="treven"><td width="10%" align=center valign=center>&nbsp;<table border=0 align=right valign=middle><tr>
+        
+         <td class="number"><a id="item1151129" /></a>100</td><td></td></tr></table><td class="list_art" style="width:160px;"><a href="/release/album/az/doe_or_die/"><img style="border:0px;" width="150" alt="Doe or Die" title="Doe or Die" src="http://static.rateyourmusic.com/album_images/s11076.jpg" /></a></td><td class="main_entry" ><h4><a title="[Artist3035]" href="/artist/az" class="list_artist">AZ</a></h4>
+                                     <h5><a title="[Album11076]" href="/release/album/az/doe_or_die/" class="list_album">Doe or Die</a></a>
+                        <span class="rel_date">(1995)</span></h5></td></tr></table><div class="clear"> </div>
+<div class="medium" style="padding:10px; text-align:center"></div> <table><tr><td style="width:50%;vertical-align:top;"><div class="profileh" style="margin:0px;padding:0px;">
+       <b class="rtop1" ><b class="r1"></b> <b class="r2"></b> <b class="r3"></b> <b class="r4"></b></b>
+         <div class="profilehir" style=""  ><span class="dropheader">Items on this list</span></div>
+      </div>
+      <div class="profileb" style="margin:0px;padding:0px">     <div style="padding:10px;"> 
+       </div>
+
+       <b class="rbottom1"><b class="r4"></b> <b class="r3"></b> <b class="r2"></b> <b class="r1"></b></b>
+      </div><div class="clear"> </div></td></tr></table>
+
+<!-- ~~~~~~~~ end content ~~~~~~~~~~~~~~~ -->
+
+
+<!--trick--><div style="clear:both;"></div>
+</div>
+<div id="navbottom">
+<ul>
+	<li><a href="/listen/all">Artists on RYM</a></li>
+	<li><a href="/faq/">FAQ</a></li>
+	<li><a href="/chat/">Chat</a></li>
+	<li><a href="/tos">Terms of Service</a></li>
+	<li><a href="/privacy">Privacy</a></li>
+	<li><a href="/suggestions">Contact/Feedback</a></li>
+	<li><a href="/help/">Help</a></li>
+</ul>
+
+<table><tr><td style="width:100%;text-align:center;"><address>&copy; 2000 - 2010 rateyourmusic.com </td></tr></table> 
+
+</div>
+</div>		
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-59057-1";
+if (typeof urchinTracker == 'function')
+{
+  urchinTracker();
+}
+</script>
+</body>
+</html>
+ 
+ 

@@ -1,4 +1,4 @@
-package ohhla
+package com.rt.ohhla
 
 /**
  * Created by IntelliJ IDEA.

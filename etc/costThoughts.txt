@@ -1,0 +1,29 @@
+The aim is to return rhymes that are satisfying. This will be made up of: recognised artists, good/funny lines,
+short to read. Different audiences will have different opinions on offence etc, swearing should be configurable and
+set to medium to begin with (no f or c!).
+
+The predictive/suggestive input is important - people could miss-spell, can give people other ideas and give indication of what
+is in the database.
+
+Most important: recognised artists
+
+Artists should be configurable as this will determine weather people like the app! What is the best way to do this?
+- list of artists - too long
+- year/era? decades? useful but can't distinguish between pop/underground
+- pop/underground useful but how? could apply pop rating to artist based on songs in charts. But just because an
+artist has had some pop hits, doesn't mean they're pop, ie nas
+- Favorites system - too much work from user, user may not do properly, more work. Could allow a user to select favourite
+artists from a list and base results on those?
+
+Whatever ever is implemented we need a sensible default which will be more pop-ish using songs and albums that have
+been in the US and UK top 40 in the last 15 years - I should choose what they are, use the dsl rating systems.
+
+Shorter rhymes better? less to read.
+Popularity as guaged by something. Could use recent charts with update but just stick to record sales - if we ever find them
+big words and more than two word rhymes
+
+Only give 2-3 answers in one go to make them more 'valuable', if users see lots of results they may become less valuble?
+
+-- simple rating system --
+will be primitive listing artists we'd like to see in results. 1 is popular 5 is not so. Doing this on an album basis
+is a blunt instrument and we'd rather do it on singles

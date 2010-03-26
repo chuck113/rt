@@ -1,28 +1,16 @@
-package ohhla
+package com.rt.ohhla
+
 
 import io.Source
 import org.apache.commons.io.IOUtils
 import scala.util.matching.Regex.MatchIterator
+import com.rt.indexing.persistence.{ArtistAlbums, AlbumMetaData, Album, AlbumTrack}
+import java.net.URLDecoder
 
-case class AlbumMetaData(artist: String, title: String, year: String)
-case class AlbumTrack(title: String, number: Int, url: String)
-case class AlbumInfo(metaData: AlbumMetaData, tracks: List[AlbumTrack]);
-case class ArtistInfo(artist: String, albums: List[AlbumInfo]);
 
 class OhhlaGrabber {
-  //val olhhaUrl = "http://ohhla.com"
 
-  //val rawTargetLocation = """C:\data\projects\rhyme-0.9\olhha"""
-
-  //  private def source(): Source = {
-  //    return Source.fromFile("""C:\data\projects\scala-play\rapAttack\resources\olhha-index.html""");
-  //  }
-
-  //def downloadAlbum
-
-
-
-  def artistAlbums(htmlString: String, artist: String): ArtistInfo = {
+  def artistAlbums(htmlString: String, artist: String): ArtistAlbums = {
     val tableStart = """<table border=1 cellspacing=2 bordercolor=#000000 cellpadding=1 width=100%>"""
     val tableEnd = """</table>"""
 
@@ -50,13 +38,14 @@ class OhhlaGrabber {
     } else {
       println("NO ALBUMS FOUND FOR ARTIST "+artist)
       //TODO deal with broken lyrics like public enemy 
-      new ArtistInfo(artist, List[AlbumInfo]())
+      new ArtistAlbums(artist, List[Album]())
     }
   }
 
   // a proper page is something like the beastie boy page
-  private def fromProperPage(matchIter: MatchIterator, artist: String): ArtistInfo = {
-    val albums = matchIter.map[AlbumInfo](albumHtml => {
+  private def fromProperPage(matchIter: MatchIterator, artist: String): ArtistAlbums = {
+    //TODO fold left instead of matchIter.map to avoid nulls at end
+    val albums = matchIter.map[Album](albumHtml => {
       val headerOpt = getAlbumHeader(albumHtml)
       headerOpt match {
         case None => println("WARN - didn't find album header in album html: (not included)"); null
@@ -65,17 +54,21 @@ class OhhlaGrabber {
           val tracksEnd = """</tr>"""
           val tracksRegex = tracksStart + "[\\s\\S]+?" + tracksEnd
           val tracksIter = tracksRegex.r.findAllIn(albumHtml)
-          val metaOpt = makeAlbumMetaData(headerOpt.get)
-          if (tracksIter.hasNext && metaOpt.isDefined) {
-            //val tracks = buildTracks(tracksIter)
-            new AlbumInfo(metaOpt.get, buildTracks(tracksIter))
+
+          if (tracksIter.hasNext) {
+            val metaOpt = makeAlbumMetaData(headerOpt.get, buildTracks(tracksIter))
+            if(metaOpt.isDefined){
+              new Album(metaOpt.get)
+            }else{
+              null
+            }
           } else {
             null
           }
         }
       }
     })
-    new ArtistInfo(artist, albums.filter(_ != null).toList)
+    new ArtistAlbums(artist, albums.filter(_ != null).toList)
   }
 
   private def buildTracks(tracksIter: MatchIterator): List[AlbumTrack] = {
@@ -98,16 +91,20 @@ class OhhlaGrabber {
     trackNoOpt match{
       case None => {println("got no track number for " + trackHtml); None}
       case _ => {
-        println("got trackNoOpt "+trackNoOpt.get)
+        //println("got trackNoOpt "+trackNoOpt.get)
         val c = trackNoOpt.get.substring(trackNoOpt.get.indexOf('>')+1, trackNoOpt.get.lastIndexOf('<'))
-        println("no is "+c)
+        //println("no is "+c)
         Some(removeNonNumberChars(c))
       }
     }
   }
 
+  private def getNumber(st: String):Int={
+    removeNonNumberChars(st)
+  }
+
   private def removeNonNumberChars(st: String): Int = {
-    st.toArray.elements.foldLeft(new StringBuilder()) {
+    val res:String = st.toArray.elements.foldLeft(new StringBuilder()) {
       (b, c) => {
         try {
          new Integer(c+"")
@@ -116,21 +113,24 @@ class OhhlaGrabber {
           case ex: NumberFormatException => b.append("")
         }
       }
-    }.toString.toInt
+    }.toString
+
+    if(res.length == 0)99
+    else res.toInt
   }
 
   private def getTitleAndLink(trackHtml: String): Option[AlbumTrack] = {
-    println("Track html is "+trackHtml)
+    //println("Track html is "+trackHtml)
 
     val trackStart = "<a href=\""
     val trackEnd = "</a>"
     val trackRegex = trackStart + "[\\s\\S]+?" + trackEnd
     val trackOpt = trackRegex.r.findFirstIn(trackHtml)
     trackOpt match {
-      case None => {println("got none for " + trackHtml); None}
+      case None => None
       case _ => {
         val trackString = trackOpt.get
-        println("trackString: " + trackString)
+        //println("trackString: " + trackString)
         val number: Int = findTrackNumber(trackHtml).get
         val lastQuote = trackString.lastIndexOf("\"");
         val firstQuote = trackString.indexOf("\"");
@@ -188,14 +188,17 @@ class OhhlaGrabber {
     List.fromArray((javaList.toArray)).asInstanceOf[List[String]]
   }
 
-  def artistPageContents(artistName: String): String = {
+  def artistPageContents(artistName: String): Option[String] = {
     println("artist url is " + urlForArtist(artistName))
-    Source.fromURL("http://ohhla.com/" + urlForArtist(artistName)).getLines.toList.foldLeft("")(_ + _)
+    try{
+      Some(Source.fromURL("http://ohhla.com/" + urlForArtist(artistName)).getLines.toList.foldLeft("")(_ + _))
+    }catch {
+      case e:Exception => println("could not get html at http://ohhla.com/" + urlForArtist(artistName)+" due to "+e.getMessage);None
+    }
   }
 
   private def urlForArtist(artistName: String): String = {
     val cpResources = OhhlaConfig.ohhlaLocalSiteAll.map(l => fileContent(OhhlaConfig.ohhlaLocalSiteRoot + "/" + l))
-    println("cpResources = " + cpResources)
     val allLines = cpResources.foldLeft(List[String]()) {(list, lines) => {list ::: lines}}
     def res = allLines.filter(_.contains(">" + artistName + "<"));
     println("found: " + res)
@@ -205,34 +208,40 @@ class OhhlaGrabber {
     }
   }
 
+  //TODO use some library to do this properly for all html
+  private def stripAmps(html:String):String = {
+    html.replace("&amp;", "&").replace("&amp", "&")
+  }
+
   // regex on http://daily-scala.blogspot.com/2009/09/matching-regular-expressions.html
-  private def makeAlbumMetaData(htmlTitle: String): Option[AlbumMetaData] = {
+  private def makeAlbumMetaData(htmlTitleEncoded: String, tracks:List[AlbumTrack]): Option[AlbumMetaData] = {    
+    val htmlTitle = stripAmps(htmlTitleEncoded)
     println("html is '" + htmlTitle + "'")
     val Name = """(.+?) - (.+?) [\\(\\)](.+?)[\\)\\)]""".r
     htmlTitle.trim match {
-      case Name(a, t, y) => Some(new AlbumMetaData(a, t, y))
+      case Name(a, t, y) => Some(new AlbumMetaData(a, t, removeNonNumberChars(y).toInt, tracks))
       case _ => println("could not get album meta data from string '" + htmlTitle + "'"); None
     }
   }
 
-  def mapOnAlbumName(albums: List[AlbumInfo]): Map[String, AlbumInfo] = {
-    albums.foldLeft(Map[String, AlbumInfo]()) {
+  def mapOnAlbumName(albums: List[Album]): Map[String, Album] = {
+    albums.foldLeft(Map[String, Album]()) {
       (map, a) => {
         map(a.metaData.title) = a
       }
     }
   }
 
-  def regexTest2() = {
-    def wu = "Wu-Tang Clan - Enter the Wu-Tang: 36 Chambers (1993)"
-    println(makeAlbumMetaData(wu))
-  }
-
-
-  def regexTest() = {
-    val albumHeaderStart = """start etc"""
-    val albumHeaderEnd = """ending"""
-    val albumHeaderRegex = albumHeaderStart + "([\\s\\S]+?)" + albumHeaderEnd
-    println(albumHeaderRegex.r.findFirstIn("start etc this please ending").get)
-  }
+//  def regexTest2() = {
+//    def wu = "Wu-Tang Clan - Enter the Wu-Tang: 36 Chambers (1993)"
+//    println(makeAlbumMetaData(wu))
+//  }
+//
+//
+//  def regexTest() = {
+//    val albumHeaderStart = """start etc"""
+//    val albumHeaderEnd = """ending"""
+//    val albumHeaderRegex = albumHeaderStart + "([\\s\\S]+?)" + albumHeaderEnd
+//    println(albumHeaderRegex.r.findFirstIn("start etc this please ending").get)
+//  }
 }

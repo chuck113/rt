@@ -1,4 +1,4 @@
-package indexing
+package com.rt.indexing
 
 import io.Source
 import java.io.FileInputStream
