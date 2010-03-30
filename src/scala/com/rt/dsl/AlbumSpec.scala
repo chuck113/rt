@@ -9,15 +9,42 @@ object AlbumSpec {
       
   }
 
-  def artist(artist: String, albumNames: List[String]): ArtistAlbums = {
-    return ArtistAlbums(artist, albumNames)
+  def artists(artists: ArtistAlbums*):List[ArtistAlbums]={
+    artists.toList
   }
 
-  def albums(albums: String*): List[String] = {
-    var result = List[String]()
-    for (arg <- albums.elements) arg :: result
-    result
+  def artist(artist: String, albums: List[Album]): ArtistAlbums = {
+    return new ArtistAlbums(artist, albums)
+  }
+
+  def artist(artist: String, alias:String, albums: List[Album]): ArtistAlbums = {
+    return new ArtistAlbums(artist, albums, alias)
+  }
+
+  def artistAllAlbums(artist: String, batchRating:Int): ArtistAlbums = {
+    return new ArtistAlbums(artist, batchRating)
+  }
+
+  def artist(artist: String, alias: String, albums: Album*): ArtistAlbums = {
+    return new ArtistAlbums(artist, albums.toList, alias)
+  }
+
+  def artist(artist: String, albums: Album*): ArtistAlbums = {
+    return new ArtistAlbums(artist, albums.toList)
   }
 }
-//
-case class ArtistAlbums(artist: String, albumNames: List[String])
+
+
+case class ArtistAlbums(artist: String, albums: List[Album], batchRating:Int, alias:String){
+  def this(artist: String, batchRating:Int) = this(artist, List[Album](), batchRating, null)
+  def this(artist: String, batchRating:Int, alias:String) = this(artist, List[Album](), batchRating, alias)
+  def this(artist: String, albums: List[Album]) = this(artist, albums, -1, null)
+  def this(artist: String, albums: List[Album], alias:String) = this(artist, albums, -1, alias)
+
+  def isArtistBatch():Boolean={
+    batchRating > -1
+  }
+
+  //def withAlias(alias:String):ArtistAlbums
+}
+case class Album(title: String, pop:Int)

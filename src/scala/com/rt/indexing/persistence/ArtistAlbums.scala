@@ -1,7 +1,6 @@
 package com.rt.indexing.persistence
 
 import java.io._
-import xml.{Utility, XML, Elem}
 import sjson.json.{JsBean, DefaultConstructor, Serializer}
 import reflect.BeanInfo
 import dispatch.json.{Js, JsString, JsValue}
@@ -34,11 +33,11 @@ class ArtistAlbums(val artist: String, val albums: List[Album]){
 
   def toJson():String ={
      val jsonAlbums:Map[String, String] = albums.foldLeft(Map[String, String]()){(map, album)=>{
-       map(album.fileInfo.albumName) = FileNameUtils.toFileName(album.fileInfo.fileName)
+       map(album.fileInfo.albumName) = album.fileInfo.fileName
      }}
 
     val aaJson:ArtistAlbumsJson = ArtistAlbumsJson(artist, jsonAlbums)
-    println("aaJson: "+aaJson)
+    println("aaJson: "+aaJson+" will be "+jsBean.toJSON(aaJson))
     jsBean.toJSON(aaJson)
   }
 }
@@ -52,6 +51,20 @@ object ArtistAlbums{
 
   def fromFolder(folder:String):ArtistAlbums ={
      fromJson(IOUtils.toString(new FileInputStream(folder+"/"+Constants.artistMetaDataFileName)))
+  }
+
+  def fromFolderWithAlbumMetadata(folder:String):ArtistAlbums ={
+     fromJsonWithAlbumMetadata(IOUtils.toString(new FileInputStream(folder+"/"+Constants.artistMetaDataFileName)), folder)
+  }
+
+  def fromJsonWithAlbumMetadata(json:String, folder:String):ArtistAlbums ={
+    val aaJson:ArtistAlbumsJson = jsBean.fromJSON(Js(json), Some(classOf[ArtistAlbumsJson])).asInstanceOf[ArtistAlbumsJson]
+    val albums:List[Album] = aaJson.albums.foldLeft(List[Album]()){(list, albumEntry) => {
+      val albumMetaData: AlbumMetaData = AlbumMetaData.fromFolder(folder + "/" + albumEntry._2)
+      new Album("id", new AlbumFile(albumEntry._2, albumEntry._1), albumMetaData) :: list
+    }}
+
+    new ArtistAlbums(aaJson.artist, albums)
   }
 
   def fromJson(json:String):ArtistAlbums ={

@@ -4,6 +4,15 @@ package com.rt.indexing.persistence
 
 object FileNameUtils{
 
+  def toArtistFolderName(st:String):String={
+    val toRemove:List[String] = List("\\", "/", ".", ":", ";", "*", "?", ",", "'", "\"");
+    var result:String = st
+    for(r <- toRemove){
+      result = result.replace(r, "")
+    }
+    result.replace(" ", "_")
+  }
+
   def toFileName(st: String):String ={
     val toReplace:List[String] = List(" ", "\\", "/", ".", ":", ";", "*", "?", ",", "'", "\"");
     var result:String = st

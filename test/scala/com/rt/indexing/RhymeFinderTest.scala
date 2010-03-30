@@ -3,6 +3,7 @@ package com.rt.indexing
 import collection.mutable.ListBuffer
 import org.junit.Test
 import junit.framework.Assert
+import com.rt.rhyme.RhymeFinder
 
 class RhymeFinderTest  {
 

@@ -1,7 +1,8 @@
 package com.rt.indexing.persistence
 
+import com.rt.util.NameMapper
 
 
-class AlbumFile(val fileName:String, val albumName:String){
-  def this(albumName:String)=this(FileNameUtils.toFileName(albumName), albumName)
+case class AlbumFile(fileName:String, albumName:String){
+  def this(albumName:String)=this(NameMapper.nUnder(albumName), albumName)
 }

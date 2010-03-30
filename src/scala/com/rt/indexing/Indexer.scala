@@ -8,6 +8,8 @@ import com.rt.ohhla.OhhlaConfig
 import java.lang.String
 import collection.immutable.Map
 import java.io.{Serializable, FileInputStream, FileFilter, File}
+import com.rt.rhyme.RapSheetReader
+import com.rt.util.MapUtils
 
 
 /**holds one or more rhyme lines and associated data about the containing track */
@@ -23,11 +25,6 @@ case class RhymeLines(val song:SongMetaData, val lines: List[String]){
     MapUtils.toJavaList(lines)
   }
 }
-
-case class RhymeLeaf(word:String, lines: List[String]) extends Serializable
-case class SongNode(title:String, trackNo:Int, rhymes: List[RhymeLeaf]) extends Serializable
-case class AlbumNode(artist:String, title:String, year:Int, children: List[SongNode]) extends Serializable
-case class ArtistNode(children: List[AlbumNode]) extends Serializable
 
 class Indexer {
 
@@ -127,35 +124,42 @@ class Indexer {
 //    })
 //    indexMap
 
-  def makeArtistNode(artistFolder:String):ArtistNode={
-    val artist = ArtistAlbums.fromFolder(artistFolder)
-    ArtistNode(artist.albums.foldLeft(List[AlbumNode]()){(list, album) =>{
-      println("for artist "+artist)
-      makeAlbumNode(artistFolder + "/" + album.fileInfo.fileName) :: list
-    }})
-  }
-
-  def makeAlbumNode(albumFolder:String):AlbumNode={
-    val md:AlbumMetaData = AlbumMetaData.fromFolder(albumFolder)
-    val songNodes = md.tracks.foldLeft(List[SongNode]()){(list, track) =>{//(track => {
-      val file = albumFolder + "/" + track.number + ".txt"
-      makeSongNode(file, makeSongMetaData(md, track)) :: list
-    }}
-    AlbumNode(md.artist, md.title, md.year, songNodes)
-  }
-
-  def makeSongNode(trackFile:String, song:SongMetaData):SongNode={
-    val rhymes: Map[String, List[RhymeLines]] = indexTrack(trackFile, song)
-    val leaves:List[RhymeLeaf] = rhymes.foldLeft(List[RhymeLeaf]()){(leafList, rhymeLineEntry) =>{
-      //TODO, remove hack, only gets first entry
-      RhymeLeaf(rhymeLineEntry._1, rhymeLineEntry._2(0).lines) :: leafList
-    }}
-    SongNode(song.title, song.track, leaves)
-  }
-
+//  def makeArtistNode(albumFolder:List[String]):ArtistNode={
+//    ArtistNode(albumFolder.foldLeft(List[AlbumNode]()){(list, albumFolder) =>{
+//      println("for albumFolder "+albumFolder)
+//      makeAlbumNode(albumFolder) :: list
+//    }})
+//  }
+//
+//  def makeArtistNode(artistFolder:String):ArtistNode={
+//    val artist = ArtistAlbums.fromFolder(artistFolder)
+//    ArtistNode(artist.albums.foldLeft(List[AlbumNode]()){(list, album) =>{
+//      println("for artist "+artist)
+//      makeAlbumNode(artistFolder + "/" + album.fileInfo.fileName) :: list
+//    }})
+//  }
+//
+//  def makeAlbumNode(albumFolder:String):AlbumNode={
+//    val md:AlbumMetaData = AlbumMetaData.fromFolder(albumFolder)
+//    val songNodes = md.tracks.foldLeft(List[SongNode]()){(list, track) =>{//(track => {
+//      val file = albumFolder + "/" + track.number + ".txt"
+//      makeSongNode(file, makeSongMetaData(md, track)) :: list
+//    }}
+//    AlbumNode(md.artist, md.title, md.year, songNodes)
+//  }
+//
+//  def makeSongNode(trackFile:String, song:SongMetaData):SongNode={
+//    val rhymes: Map[String, List[RhymeLines]] = indexTrack(trackFile, song)
+//    val leaves:List[RhymeLeaf] = rhymes.foldLeft(List[RhymeLeaf]()){(leafList, rhymeLineEntry) =>{
+//      //TODO, remove hack, only gets first entry
+//      RhymeLeaf(rhymeLineEntry._1, rhymeLineEntry._2(0).lines) :: leafList
+//    }}
+//    SongNode(song.title, song.track, leaves)
+//  }
+//
   def indexAlbum(album: AlbumMetaData, albumFolder:String): Map[String, List[RhymeLines]] = {
     var indexMap: Map[String, List[RhymeLines]] = Map[String, List[RhymeLines]]()
-    
+
     album.tracks.foreach(track => {
       val file = albumFolder + "/" + track.number + ".txt"
       indexMap = MapUtils.mergeListMaps(indexMap, indexTrack(file, makeSongMetaData(album, track)))

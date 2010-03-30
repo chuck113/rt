@@ -2,6 +2,7 @@ package com.rt.indexing
 
 import org.scalatest.junit.JUnitSuite
 import org.junit.Test
+import com.rt.util.MapUtils
 
 /**
  *

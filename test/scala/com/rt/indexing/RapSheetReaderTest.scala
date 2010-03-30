@@ -3,6 +3,7 @@ package com.rt.indexing
 import java.lang.String
 import collection.immutable.Map
 import org.junit.{Assert, Test}
+import com.rt.rhyme.RapSheetReader
 
 
 class RapSheetReaderTest   {

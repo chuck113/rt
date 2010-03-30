@@ -6,25 +6,45 @@ import io.Source
 import org.apache.commons.io.IOUtils
 import java.net.URL
 import com.rt.indexing.persistence.{FileNameUtils, Album, ArtistAlbums, AlbumTrack}
+import com.rt.util.NameMapper
 
 /**
-*
-* @Deprecated "use MetaData classes directly"
+* Download rap sheets from ohhla 
 */
 class OhhlaPersister{
 
   def persistArtistFiles(info: ArtistAlbums):Unit ={
-    val targetFolder = OhhlaConfig.rawTargetLocation+"/"+FileNameUtils.toFileName(info.artist)
-    new File(targetFolder).mkdirs
-    info.writeToFolder(targetFolder)
-    info.albums.foreach(album => {
-      persistAlbum(album, targetFolder)
-    })
+    val artistAlbumsList: List[ArtistAlbums] = buildActualArtistAlbums(info)
 
+    artistAlbumsList.foreach(artistAlbums => {
+      val targetFolder = OhhlaConfig.rawTargetLocation+"/"+NameMapper.nUnder(artistAlbums.artist)
+      new File(targetFolder).mkdirs
+      artistAlbums.writeToFolder(targetFolder)
+      artistAlbums.albums.foreach(album => {
+        persistAlbum(album, targetFolder)
+      })
+    })
   }
 
+  private def buildActualArtistAlbums(info: ArtistAlbums):List[ArtistAlbums]={
+     val artistAlbumsMap:Map[String, List[Album]] = info.albums.foldLeft(Map[String, List[Album]]()){(map, album) => {
+      val artist:String = album.metaData.artist
+      map(artist) = new Album(album.metaData) :: map.getOrElse(artist, List[Album]())
+    }}
+
+    artistAlbumsMap.foldLeft(List[ArtistAlbums]()){(list, e) => {
+      new ArtistAlbums(e._1, e._2) :: list
+    }}
+  }
+
+//  private def persistAlbums(albums: List[Album], targetArtistFolder: String):Unit = {
+//    val targetFolder = OhhlaConfig.rawTargetLocation+"/"+NameMapper.neutralizeWithUnderscores()
+//    albums.foreach(album => persistAlbum(album, targetArtistFolder))
+//  }
+
+
   private def persistAlbum(album: Album, targetArtistFolder: String):Unit = { // return xml
-    val targetFolder = targetArtistFolder+"/"+album.fileInfo.fileName//toFileName(album.metaData.title)
+    val targetFolder = targetArtistFolder+"/"+NameMapper.nUnder(album.fileInfo.fileName)//toFileName(album.metaData.title)
     new File(targetFolder).mkdirs;
     album.metaData.writeToFolder(targetFolder)
     downloadTracks(album.metaData.tracks, targetFolder, OhhlaConfig.ohhlaUrl)

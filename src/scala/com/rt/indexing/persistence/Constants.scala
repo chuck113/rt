@@ -21,4 +21,5 @@ object Constants{
   def serialisedIndexHierarchyFolder(prefix:String):String={
     indexesFolder+sep+serialisedIndexHierarchyFileName+prefix+dot+serializedFileExtension  
   }
+  
 }
