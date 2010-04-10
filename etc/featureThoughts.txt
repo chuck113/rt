@@ -6,4 +6,6 @@ test if rhymes are the same, ie
     THE ROOTS - The Lesson
 
 rhymes that span multiple words
+rhymes that rhyme with different part numbers, ie AH0 and AH1
+Auto fix spelling errors, eg
     

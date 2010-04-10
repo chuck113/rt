@@ -3,14 +3,22 @@ package com.rt.indexing
 import java.lang.String
 import collection.immutable.Map
 import org.junit.{Assert, Test}
-import com.rt.rhyme.RapSheetReader
-
+import com.rt.rhyme.{Rhyme, RapSheetReader}
 
 class RapSheetReaderTest   {
+  @Test def failedRead(){
+    val trackFile = """C:\data\projects\rapAttack\rapAttack\rhyme-0.9\olhha\PUBLIC_ENEMY\MUSE_SICK_N_HOUR_MESS_AGE\7.txt"""
+    val rhymes:List[Rhyme] = RapSheetReader.findRhymes(trackFile, null);
+    println("found "+rhymes.size+" rhymes")
+    rhymes.foreach(println)
 
+    val rhymeMap: Map[String, List[RhymeLines]] = RapSheetReader.findRhymesOld(trackFile, null)
+    println("found "+rhymeMap.size+" rhymes in second")
+    rhymeMap.keySet.foreach(println)
+  }
+  
   @Test def failingOne(){
-    val reader:RapSheetReader = new RapSheetReader(lyrics(), null)
-    val rhymes: Map[String, List[RhymeLines]] = reader.findRhymes()
+    val rhymes: Map[String, List[RhymeLines]] = RapSheetReader.findRhymesOld(lyrics(), null)
     rhymes.foreach(rhyme =>{
       println(rhyme._1+" = "+rhyme._2)
     })
@@ -21,7 +29,7 @@ class RapSheetReaderTest   {
     println()
 
     val trackFile = """C:\data\projects\rapAttack\rapAttack\rhyme-0.9\olhha\Nas\Illmatic\10.txt"""
-    val rhymes2 = RapSheetReader.findRhymes(trackFile, null);
+    val rhymes2 = RapSheetReader.findRhymesOld(trackFile, null);
     rhymes2.foreach(rhyme =>{
       println(rhyme._1+" = "+rhyme._2)
     })

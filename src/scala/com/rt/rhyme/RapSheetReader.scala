@@ -20,12 +20,16 @@ case class Verse(lines: List[String]);
 
 
 object RapSheetReader{
-  private val rhymeFinder = new RhymeFinder()
+  private val rhymeFinder = new RhymeFinder(new RhymeMap())
 
-  def findRhymes(file: String, songMetaData: SongMetaData): Map[String, List[RhymeLines]] = {
+  def findRhymes(lines:List[String], songMetaData: SongMetaData): List[Rhyme] = {
+    return new RapSheetReader(lines, songMetaData, rhymeFinder).findRhymes()
+  }
+
+  def findRhymes(file: String, songMetaData: SongMetaData): List[Rhyme] = {
     val lines:List[String] = IO.fileLines(new File(file)).map(_.trim)
 
-    return new RapSheetReader(lines, songMetaData).findRhymes()
+    return new RapSheetReader(lines, songMetaData, rhymeFinder).findRhymes()
   }
 }
 
@@ -34,29 +38,26 @@ object RapSheetReader{
  *
  * Rules - an empty line symbolises a gap between verses
  */
-class RapSheetReader(lines: List[String], songMetaData: SongMetaData){
-  private val rhymeFinder = new RhymeFinder()
+class RapSheetReader(lines: List[String], songMetaData: SongMetaData, rhymeFinder:RhymeFinder){
 
-  def findRhymes(): Map[String, List[RhymeLines]] = {
-    findRhymesSimple(buildSong(lines))
+  def findRhymes(): List[Rhyme] = {
+    findRhymes(buildSong(lines))
   }
 
-  /**
-   * Returns a map of words to lines that rhyme them
-   */
-  def findRhymesSimple(song: Song): Map[String, List[RhymeLines]] = {
-    song.verses.foldLeft(Map[String, List[RhymeLines]]()) {
-      (outerMap, verse) => {
+  def findRhymes(song: Song): List[Rhyme] = {
+    song.verses.foldLeft(List[Rhyme]()) {
+      (rhymes, verse) => {
         val filtered:List[String] = verse.lines.filter(isAllowedWord)
-        val foundRhymes:Map[String, List[List[Int]]] = rhymeFinder.findRhymesInLines(filtered)
-        foundRhymes.elements.foldLeft(Map[String, List[RhymeLines]]()) {
-          (innerMap, foundRhymesEntry) => {
-            innerMap(foundRhymesEntry._1) = getRhymesFromStrings(filtered, foundRhymesEntry._2)
-          }
-        }
+        rhymeFinder.findRhymesInLines(filtered) ::: rhymes
       }
     }
   }
+
+//  private def convert(from:List[Rhyme]):List[RhymeLines]={
+//    from.foldLeft(List[RhymeLines]()){(list, rhyme)=>{
+//      list :: new RhymeLines(this.songMetaData,rhyme.parts);
+//    }}
+//  }
 
   def getRhymesFromStrings(strings: List[String], lineNumbers: List[List[Int]]): List[RhymeLines] = {
     lineNumbers.foldLeft(List[RhymeLines]()) {
@@ -99,10 +100,10 @@ class RapSheetReader(lines: List[String], songMetaData: SongMetaData){
     word.toCharArray.exists(_.isLetter)
   }
 
-//  def findRhymes(song: Song): Map[String, List[RhymeRef]] = {
+//  def findRhymesOld(song: Song): Map[String, List[RhymeRef]] = {
 //    song.verses.foldLeft(Map[String, List[RhymeRef]]()) {
 //      (outerMap, verse) => {
-//        rhymeFinder.findRhymesInLines(verse.lines.filter(isAllowedWord)).elements.foldLeft(Map[String, List[RhymeRef]]()) {
+//        rhymeFinder.findRhymesInLinesOld(verse.lines.filter(isAllowedWord)).elements.foldLeft(Map[String, List[RhymeRef]]()) {
 //          (innerMap, r) => {
 //            innerMap(r._1) = r._2.map(e => RhymeRef(song, verse, e))
 //          }
@@ -114,7 +115,7 @@ class RapSheetReader(lines: List[String], songMetaData: SongMetaData){
   def main(args: Array[String]): Unit = {
     //read("C:\\data\\projects\\rhyme-0.9\\wtc1_snIPez\\01-bring_da_ruckus.txt");
     //def rhymeMap = buildRhymeMap();
-    //println("findRhymes: " + rhymeMap)
+    //println("findRhymesOld: " + rhymeMap)
     //readRapSheet("""C:\data\projects\rhyme-0.9\bb\fight.txt""")
     //val res = buildIndexForAlbum("""C:\data\projects\rhyme-0.9\olhha\Beastie Boys\Licensed_to_Ill""")
     //println("res is " + res)

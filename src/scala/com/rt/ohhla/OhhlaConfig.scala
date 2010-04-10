@@ -1,8 +1,8 @@
 package com.rt.ohhla
 
 import util.IO
-import com.rt.util.{Folders, IO}
 import java.io.File
+import com.rt.util.{MapUtils, Folders, IO}
 
 
 object OhhlaConfig{
@@ -37,6 +37,10 @@ object OhhlaConfig{
 
   def artistFolder(artistFolderName:String):Option[String]={
     folderExists(artistFolderName)
+  }
+
+  def allArtistFoldersToFiles():Map[String, File]={
+    MapUtils.toMap(Folders.foldersInDir(rawTargetLocation), ((f:File) => f.getName))
   }
 
   def allArtistFolders():List[String]={

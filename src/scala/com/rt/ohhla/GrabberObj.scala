@@ -1,22 +1,20 @@
 package com.rt.ohhla
 
-import io.Source
-import com.rt.indexing.persistence.ArtistAlbums
 
 
 object GrabberObj{
   def main(args: Array[String]): Unit = {
 
     val artists = List[String](
-        "Beastie Boys"
-//      "Run-D.M.C.",
-//      "Jay-Z",
-//      "A Tribe Called Quest",
-//      "KRS-One",
-//      "Method Man",
-//      "MF Doom",
-//      "Nas",
-//      "Jay-Z"
+      "Beastie Boys"
+      //      "Run-D.M.C.",
+      //      "Jay-Z",
+      //      "A Tribe Called Quest",
+      //      "KRS-One",
+      //      "Method Man",
+      //      "MF Doom",
+      //      "Nas",
+      //      "Jay-Z"
       )
 
     //val artistName = "Beastie Boys"
@@ -33,7 +31,7 @@ object GrabberObj{
     //val artistName = "Eric B. & Rakim".replace("&", "&amp;")
     //persistDirect("Eric B. & Rakim".replace("&", "&amp;"), "YFA_rakim.html")
     //val artistName = "De La Soul"
-    persistArtists(artistName)
+    //persistArtists(artistName)
 
     //BROKEN
     // val artistName = "Mos Def"
@@ -45,39 +43,38 @@ object GrabberObj{
 
 
 
-    //val yfaArtists = findAllArtistsWithYFA()
-//    println("total: "+yfaArtists.size)
-//    yfaArtists.foreach(entry => {
-//      println(entry._2)
-//      persistArtists(entry._2)
-//    })
+    val yfaArtists = findAllArtistsWithYFA()
+        println("total: "+yfaArtists.size)
+        yfaArtists.foreach(entry => {
+          println(entry._2)
+          persistArtists(entry._2)
+        })
 
     null
   }
 
-  def findAllArtistsWithYFA():Map[String, String] ={
+  def findAllArtistsWithYFA(): Map[String, String] = {
     val pairs = OhhlaConfig.allOhhlaIndexes.filter(_.contains("YFA_")).map(ParsingUtils.hrefLinkAndtitle)
-    pairs.foldLeft(Map[String, String]()){(map, pair) => {map(pair._1) = pair._2}};
+    pairs.foldLeft(Map[String, String]()) {(map, pair) => {map(pair._1) = pair._2}};
   }
 
-  private def persistDirect(artist:String, artistUrl:String)={
+  private def persistDirect(artist: String, artistUrl: String) = {
     val persister = new OhhlaPersister()
-    val yfaGrabber:ArtistPageGrabber = new ArtistPageGrabber(new OhhlaStreamBuilderImpl())
+    val yfaGrabber: ArtistPageGrabber = new ArtistPageGrabber(new OhhlaStreamBuilderImpl())
     yfaGrabber.getArtistAlbumsFromUrl(artist, artistUrl).foreach(persister.persistArtistFiles(_))
   }
 
-  private def persistArtists(artistNames: String*)={
+  private def persistArtists(artistNames: String*) = {
     val grabber = new Grabber(new OhhlaStreamBuilderImpl())
     val persister = new OhhlaPersister()
 
-    for (artistName <- artistNames.elements){
-       grabber.getArtistAlbums(artistName).foreach(persister.persistArtistFiles(_))
+    for (artistName <- artistNames.elements) {
+      grabber.getArtistAlbums(artistName).foreach(persister.persistArtistFiles(_))
 
-//      grabber.getArtistAlbums(artistName) match{
-//        case Some(info) => persister.persistArtistFiles(info)
-//        case None => {}
-//      }
+      //      grabber.getArtistAlbums(artistName) match{
+      //        case Some(info) => persister.persistArtistFiles(info)
+      //        case None => {}
+      //      }
     }
   }
-
 }

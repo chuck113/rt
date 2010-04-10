@@ -5,4 +5,11 @@ ONE, GUN
 HUTT, WHAT
 REMEMBER, BLENDER // illcommunication 01,
 
+ANIMAL, REBEL
+WOMAN, THINKIN'
+TERMINATOR, FLAVOR
+TERMINATOR, FOREVER, EVER
+LYRICAL, MIRACLE, PEOPLE
+SENATOR, MADDER, BROTHER, NEVER
+
 PUZZLE, JUGGLE // THE ROOTS - The Ultimate: Out of sync, outta order like a puzzle / In the land of the unseen hand that hold juggle

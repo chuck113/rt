@@ -13,9 +13,15 @@ object IO {
       readLines(new FileInputStream(file))
   }
 
-  def fileLines(classpathFile: String): List[String] ={
-      Source.fromInputStream(streamFromClasspath(classpathFile)).getLines.toList
+  def fileLines(classpathFile: String*): List[String] ={
+    classpathFile.toList.foldLeft(List[String]()){(list, f) => {
+      list ::: Source.fromInputStream(streamFromClasspath(f)).getLines.toList
+    }}
   }
+
+//  def fileLines(classpathFile: String): List[String] ={
+//      Source.fromInputStream(streamFromClasspath(classpathFile)).getLines.toList
+//  }
 
   def readLines(in:InputStream):List[String]={
     val javaList = IOUtils.readLines(in)

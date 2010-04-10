@@ -18,7 +18,7 @@ import com.rt.util.MapUtils
 
 case class RhymeIndexEntry(rhymes: List[RhymeLines], score: Int)
 
-// One rhyme stored as a list of words that rhyme, and data about the song it was found in.
+// One rhyme stored as a list of individualWords that rhyme, and data about the song it was found in.
 case class RhymeLines(val song:SongMetaData, val lines: List[String]){
 
   def linesAsJavaList():java.util.List[String]={
@@ -27,8 +27,6 @@ case class RhymeLines(val song:SongMetaData, val lines: List[String]){
 }
 
 class Indexer {
-
-  //val rapSheetReader = new RapSheetReader()
 
   def dirFilter = new FileFilter {
     def accept(f: File) = f.isDirectory
@@ -143,13 +141,13 @@ class Indexer {
 //    val md:AlbumMetaData = AlbumMetaData.fromFolder(albumFolder)
 //    val songNodes = md.tracks.foldLeft(List[SongNode]()){(list, track) =>{//(track => {
 //      val file = albumFolder + "/" + track.number + ".txt"
-//      makeSongNode(file, makeSongMetaData(md, track)) :: list
+//      makeSongNodeOld(file, makeSongMetaData(md, track)) :: list
 //    }}
 //    AlbumNode(md.artist, md.title, md.year, songNodes)
 //  }
 //
-//  def makeSongNode(trackFile:String, song:SongMetaData):SongNode={
-//    val rhymes: Map[String, List[RhymeLines]] = indexTrack(trackFile, song)
+//  def makeSongNodeOld(trackFile:String, song:SongMetaData):SongNode={
+//    val rhymes: Map[String, List[RhymeLines]] = indexTrackOld(trackFile, song)
 //    val leaves:List[RhymeLeaf] = rhymes.foldLeft(List[RhymeLeaf]()){(leafList, rhymeLineEntry) =>{
 //      //TODO, remove hack, only gets first entry
 //      RhymeLeaf(rhymeLineEntry._1, rhymeLineEntry._2(0).lines) :: leafList
@@ -168,7 +166,7 @@ class Indexer {
   }
 
   def indexTrack(trackFile:String, song:SongMetaData):Map[String, List[RhymeLines]]={
-    RapSheetReader.findRhymes(trackFile, song);
+    RapSheetReader.findRhymesOld(trackFile, song);
   }
 
   def buildScoringIndex(indexMap: Map[String, List[RhymeLines]]): Map[String, List[RhymeIndexEntry]] = {
@@ -195,14 +193,14 @@ class Indexer {
       album.tracks.foreach(track => {
         println("track = " + track)
         val file = albumFolder + "/" + track.number + ".txt"
-        val songIndex: Map[String, List[RhymeLines]] = RapSheetReader.findRhymes(file, makeSongMetaData(album, track));
+        val songIndex: Map[String, List[RhymeLines]] = RapSheetReader.findRhymesOld(file, makeSongMetaData(album, track));
         songIndex.foreach(entry => {
           indexMap += entry._1 -> (indexMap.getOrElse(entry._1, List[RhymeLines]()) ::: entry._2.toList)
         })
       })
       //        textFilesInFolder(albumFolder).foreach(f => {
       //          println(f)
-      //          val songIndex: Map[String, List[RhymeLines]] = RapSheetReader.findRhymes(f.getAbsolutePath());
+      //          val songIndex: Map[String, List[RhymeLines]] = RapSheetReader.findRhymesOld(f.getAbsolutePath());
       //          songIndex.foreach(entry => {
       //             indexMap += entry._1 -> (indexMap.getOrElse(entry._1, List[RhymeLines]()) ::: entry._2.toList)
       //          })
@@ -210,7 +208,7 @@ class Indexer {
     })
     //})
 
-    //println("index has is "+indexMap.size+" words")
+    //println("index has is "+indexMap.size+" individualWords")
     //indexMap.foreach(entry => println("word is "+ entry._1+", has "+ entry._2.size+" entries"))
     val list: List[(String, List[RhymeLines])] = indexMap.elements.toList.sort(wordScoreSorter)
     list.foreach(entry => println("word is " + entry._1 + ", has " + entry._2.size + " entries (" + wordScore(entry._1, entry._2.size) + ")"))
