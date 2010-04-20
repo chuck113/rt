@@ -4,7 +4,7 @@ import org.junit.Test
 import junit.framework.Assert._
 
 class RhymeLookupTests {
-  val rhymeMap = new RhymeMap()
+  val rhymeMap = new CmuDictRhymeMap()
   val reader = new RhymeFinder(rhymeMap)
 
 

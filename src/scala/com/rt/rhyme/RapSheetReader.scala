@@ -7,7 +7,6 @@ import org.apache.commons.io.IOUtils
 import java.io.{FileReader, FilenameFilter, File}
 import java.lang.String
 import util.IO
-import com.rt.rhyme.RhymeFinder
 import com.rt.indexing.{RhymeLines, SongMetaData}
 import com.rt.util.IO
 
@@ -20,7 +19,8 @@ case class Verse(lines: List[String]);
 
 
 object RapSheetReader{
-  private val rhymeFinder = new RhymeFinder(new RhymeMap())
+  //private val rhymeFinder = new RhymeFinder(new CmuDictRhymeMap())
+  private val rhymeFinder = new RhymeFinder(new RhymeZoneRhymeMap())
 
   def findRhymes(lines:List[String], songMetaData: SongMetaData): List[Rhyme] = {
     return new RapSheetReader(lines, songMetaData, rhymeFinder).findRhymes()
@@ -53,6 +53,10 @@ class RapSheetReader(lines: List[String], songMetaData: SongMetaData, rhymeFinde
     }
   }
 
+  def isAllowedWord(word: String): boolean = {
+    word.toCharArray.exists(_.isLetter)
+  }
+
 //  private def convert(from:List[Rhyme]):List[RhymeLines]={
 //    from.foldLeft(List[RhymeLines]()){(list, rhyme)=>{
 //      list :: new RhymeLines(this.songMetaData,rhyme.parts);
@@ -73,44 +77,31 @@ class RapSheetReader(lines: List[String], songMetaData: SongMetaData, rhymeFinde
     }}
   }
 
-  def getRhymesFromVerse(verse: Verse, lines: List[List[Int]]): List[RhymeLines] = {
-    lines.foldLeft(List[RhymeLines]()) {
-      (result, ints) => {
-        result + getLinesFromVerse(verse, ints)
-      }
-    }
-  }
-
-  def getLinesFromVerse(verse: Verse, lines: List[Int]): RhymeLines = {
-    new RhymeLines(this.songMetaData, lines.foldLeft(List[String]()) {
-      (l, i) => l + verse.lines(i)
-    })
-  }
-
-
   def buildSong(lines: List[String]): Song = {
     val removedLineFeeds = lines.map(_.stripLineEnd)
     val removedChorus = removedLineFeeds.filter(!_.startsWith("[")).filter(!_.startsWith("("));
     val versesLists = splitOn(removedChorus, _ == "")
-    val verses = versesLists.filter(rhymeFinder.containsInSubString(_, ":"))
+    val verses = versesLists.filter(containsInSubString(_, ":"))
     new Song(verses.map(Verse(_)))
   }
 
-  def isAllowedWord(word: String): boolean = {
-    word.toCharArray.exists(_.isLetter)
+  def splitOn(lines: List[String], predicate: String => Boolean): List[List[String]] = {
+    val res = lines.break(predicate)
+    res._2 match {
+      case List() => List(res._1)
+      case _ => List(res._1) ::: splitOn(res._2.tail, predicate)
+    }
   }
 
-//  def findRhymesOld(song: Song): Map[String, List[RhymeRef]] = {
-//    song.verses.foldLeft(Map[String, List[RhymeRef]]()) {
-//      (outerMap, verse) => {
-//        rhymeFinder.findRhymesInLinesOld(verse.lines.filter(isAllowedWord)).elements.foldLeft(Map[String, List[RhymeRef]]()) {
-//          (innerMap, r) => {
-//            innerMap(r._1) = r._2.map(e => RhymeRef(song, verse, e))
-//          }
-//        }
-//      }
-//    }
-//  }
+
+  /**
+   * Is the given string present in any String in the given string list
+   */
+  private def containsInSubString(lines: List[String], st: String): Boolean = {
+    !lines.forall(line => {
+      line.contains(st)
+    })
+  }
 
   def main(args: Array[String]): Unit = {
     //read("C:\\data\\projects\\rhyme-0.9\\wtc1_snIPez\\01-bring_da_ruckus.txt");
@@ -125,13 +116,7 @@ class RapSheetReader(lines: List[String], songMetaData: SongMetaData, rhymeFinde
 
   }
 
-  def splitOn(lines: List[String], predicate: String => Boolean): List[List[String]] = {
-    val res = lines.break(predicate)
-    res._2 match {
-      case List() => List(res._1)
-      case _ => List(res._1) ::: splitOn(res._2.tail, predicate)
-    }
-  }
+
 
 }
 

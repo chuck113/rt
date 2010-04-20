@@ -68,7 +68,7 @@ abstract class AbstractDslFile{
             }else{
               val albumList:List[String] = getArtistAlbumList(artistFolder, artist.albums)
               println("serializing albums: "+albumList)
-              val albumsHierarchy: ArtistNode = indexer.makeArtistAlbumsHierarchy(artistFolder, albumList)
+              val albumsHierarchy: ArtistNode = indexer.makeArtistAlbumsHierarchy(artistFolder, albumList, 1)
               indexer.serializeHierarcy(new Map1(artistFolder, albumsHierarchy))
             }
         }

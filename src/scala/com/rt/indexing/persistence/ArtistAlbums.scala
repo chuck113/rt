@@ -7,9 +7,9 @@ import dispatch.json.{Js, JsString, JsValue}
 import org.apache.commons.io.IOUtils
 
 @BeanInfo
-  private case class ArtistAlbumsJson(artist: String, albums: Map[String, String]){
-    private def this() = this(null, null)
-  }
+private case class ArtistAlbumsJson(artist: String, albums: Map[String, String]){
+  private def this() = this(null, null)
+}
 
 class ArtistAlbums(val artist: String, val albums: List[Album]){
 

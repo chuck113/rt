@@ -166,7 +166,8 @@ class Indexer {
   }
 
   def indexTrack(trackFile:String, song:SongMetaData):Map[String, List[RhymeLines]]={
-    RapSheetReader.findRhymesOld(trackFile, song);
+    //RapSheetReader.findRhymesOld(trackFile, song);
+    null
   }
 
   def buildScoringIndex(indexMap: Map[String, List[RhymeLines]]): Map[String, List[RhymeIndexEntry]] = {
@@ -177,43 +178,44 @@ class Indexer {
     }
   }
 
-  def indexAll(): Map[String, List[RhymeLines]] = {
-    val all = foldersInDir(new File(OhhlaConfig.rawTargetLocation))
-    var indexMap: collection.mutable.HashMap[String, List[RhymeLines]] = new collection.mutable.HashMap[String, List[RhymeLines]]()
-    println("will index: " + all.toList)
-    val dir = all.head
-    //all.foreach(dir => {
-    val albumFolders = foldersInDir(dir);
-    albumFolders.foreach(albumFolder => {
-      println("albumFolder = " + albumFolder)
-      //val data: AlbumMetaData = buildAlbumMetaData(toElem(albumFolder+"/md.xml"))
-      val album: AlbumMetaData = AlbumMetaData.fromFolder(albumFolder.toString)
-      println("AlbumMetaData = " + album)
-      //val songMappingFile = albumFolder+"/md.xml"
-      album.tracks.foreach(track => {
-        println("track = " + track)
-        val file = albumFolder + "/" + track.number + ".txt"
-        val songIndex: Map[String, List[RhymeLines]] = RapSheetReader.findRhymesOld(file, makeSongMetaData(album, track));
-        songIndex.foreach(entry => {
-          indexMap += entry._1 -> (indexMap.getOrElse(entry._1, List[RhymeLines]()) ::: entry._2.toList)
-        })
-      })
-      //        textFilesInFolder(albumFolder).foreach(f => {
-      //          println(f)
-      //          val songIndex: Map[String, List[RhymeLines]] = RapSheetReader.findRhymesOld(f.getAbsolutePath());
-      //          songIndex.foreach(entry => {
-      //             indexMap += entry._1 -> (indexMap.getOrElse(entry._1, List[RhymeLines]()) ::: entry._2.toList)
-      //          })
-      //        })
-    })
-    //})
-
-    //println("index has is "+indexMap.size+" individualWords")
-    //indexMap.foreach(entry => println("word is "+ entry._1+", has "+ entry._2.size+" entries"))
-    val list: List[(String, List[RhymeLines])] = indexMap.elements.toList.sort(wordScoreSorter)
-    list.foreach(entry => println("word is " + entry._1 + ", has " + entry._2.size + " entries (" + wordScore(entry._1, entry._2.size) + ")"))
-    Map[String, List[RhymeLines]](indexMap.toList: _*)
-  }
+//  def indexAll(): Map[String, List[RhymeLines]] = {
+//    val all = foldersInDir(new File(OhhlaConfig.rawTargetLocation))
+//    var indexMap: collection.mutable.HashMap[String, List[RhymeLines]] = new collection.mutable.HashMap[String, List[RhymeLines]]()
+//    println("will index: " + all.toList)
+//    val dir = all.head
+//    //all.foreach(dir => {
+//    val albumFolders = foldersInDir(dir);
+//    albumFolders.foreach(albumFolder => {
+//      println("albumFolder = " + albumFolder)
+//      //val data: AlbumMetaData = buildAlbumMetaData(toElem(albumFolder+"/md.xml"))
+//      val album: AlbumMetaData = AlbumMetaData.fromFolder(albumFolder.toString)
+//      println("AlbumMetaData = " + album)
+//      //val songMappingFile = albumFolder+"/md.xml"
+//      album.tracks.foreach(track => {
+//        println("track = " + track)
+//        val file = albumFolder + "/" + track.number + ".txt"
+//        //val songIndex: Map[String, List[RhymeLines]] = RapSheetReader.findRhymesOld(file, makeSongMetaData(album, track));
+//        //songIndex.foreach(entry => {
+//        //  indexMap += entry._1 -> (indexMap.getOrElse(entry._1, List[RhymeLines]()) ::: entry._2.toList)
+//        //})
+//        null
+//      })
+//      //        textFilesInFolder(albumFolder).foreach(f => {
+//      //          println(f)
+//      //          val songIndex: Map[String, List[RhymeLines]] = RapSheetReader.findRhymesOld(f.getAbsolutePath());
+//      //          songIndex.foreach(entry => {
+//      //             indexMap += entry._1 -> (indexMap.getOrElse(entry._1, List[RhymeLines]()) ::: entry._2.toList)
+//      //          })
+//      //        })
+//    })
+//    //})
+//
+//    //println("index has is "+indexMap.size+" individualWords")
+//    //indexMap.foreach(entry => println("word is "+ entry._1+", has "+ entry._2.size+" entries"))
+//    val list: List[(String, List[RhymeLines])] = indexMap.elements.toList.sort(wordScoreSorter)
+//    list.foreach(entry => println("word is " + entry._1 + ", has " + entry._2.size + " entries (" + wordScore(entry._1, entry._2.size) + ")"))
+//    Map[String, List[RhymeLines]](indexMap.toList: _*)
+//  }
 
   private def makeSongMetaData(album: AlbumMetaData, track: AlbumTrack): SongMetaData = {
     new SongMetaData(track.title, album.artist, album.year, album.title, track.number)

@@ -3,11 +3,15 @@ package com.rt.util
 
 
 object NameMapper{
-  private val toRemove:List[String] = List("\\", "/", ".", ":", ";", "*", "?", ",", "'", "\"", "-", "!", "$");
+  private val toRemove:List[String] = List("\\", "/", "(", ")", ".", ":", ";", "*", "?", ",", "'", "\"", "-", "+", "!", "$", "%", "[", "]", "{", "}", "_", "=", "~");
   private val toReplace:List[(String, String)] = List(("&" -> "AND"))
 
   private def neutralizeWithSpaces(st:String):String={
     neuteralize(st, " ")
+  }
+
+  private def neutralizeWithNoSpaces(st:String):String={
+    neuteralize(st, "")
   }
 
   private def neutralizeWithUnderscores(st:String):String={
@@ -16,6 +20,10 @@ object NameMapper{
 
   def nSpace(st:String):String={
     neutralizeWithSpaces(st)
+  }
+
+  def nNoSpace(st:String):String={
+    neutralizeWithNoSpaces(st)
   }
 
   def nUnder(st:String):String={

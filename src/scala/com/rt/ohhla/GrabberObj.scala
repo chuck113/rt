@@ -19,7 +19,7 @@ object GrabberObj{
 
     //val artistName = "Beastie Boys"
     //val artistName = "Run-D.M.C."
-    val artistName = "A Tribe Called Quest"
+    //val artistName = "A Tribe Called Quest"
     //val artistName = "KRS-One"
     //val artistName = "Method Man"
     //val artistName = "MF Doom"
@@ -31,7 +31,10 @@ object GrabberObj{
     //val artistName = "Eric B. & Rakim".replace("&", "&amp;")
     //persistDirect("Eric B. & Rakim".replace("&", "&amp;"), "YFA_rakim.html")
     //val artistName = "De La Soul"
-    //persistArtists(artistName)
+
+
+    val artistName = "ice t"
+    persistArtists(artistName)
 
     //BROKEN
     // val artistName = "Mos Def"
@@ -70,11 +73,6 @@ object GrabberObj{
 
     for (artistName <- artistNames.elements) {
       grabber.getArtistAlbums(artistName).foreach(persister.persistArtistFiles(_))
-
-      //      grabber.getArtistAlbums(artistName) match{
-      //        case Some(info) => persister.persistArtistFiles(info)
-      //        case None => {}
-      //      }
     }
   }
 }

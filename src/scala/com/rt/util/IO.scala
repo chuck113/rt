@@ -19,10 +19,6 @@ object IO {
     }}
   }
 
-//  def fileLines(classpathFile: String): List[String] ={
-//      Source.fromInputStream(streamFromClasspath(classpathFile)).getLines.toList
-//  }
-
   def readLines(in:InputStream):List[String]={
     val javaList = IOUtils.readLines(in)
     List.fromArray(javaList.toArray).asInstanceOf[List[String]]
@@ -30,9 +26,7 @@ object IO {
 
   def streamFromUrl(url:String):InputStream ={
     val connection:HttpURLConnection = URI.create(url).toURL.openConnection.asInstanceOf[HttpURLConnection]
-    //connection.setFollowRedirects(true)
     connection.getInputStream
-    //URI.create(url).toURL.openStream
   }
 
   def streamFromClasspath(classpathFile: String): InputStream = {

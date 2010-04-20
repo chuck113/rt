@@ -14,10 +14,23 @@ object FromSourceAlbumList {
 
   val grabber:AnonymousAlbumGrabber = new AnonymousAlbumGrabber(new OhhlaStreamBuilderImpl())
   val persister:OhhlaPersister = new OhhlaPersister()
+  
+  def extras():List[String]={
+    List("Ice-T",
+    "Immortal Technique",
+    "Jeru the Damaja",
+    "Ja Rule",
+    "Jedi Mind Tricks",
+    "The Juggaknots",
+    "J-Zone",
+    "Mr. Lif",
+    "M.O.P",
+    "Kanye West")
+  }
 
   def main(args: Array[String]): Unit = {
     val file: File = new File("""C:\data\projects\rapAttack\rapAttack\etc\sourceGreatestAlbums.txt""")
-    val artists: List[String] = IO.fileLines(file).map(f => f.substring(0, f.indexOf('-'))).removeDuplicates
+    val artists: List[String] = IO.fileLines(file).map(f => f.substring(0, f.indexOf('-'))).removeDuplicates ++ extras()
     val artistsToFolderNames: Map[String, String] = MapUtils.toMap(artists, ((s: String) => NameMapper.nUnder(s)))
     //val files: Map[String, File] = OhhlaConfig.allTransformedArtistNamesToFiles()
     val files: Map[String, File] = OhhlaConfig.allArtistFoldersToFiles()
@@ -46,7 +59,20 @@ object FromSourceAlbumList {
       )
 
     // notable missing
-    // jay z
+    // Ice T, Immortal Technique, Mr Lif, Kanye West
+
+    //Ice-T
+    //Immortal Technique
+    //Jeru the Damaja
+    //Ja Rule
+    //Jedi Mind Tricks
+    //The Juggaknots
+    //J-Zone
+    //Mr. Lif
+    //M.O.P
+    //Kanye West
+
+    // albums to check: WuTang, Gza
 
     var notFound = List[String]()
 

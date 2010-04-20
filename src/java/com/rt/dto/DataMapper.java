@@ -45,7 +45,7 @@ public class DataMapper {
             while (zipentry != null) {
                 //for each entry to be extracted
                 String entryName = zipentry.getName();
-                System.out.println("entryname " + entryName);
+                //System.out.println("entryname " + entryName);
                 int n;
                 FileOutputStream fileoutputstream;
                 File newFile = new File(entryName);

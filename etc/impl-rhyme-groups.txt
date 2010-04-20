@@ -1,0 +1,15 @@
+May benefit from groups of rhymes - groups of words that rhyme with each other. useful for giving back better
+random results as we'll know the next result didn't rhyme with the last. may make searching easier as we can just
+store groups of rhmes mapped on to each entry with the rap lines associated with a rhyme group.
+
+May be good for iphone indexing, we zip up a group with each rhyme and de-index when user searches.
+In GAE a RhymeGroup would contain all the lines that rhyme with a word. Would only be good for large groups, will
+have to see how big they are.
+
+* Need to be careful that we dont drop too many words - 
+
+words(val word:String, ref RhymeGroup)
+RhymeGroup(val )
+
+Rhyme groups would be built after the hierarchal index is being built up, will be quite easy to do. This data would
+then be used by deployments for random data

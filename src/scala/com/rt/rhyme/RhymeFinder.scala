@@ -3,9 +3,12 @@ package com.rt.rhyme
 import com.rt.util.MapUtils
 import collection.mutable.{ListBuffer, Map => MutableMap}
 import java.lang.String
+import com.rt.Properties
 
 /**
- * Data structure for storing rhyme parts as single entries.
+ * Map-like Data structure for stroring groups of parts based on weather they rhyme.
+ * When a string is inserted it is inserted into an entry with all other words it
+ * rhymes with 
  */
 class RhymePartSet(val rhymeMap:RhymeMap) {
   private case class Entry(var parts: List[String]) {
@@ -26,6 +29,7 @@ class RhymePartSet(val rhymeMap:RhymeMap) {
   }
 
   def allRhymes(): List[List[String]] = {
+    //println("entries = "+entries)
     entries.foldLeft(List[List[String]]()) {
       (list, entry) => {
         list + entry.parts
@@ -50,14 +54,6 @@ class RhymePartSet(val rhymeMap:RhymeMap) {
 
   def containsEntryFor(part: String): Boolean = {
     entries.exists(e => {contains(e, part)})
-
-    //      entries.foreach(e =>{
-    //        e.foreach(p =>{
-    //          if(rhymeMap.doWordsRhyme(part, p){
-    //
-    //          }
-    //        })
-    //      })
   }
 }
 
@@ -222,10 +218,14 @@ class RhymeFinder(val rhymeMap:RhymeMap) {
 //    }
 //  }
 
+  private def collectUnEmptyString(rhymes:List[String])={
+    rhymes.filter(_.length > 0)
+  }
+
   // returns a list of lines mapped to a list of rhyme parts for the given lines
   def findUniqueRhymes(lines: List[String]): List[Rhyme] = {
-    //println("raw rhymes: " + findRhymePairsInLine(lines))
-    val rhymes: List[List[String]] = getRhymes(findRhymePairsInLine(lines))
+    //println("raw rhymes: " + findRhymePairsInLine(lines)+", lines: "+lines)
+    val rhymes: List[List[String]] = getRhymes(removeUnwantedWords(findRhymePairsInLine(collectUnEmptyString(lines))))
     //println("findUniqueRhymes rhymes: "+rhymes)
     findLinesContainingRhymesSets(rhymes, lines)
   }
@@ -265,51 +265,45 @@ class RhymeFinder(val rhymeMap:RhymeMap) {
     })
 
     rhymeSet.allRhymes
-
-    //    pairs.foldLeft(List[String]()) {
-    //      (list, pair) => {
-    //        if (!list.contains(pair._1)) pair._1 :: list
-    //        if (!list.contains(pair._2)) pair._2 :: list
-    //        else list
-    //      }
-    //    }
   }
 
   private def individualWords(line: String): List[String] = {
-    line.split(" ").map(cleanWord).map(x => x.toUpperCase).toList
+    // split the lines into words, clean each word, filter out any words that are now of 0 length
+    // after the clean such as '-' and convert to uppercase
+    line.split(" ").map(cleanWord).filter(_.length > 0).map(x => x.toUpperCase).toList
   }
 
   private def individualWords(lines: List[String]): List[String] = {
-    val allWords = lines.foldLeft(List[String]()) {(list, line) => {line.split(" ").toList ::: list}}
-    allWords.map(cleanWord).map(x => x.toUpperCase)
+    lines.foldLeft(List[String]()) {(list, line) => {individualWords(line) ::: list}}
   }
 
-//  def findSingleLineRhymes(lines: List[String]): Map[String, List[List[Int]]] = {
-//    val iter = lines.elements.counted
-//
-//    iter.foldLeft(Map[String, List[List[Int]]]()) {
-//      (map, line) => {
-//        val rhymes: List[String] = findRhymesInLine(line)
-//        if (rhymes.size != 0) println("found single rhymes: " + rhymes + " in " + line)
-//        MapUtils.addEntry(map, rhymes, iter.count)
-//      }
+  private def removeUnwantedWords(rhymePairs:List[(String, String)]):List[(String, String)]={
+    rhymePairs.filter(p => {
+      !Properties.unwantedWords.contains(p._1) && !Properties.unwantedWords.contains(p._2)
+    })
+  }
+
+//  def buildCombinationPairs(words:List[String]): List[(String, String)] = {
+//    if(words.size == 2)List(words(0) -> words(1))
+//    else{
+//      println("tail: "+words.tail)
+//      val list: List[(String, String)] = buildCombinationPairs(words.tail)
+//      println("make List: "+list)
+//      val list2:List[(String, String)] = list ::: words.tail.foldLeft(List[(String, String)]()){(pairs, word)=>{
+//        words.head -> word :: pairs
+//      }}
+//      println("added List: "+list2)
+//      list2
 //    }
 //  }
 
   /**
-   *  finds the rhymes in one line
+   *  finds the rhymes in one line, returns pairs of words that rhyme
    */
-  def findRhymesInLine(line: List[String]): List[String] = {
-    val words = individualWords(line)
-
-    // only need to return 'i' because the reverse will also rhyme
-    for{i <- words; j <- words; if (rhymeMap.doWordsRhyme(i, j))} yield i
-  }
-
   def findRhymePairsInLine(line: List[String]): List[(String, String)] = {
     val words = individualWords(line)
-
-    // only need to return 'i' because the reverse will also rhyme
+    //println("combos: "+buildCombinationPairs(words))
+    //println("words = "+words)
     for{i <- words; j <- words; if (rhymeMap.doWordsRhyme(i, j))} yield i -> j
   }
 
@@ -330,14 +324,5 @@ class RhymeFinder(val rhymeMap:RhymeMap) {
       case None => ""
       case _ => option.get
     }
-  }
-
-  /**
-   * Is the given string present in any String in the given string list
-   */
-  def containsInSubString(lines: List[String], st: String): Boolean = {
-    !lines.forall(line => {
-      line.contains(st)
-    })
   }
 }

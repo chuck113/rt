@@ -3,35 +3,42 @@ package com.rt.rhyme
 import collection.mutable.ListBuffer
 import org.junit.Test
 import junit.framework.Assert
-import com.rt.rhyme.RhymeFinder
 import java.lang.String
 
 class RhymeFinderTest {
-  val rhymeMap = new RhymeMap()
+  //val rhymeMap = new CmuDictRhymeMap()
+  val rhymeMap = new RhymeZoneRhymeMap()
   val reader = new RhymeFinder(rhymeMap)
 
 
   @Test def twoLineRhyme() {
     val lines = List("Foot on the pedal - never ever false metal", "Engine running hotter than a boiling kettle")
-    val res = reader.findMultiLineRhymes(lines)
+    val res = reader.findMultiPartRhymes(lines)
     println("res is " + res)
     Assert.assertTrue(res.size == 2)
   }
 
   @Test def oneLineRhyme() {
     val line = "My mic check is life or death, breathin a sniper's breath"
-    val res = reader.findSingleLineRhymes(List(line))
+    val res = reader.findMultiPartRhymes(List(line))
     println("res is " + res)
     Assert.assertTrue(res.size > 0)
   }
 
   @Test def oneLineRhyme2() {
     val line = "in I keep all my rhymes in my Le Sportsac"
-    val res = reader.findSingleLineRhymes(List(line))
+    val res = reader.findMultiPartRhymes(List(line))
     println("res is " + res)
     Assert.assertTrue(res.size > 0)
   }
-  
+
+
+  @Test def noRhymes(){
+    val lines = List("They drove off quickly in the black Hummer",
+      "Never trust no matter what the dance or song")
+
+    Assert.assertTrue(reader.findUniqueRhymes(lines).size == 0)
+  }
   @Test def findUniqueRhymes(){
     // todo, switch in' for ing
     val lines = List(

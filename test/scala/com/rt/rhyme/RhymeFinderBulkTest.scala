@@ -5,7 +5,7 @@ import org.junit.Test
 
 
 class RhymeFinderBulkTest {
-  val rhymeMap = new RhymeMap()
+  val rhymeMap = new CmuDictRhymeMap()
   val reader = new RhymeFinder(rhymeMap)
 
 

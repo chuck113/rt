@@ -8,4 +8,6 @@ test if rhymes are the same, ie
 rhymes that span multiple words
 rhymes that rhyme with different part numbers, ie AH0 and AH1
 Auto fix spelling errors, eg
+
+If rhymes work with the rhyming dictionary, mulitply the score by X
     
