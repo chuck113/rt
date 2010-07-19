@@ -7,7 +7,7 @@ import com.rt.util.{MapUtils, Folders, IO}
 
 object OhhlaConfig{
   val ohhlaUrl = "http://ohhla.com/"  
-  val rawTargetLocation = """C:\data\projects\rapAttack\rapAttack\rhyme-0.9\olhha"""
+  val rawTargetLocation = """C:\data\projects\rapAttack\rapAttack\olhha"""
   val ohhlaLocalSiteStart = "ohhla-site/all.html"
   val ohhlaLocalSiteRoot = "ohhla-site"
   val ohhlaLocalSiteAll: List[String] = List("all.html", "all_two.html", "all_three.html", "all_four.html", "all_five.html")

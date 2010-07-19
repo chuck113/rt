@@ -15,8 +15,6 @@ case class Song(verses: List[Verse]);
 case class Verse(lines: List[String]);
 
 // data about a song
-//case class SongMetaData(title: String, artist:String, year:Int, album:String, track:Int);
-
 
 object RapSheetReader{
   //private val rhymeFinder = new RhymeFinder(new CmuDictRhymeMap())
@@ -33,49 +31,7 @@ object RapSheetReader{
   }
 }
 
-/**
- * Prepares a list of lines to be parsed by a RhymeFinder
- *
- * Rules - an empty line symbolises a gap between verses
- */
-class RapSheetReader(lines: List[String], songMetaData: SongMetaData, rhymeFinder:RhymeFinder){
-
-  def findRhymes(): List[Rhyme] = {
-    findRhymes(buildSong(lines))
-  }
-
-  def findRhymes(song: Song): List[Rhyme] = {
-    song.verses.foldLeft(List[Rhyme]()) {
-      (rhymes, verse) => {
-        val filtered:List[String] = verse.lines.filter(isAllowedWord)
-        rhymeFinder.findRhymesInLines(filtered) ::: rhymes
-      }
-    }
-  }
-
-  def isAllowedWord(word: String): boolean = {
-    word.toCharArray.exists(_.isLetter)
-  }
-
-//  private def convert(from:List[Rhyme]):List[RhymeLines]={
-//    from.foldLeft(List[RhymeLines]()){(list, rhyme)=>{
-//      list :: new RhymeLines(this.songMetaData,rhyme.parts);
-//    }}
-//  }
-
-  def getRhymesFromStrings(strings: List[String], lineNumbers: List[List[Int]]): List[RhymeLines] = {
-    lineNumbers.foldLeft(List[RhymeLines]()) {
-      (result, ints) => {
-        result + new RhymeLines(this.songMetaData, getStrings(strings, ints))
-      }
-    }
-  }
-
-  def getStrings(strings:List[String], lineNumbers:List[Int]):List[String]={
-    lineNumbers.foldLeft(List[String]()){(list, i) => {
-      list + strings(i)
-    }}
-  }
+class SongFileParser{
 
   def buildSong(lines: List[String]): Song = {
     val removedLineFeeds = lines.map(_.stripLineEnd)
@@ -93,7 +49,6 @@ class RapSheetReader(lines: List[String], songMetaData: SongMetaData, rhymeFinde
     }
   }
 
-
   /**
    * Is the given string present in any String in the given string list
    */
@@ -102,21 +57,52 @@ class RapSheetReader(lines: List[String], songMetaData: SongMetaData, rhymeFinde
       line.contains(st)
     })
   }
+}
 
-  def main(args: Array[String]): Unit = {
-    //read("C:\\data\\projects\\rhyme-0.9\\wtc1_snIPez\\01-bring_da_ruckus.txt");
-    //def rhymeMap = buildRhymeMap();
-    //println("findRhymesOld: " + rhymeMap)
-    //readRapSheet("""C:\data\projects\rhyme-0.9\bb\fight.txt""")
-    //val res = buildIndexForAlbum("""C:\data\projects\rhyme-0.9\olhha\Beastie Boys\Licensed_to_Ill""")
-    //println("res is " + res)
-    //val ref: RhymeRef = index("DAY").toList.head
-    //println("rhyme for play is "+ref)
-    //println(ref.verse.lines(ref.lines._1)+" / "+ref.verse.lines(ref.lines._2))
+/**
+ * Prepares a list of lines to be parsed by a RhymeFinder
+ *
+ * Rules - an empty line symbolises a gap between verses
+ */
+class RapSheetReader(lines: List[String], songMetaData: SongMetaData, rhymeFinder:RhymeFinder){
 
+  private val songFileParser:SongFileParser = new SongFileParser();
+
+  def findRhymes(): List[Rhyme] = {
+    findRhymes(songFileParser.buildSong(lines))
   }
 
+  def findRhymes(song: Song): List[Rhyme] = {
+    song.verses.foldLeft(List[Rhyme]()) {
+      (rhymes, verse) => {
+        val filtered:List[String] = removeBracketsAndContent(verse.lines.filter(isAllowedWord))
+        rhymeFinder.findRhymesInLines(filtered) ::: rhymes
+      }
+    }
+  }
 
+  def removeBracketsAndContent(lines:List[String]):List[String]={
+    lines.map(StringRhymeUtils.removeBrackets)
+  }
+
+  /** not sure why we need this, it is checking the whole line which sounds wrong. */
+  def isAllowedWord(word: String): boolean = {
+    word.toCharArray.exists(_.isLetter)
+  }
+
+  def getRhymesFromStrings(strings: List[String], lineNumbers: List[List[Int]]): List[RhymeLines] = {
+    lineNumbers.foldLeft(List[RhymeLines]()) {
+      (result, ints) => {
+        result + new RhymeLines(this.songMetaData, getStrings(strings, ints))
+      }
+    }
+  }
+
+  def getStrings(strings:List[String], lineNumbers:List[Int]):List[String]={
+    lineNumbers.foldLeft(List[String]()){(list, i) => {
+      list + strings(i)
+    }}
+  }
 
 }
 

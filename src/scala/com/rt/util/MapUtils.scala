@@ -77,13 +77,16 @@ object MapUtils {
     java.util.Arrays.asList(scalaList.toArray: _*)
   }
 
+  def toJavaSet[T](scalaSet: Set[T]):java.util.Set[T]={
+    //val list: java.util.List[T] = java.util.Arrays.asList(scalaSet.toArray: _*)
+    new java.util.HashSet[T](toJavaList(scalaSet.toList))
+  }
+
   def toScalaList[T](javaList: java.util.List[T])={
-    //Set(javaApi.query(...).toArray : _*
     List(javaList.toArray: _*)
   }
 
   def toScalaList[T](javaList: java.util.List[T], clazz:Class[T])={
-    //Set(javaApi.query(...).toArray : _*
     List(javaList.toArray: _*)
   }
 

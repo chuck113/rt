@@ -13,7 +13,7 @@ object CmuDictRhymeMap{
   }
 }
 
-class CmuDictRhymeMap  extends RhymeMap{
+class CmuDictRhymeMap extends RhymeMap{
 
   private val rhymeMap:Map[String,String] = makeRhymeMap();
 

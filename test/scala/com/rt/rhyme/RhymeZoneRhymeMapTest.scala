@@ -6,30 +6,19 @@ import java.lang.String
 
 
 class RhymeZoneRhymeMapTest {
-  val rhymeMap = new RhymeZoneRhymeMap()
+  val rhymeMap = RhymeZoneMapCache.getRhymeMap()
 
-
-  @Test def twoLineRhyme() {
-    assertTrue(rhymeMap.doWordsRhyme("BUD", "FLOODS"))
-    assertTrue(rhymeMap.doWordsRhyme("MISSIN'", "HISSING"))
-    assertTrue(rhymeMap.doWordsRhyme("SLICK", "CHICKS"))
-    assertTrue(rhymeMap.doWordsRhyme("BUD", "FLOODES"))
+  @Test def testAliases() {
+    assertTrue(rhymeMap.doWordsRhyme("FUCKIN'", "MUCKING"))
+    assertTrue(rhymeMap.doWordsRhyme("FUCK", "MUCK"))
+    assertTrue(rhymeMap.doWordsRhyme("FLYIN'", "CRYIN'"))
+    assertTrue(rhymeMap.doWordsRhyme("MISSIN", "HISSING"))
   }
 
   @Test def testRemovesDash() {
     val lines: List[String] = List("We got determination - bass and highs", "White Castle fries only come in one size")
     val rhymeFinder: RhymeFinder = new RhymeFinder(rhymeMap)
-    val list: List[String] = rhymeFinder.findRhymesInLine(lines(0))
+    val list: List[Rhyme] = rhymeFinder.findRhymesInLines(lines)
     null
-  }
-
-  @Test def testCorrectRhymes() {
-    val lines: List[String] = List(
-      "No respect in eighty-seven, eighty-eight you kneel",
-      "Cause I produce and get loose, when it's time to perform",
-      "Wax a sucker like Mop & Glow (that's word born)")
-    val rhymeFinder: RhymeFinder = new RhymeFinder(rhymeMap)
-    val pairsInLine: List[(String, String)] = rhymeFinder.findRhymePairsInLine(lines)
-     assertTrue(pairsInLine.contains("PRODUCE" -> "LOOSE"))
   }
 }

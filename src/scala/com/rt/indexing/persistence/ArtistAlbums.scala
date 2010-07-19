@@ -50,12 +50,17 @@ object ArtistAlbums{
   }
 
   def fromFolder(folder:String):ArtistAlbums ={
-     fromJson(IOUtils.toString(new FileInputStream(folder+"/"+Constants.artistMetaDataFileName)))
-  }
-
-  def fromFolderWithAlbumMetadata(folder:String):ArtistAlbums ={
      fromJsonWithAlbumMetadata(IOUtils.toString(new FileInputStream(folder+"/"+Constants.artistMetaDataFileName)), folder)
   }
+
+
+//  def fromFolder(folder:String):ArtistAlbums ={
+//     fromJson(IOUtils.toString(new FileInputStream(folder+"/"+Constants.artistMetaDataFileName)))
+//  }
+//
+//  def fromFolderWithAlbumMetadata(folder:String):ArtistAlbums ={
+//     fromJsonWithAlbumMetadata(IOUtils.toString(new FileInputStream(folder+"/"+Constants.artistMetaDataFileName)), folder)
+//  }
 
   def fromJsonWithAlbumMetadata(json:String, folder:String):ArtistAlbums ={
     val aaJson:ArtistAlbumsJson = jsBean.fromJSON(Js(json), Some(classOf[ArtistAlbumsJson])).asInstanceOf[ArtistAlbumsJson]
@@ -70,7 +75,7 @@ object ArtistAlbums{
   def fromJson(json:String):ArtistAlbums ={
     val aaJson:ArtistAlbumsJson = jsBean.fromJSON(Js(json), Some(classOf[ArtistAlbumsJson])).asInstanceOf[ArtistAlbumsJson]
     val albums:List[Album] = aaJson.albums.foldLeft(List[Album]()){(list, albumEntry) => {
-      new Album("id", new AlbumFile(albumEntry._2, albumEntry._1), null) :: list
+      new Album("id", new AlbumFile(albumEntry._2, albumEntry._1), AlbumMetaData.fromString(json)) :: list
     }}
 
     new ArtistAlbums(aaJson.artist, albums)

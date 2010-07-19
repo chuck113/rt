@@ -2,19 +2,38 @@ package com.rt.rhyme
 
 import com.rt.util.IO
 import java.lang.String
+import collection.mutable.HashMap
+import collection.immutable.HashSet
 
 
 class RhymeZoneRhymeMap extends RhymeMap{
 
   private val rhymeMap:Map[String,List[String]] = makeRhymeMap();
+  private val aliasMap:Map[String, String] = makeAliasMap();
 
   def makeRhymeMap(): Map[String, List[String]] = {
+    println("setting up map...")
     IO.fileLines("rhymeZone.txt").foldLeft(Map[String, List[String]]()){
       (map, line) => {
         val key = line.split("-")(0)
         val entries = line.substring(key.length+1, line.length-1).trim
         map(key) = List.fromString(entries, ',').map(_.toUpperCase)
         //map(key) = List.fromString(line.split("-")(1).trim, ',').map(_.toUpperCase)
+      }
+    }
+  }
+
+  def makeAliasMap():Map[String,String]={
+    val filesToRead:List[String] = List[String]("rhymeAliases-generated.txt", "rhymeAliases-manual.txt");
+    val lines:List[String] = filesToRead.foldLeft(List[String]()){(res, file) => {
+      res ++ IO.fileLines(file)
+    }}
+
+    lines.filter(_.length > 0).filter(_.split(",").length > 1).foldLeft(Map[String, String]()){
+      (map, line) => {
+        val key = line.split(",")(0).trim
+        val value = line.split(",")(1).trim
+        map(key) = value
       }
     }
   }
@@ -29,10 +48,6 @@ class RhymeZoneRhymeMap extends RhymeMap{
     def modify(st: String) = st.substring(0, st.length-3)+"ING"
   }
 
-  private def replaceIns(st:String):String={
-    if(st.endsWith("IN'"))st.substring(0, st.length-3)+"ING"
-    else st
-  }
 
   private case class AddPluralMutator extends WordMutator{
     def matches(st: String) = !st.endsWith("S'")
@@ -63,6 +78,10 @@ class RhymeZoneRhymeMap extends RhymeMap{
     })
   }
 
+  def knownWords():Set[String]={
+    return new HashSet() ++ rhymeMap.keySet ++ aliasMap.keySet
+  }
+
   def findReplacement(st:String):Option[String]={
     getFirstWordMutator(st) match{
       case Some(m) => Some(m.modify(st))
@@ -70,28 +89,27 @@ class RhymeZoneRhymeMap extends RhymeMap{
     }
   }
 
-  override def doWordsRhyme(oneRaw: String, twoRaw: String): boolean = {
-    val one = replaceIns(oneRaw.toUpperCase)
-    val two = replaceIns(twoRaw.toUpperCase)
+  /** deal with words like 'singin' */
+  private def replaceIns(word:String):String ={
+    if(!rhymeMap.contains(word) && rhymeMap.contains(word+"G")){
+      word+"G"
+    }else{
+      StringRhymeUtils.replaceIns(word)
+    }
+  }
 
-    //println("contains "+one+": "+rhymeMap.contains(one) +", contains "+two+": "+rhymeMap.contains(two)+
-    //        ", rhymes: "+(rhymeMap.contains(one) && rhymeMap(one).contains(two)))
+  override def doWordsRhyme(oneRawUncassed: String, twoRawUncassed: String): boolean = {
+    val oneRaw = oneRawUncassed.toUpperCase
+    val twoRaw = twoRawUncassed.toUpperCase
 
-    //println("entries for "+one+" are "+rhymeMap(one))
+    val one:String = if(rhymeMap.contains(oneRaw)) oneRaw else aliasMap.getOrElse(oneRaw, oneRaw)
+    val two:String = if(rhymeMap.contains(twoRaw)) twoRaw else aliasMap.getOrElse(twoRaw, twoRaw)
+
+    if(aliasMap.contains(one)){
+      println("found in alias");
+    }
 
     (rhymeMap.contains(one) && (rhymeMap(one).contains(two))) ||
     (rhymeMap.contains(two) && (rhymeMap(two).contains(one)))
-//    if((one == null || two == null) || (one.length == 0 || two.length == 0) || (one == two)){
-//      false
-//    }
-//
-//    if(rhymeMap.contains(one) && rhymeMap(one).contains(two)){
-//      true
-//    }else{
-//      val oneReplaced = findReplacement(one).getOrElse(one)
-//      val twoReplaced = findReplacement(two).getOrElse(two)
-//
-//      (rhymeMap.contains(oneReplaced) && rhymeMap(oneReplaced).contains(twoReplaced))
-//    }
   }
 }

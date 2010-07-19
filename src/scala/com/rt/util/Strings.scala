@@ -4,7 +4,7 @@ package com.rt.util
 
 object Strings{
   def removePunctuation(st:String):String={
-    val toRemove:List[String] = List("\\", "/", ".", ":", ";", "*", "?", ",", "'", "\"", "-");
+    val toRemove:List[String] = List("\\", "/", "(", ")", ".", ":", ";", "*", "?", ",", "'", "\"", "-", "+", "!", "$", "%", "[", "]", "{", "}", "_", "=", "~");
     var result:String = st
     for(r <- toRemove){
       result = result.replace(r, "")

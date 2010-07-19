@@ -6,28 +6,20 @@ import junit.framework.Assert
 import java.lang.String
 
 class RhymeFinderTest {
-  //val rhymeMap = new CmuDictRhymeMap()
-  val rhymeMap = new RhymeZoneRhymeMap()
-  val reader = new RhymeFinder(rhymeMap)
 
+  val rhymeMap = RhymeZoneMapCache.getRhymeMap() //new RhymeZoneRhymeMap()
+  val reader = new RhymeFinder(rhymeMap)
 
   @Test def twoLineRhyme() {
     val lines = List("Foot on the pedal - never ever false metal", "Engine running hotter than a boiling kettle")
-    val res = reader.findMultiPartRhymes(lines)
+    val res = reader.findRhymesInLines(lines)
     println("res is " + res)
     Assert.assertTrue(res.size == 2)
   }
 
   @Test def oneLineRhyme() {
     val line = "My mic check is life or death, breathin a sniper's breath"
-    val res = reader.findMultiPartRhymes(List(line))
-    println("res is " + res)
-    Assert.assertTrue(res.size > 0)
-  }
-
-  @Test def oneLineRhyme2() {
-    val line = "in I keep all my rhymes in my Le Sportsac"
-    val res = reader.findMultiPartRhymes(List(line))
+    val res = reader.findRhymesInLines(List(line))
     println("res is " + res)
     Assert.assertTrue(res.size > 0)
   }
@@ -37,21 +29,7 @@ class RhymeFinderTest {
     val lines = List("They drove off quickly in the black Hummer",
       "Never trust no matter what the dance or song")
 
-    Assert.assertTrue(reader.findUniqueRhymes(lines).size == 0)
-  }
-  @Test def findUniqueRhymes(){
-    // todo, switch in' for ing
-    val lines = List(
-      //"Cuz I came back to attack others in spite-",
-      //"Strike like lightnin', It's quite frightenin'!",
-      "But don't be afraid in the dark, in a park,",
-      "Not a scream or a cry, or a bark, morexx like a spark;"
-      //"Ya tremble like a  alcoholic, muscles tighten up,"
-      )
-
-    val res:Rhyme = reader.findUniqueRhymes(lines)(0)
-    println("res is " + res)
-    Assert.assertTrue(res.parts.size == 4)
+    Assert.assertTrue(reader.findRhymesInLines(lines).size == 0)
   }
 
 //  @Test def testIsRhymeContainedIn() {
@@ -88,24 +66,36 @@ class RhymeFinderTest {
       //"Cuz I came back to attack others in spite-",
       //"Strike like lightnin', It's quite frightenin'!",
       "But don't be afraid in the dark, in a park,",
-      "Not a scream or a cry, or a bark, morexx like a spark;"
+      "Not a scream or a cry, or a bark, more like a spark;"
       //"Ya tremble like a  alcoholic, muscles tighten up,"
       )
 
-    val res = reader.findMultiPartRhymes(lines)
+    val res = reader.findRhymesInLines(lines)
     println("res is " + res)
-    Assert.assertTrue(res.size == 1)
-    Assert.assertTrue(res(0).parts.removeDuplicates.size == 4)
+    Assert.assertTrue(res.size == 2)
+    Assert.assertTrue(res(1).parts.removeDuplicates.size == 4)
+  }
+
+
+  @Test def testPairs(){
+    val res:Map[(String, String), List[String]] = reader.findRhymingWordsMap(List(
+      "But don't be afraid in the dark, in a park,",
+      "Not a scream or a cry, or a bark, morexx like a spark;",
+      "Ya tremble like a  alcoholic, muscles tighten up,"
+      ))
+
+    println(res)
+    res.foreach(println)
   }
 
   @Test def testRhymeSet(){
-    val s = new RhymePartSet(rhymeMap)
+    val s = new RhymePartSetHolder(rhymeMap)
     s.addPart("back")
     s.addPart("attack")
     s.addPart("more")
     s.addPart("or")
     s.addPart("attack")
-    val list: List[List[String]] = s.allRhymes()
+    val list: List[List[String]] = s.allRhymePartSets()
     Assert.assertEquals(2, list.size)
     Assert.assertEquals(2, list(0).size)
     Assert.assertEquals(2, list(1).size)
@@ -144,13 +134,28 @@ class RhymeFinderTest {
       "Ya tremble like a  alcoholic, muscles tighten up,"
       )
 
-    val res = reader.findMultiPartRhymes(lines)
+    val res:List[Rhyme] = reader.findRhymesInLines(lines)
     println("res is " + res)
-    Assert.assertTrue(res.size == 5)
+    //Assert.assertTrue(res.size == 5)
     Assert.assertTrue(res.exists(_.parts.size == 4))
     
-    Assert.assertTrue(res.exists(_ == Rhyme(List("MORE", "OR"),List("Not a scream or a cry, or a bark, more like a spark;"))))
-    Assert.assertTrue(res.exists(_ == Rhyme(List("SPARK", "BARK", "PARK", "DARK"),List("Not a scream or a cry, or a bark, more like a spark;", "But don't be afraid in the dark, in a park,"))))
+   // Assert.assertTrue(res.exists(_ == Rhyme(List("MORE", "OR"),List("Not a scream or a cry, or a bark, more like a spark;"))))
+    Assert.assertTrue(res.exists(r =>
+      r.parts.contains("MORE") &&  r.parts.contains("OR") && r.lines.size == 1 && 
+      r.lines(0) == "Not a scream or a cry, or a bark, more like a spark;"
+    ));
+    Assert.assertTrue(res.exists(r =>
+      r.parts.size == 4 &&
+      r.parts.contains("SPARK") &&
+      r.parts.contains("BARK") &&
+      r.parts.contains("PARK") &&
+      r.parts.contains("DARK") &&
+      r.lines.size == 2 &&
+      r.lines.contains("Not a scream or a cry, or a bark, more like a spark;")&&
+      r.lines.contains("But don't be afraid in the dark, in a park,")
+    ));
+
+    //Assert.assertTrue(res.exists(_ == Rhyme(List("SPARK", "BARK", "PARK", "DARK"),List("Not a scream or a cry, or a bark, more like a spark;", "But don't be afraid in the dark, in a park,"))))
   }
 
 }

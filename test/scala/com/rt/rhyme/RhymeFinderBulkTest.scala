@@ -5,7 +5,7 @@ import org.junit.Test
 
 
 class RhymeFinderBulkTest {
-  val rhymeMap = new CmuDictRhymeMap()
+  val rhymeMap = new RhymeZoneRhymeMap()
   val reader = new RhymeFinder(rhymeMap)
 
 
@@ -37,7 +37,7 @@ class RhymeFinderBulkTest {
       "I leave em froze like her-on in your nose",
       "Nas'll rock well, it ain't hard to tell")
 
-    val rhymes: List[Rhyme] = reader.findMultiPartRhymes(lines)
+    val rhymes: List[Rhyme] = reader.findRhymesInLines(lines)
     rhymes.foreach(r => println(r.parts))
   }
 

@@ -24,8 +24,12 @@ class RapSheetReaderTest {
       "Not a scream or a cry, or a bark, more like a spark")
 
     val rhymes: List[Rhyme] = RapSheetReader.findRhymes(lines, null)
+//    assertRhymeListContnainsRhymeSet(rhymes, "PARK", "DARK", "SPARK", "BARK")
     rhymes.foreach(println)
-    //containsWords(rhymes, "PARK", "DARK", "SPARK", "BARK")
+  }
+
+  private def assertRhymeListContnainsRhymeSet(rhymes:List[Rhyme], parts:String*)={
+    assertTrue(rhymes.find(r =>{r.parts.sameElements(parts.toList)}).isDefined)
   }
 
   @Test def empd4() {
@@ -33,6 +37,7 @@ class RapSheetReaderTest {
       " You mind float on the rhyme on I wrote (what?)")
 
     val rhymes: List[Rhyme] = RapSheetReader.findRhymes(lines, null)
+    assertRhymeListContnainsRhymeSet(rhymes, "NOTE", "QUOTE", "WROTE", "FLOAT")
     rhymes.foreach(println)
 
   }
@@ -41,31 +46,47 @@ class RapSheetReaderTest {
     val lines = List[String]("I got mine, for I'm using my rhyme")
 
     val rhymes: List[Rhyme] = RapSheetReader.findRhymes(lines, null)
+    //assertTrue(rhymes.isEmpty)
     rhymes.foreach(println)
+    assertRhymeListContnainsRhymeSet(rhymes, "RHYME", "I'M")
   }
 
-  private def containsWords(found: List[Rhyme], lines: String*) {
-    assertTrue(lines.toList.forall(x => found.contains(x)))
+
+  @Test def nas2() {
+    val lines = List[String]("Street's disciple, I rock beats that's mega trifle")
+
+    val rhymes: List[Rhyme] = RapSheetReader.findRhymes(lines, null)
+    rhymes.foreach(println)
+    assertRhymeListContnainsRhymeSet(rhymes, "BEATS", "STREET'S")
   }
 
-  @Test def correctRhymes4() {
-    val rhymes: List[Rhyme] = RapSheetReader.findRhymes(nas2(), null)
+  @Test def epmd3() {
+    val lines = List[String]("Can't understand, why your body's gettin weaker",
+      "Then you realize, it's the voice from the speaker")
+    val rhymes: List[Rhyme] = RapSheetReader.findRhymes(lines, null)
     rhymes.foreach(println)
+    assertRhymeListContnainsRhymeSet(rhymes, "WEAKER", "SPEAKER")
+
   }
 
-  @Test def correctRhymes3() {
-    val rhymes: List[Rhyme] = RapSheetReader.findRhymes(epmd3(), null)
+  @Test def epmd2() {
+    val lines = List[String]("They drove off quickly in the black Hummer",
+      "Never trust no matter what the dance or song")
+    val rhymes: List[Rhyme] = RapSheetReader.findRhymes(lines, null)
     rhymes.foreach(println)
-  }
+    assertTrue(rhymes.isEmpty)
 
-  @Test def correctRhymes2() {
-    val rhymes: List[Rhyme] = RapSheetReader.findRhymes(epmd2(), null)
-    rhymes.foreach(println)
   }
 
   @Test def correctRhymes() {
-    val rhymes: List[Rhyme] = RapSheetReader.findRhymes(epmd1(), null)
+    val lines = List("No respect in eighty-seven, eighty-eight you kneel",
+      "Cause I produce and get loose, when it's time to perform",
+      "Wax a sucker like Mop & Glow (that's word born)")
+    val rhymes: List[Rhyme] = RapSheetReader.findRhymes(lines, null)
+
     rhymes.foreach(println)
+    assertRhymeListContnainsRhymeSet(rhymes, "LOOSE", "PRODUCE")
+
   }
 
   @Test def failingOne() {
@@ -93,25 +114,6 @@ class RapSheetReaderTest {
   }
 
 
-  def nas2(): List[String] = {
-    List("Street's disciple, I rock beats that's mega trifle")
-  }
-
-  def epmd3(): List[String] = {
-    List("Can't understand, why your body's gettin weaker",
-      "Then you realize, it's the voice from the speaker")
-  }
-
-  def epmd2(): List[String] = {
-    List("They drove off quickly in the black Hummer",
-      "Never trust no matter what the dance or song")
-  }
-
-  def epmd1(): List[String] = {
-    List("No respect in eighty-seven, eighty-eight you kneel",
-      "Cause I produce and get loose, when it's time to perform",
-      "Wax a sucker like Mop & Glow (that's word born)")
-  }
 
   def lyrics(): List[String] = {
     List[String]("It ain't hard to tell, I excel, then prevail",
