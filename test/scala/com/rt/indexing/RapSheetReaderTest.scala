@@ -16,7 +16,7 @@ class RapSheetReaderTest {
     //val rhymeMap: Map[String, List[RhymeLines]] = RapSheetReader.findRhymesOld(trackFile, null)
     val list: List[Rhyme] = RapSheetReader.findRhymes(trackFile, null)
     println("found " + list.size + " rhymes in second")
-    list.foreach(println)
+    //list.foreach(println)
   }
 
   @Test def rakim() {

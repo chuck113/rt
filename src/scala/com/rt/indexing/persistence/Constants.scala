@@ -18,8 +18,6 @@ object Constants{
   val allRhymePartsFileName = "allParts.ser"
   val allRhymePartsFile = tmpFolder+sep+allRhymePartsFileName
 
-
-
   val gaeResourceFolderName = "resources"
   val serializedFileExtension = "ser"
   val serializedIndexesFileName = "index"
@@ -38,6 +36,9 @@ object Constants{
   val gaeIndexZipFile = gaeResourceFolder+sep+indexZipName
   val gaeAllRhymePartsFile = gaeIndexFolder+sep+allRhymePartsFileName
 
+  def serializedHierarchyResultFile(fileName:String):String={
+    rootDataFolder+sep+fileName+".ser"
+  }
 
   def serialisedIndexHierarchyFolder(prefix:String):String={
     serializedIndexesFolder+sep+serialisedIndexHierarchyFileName+prefix+dot+serializedFileExtension

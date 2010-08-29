@@ -57,9 +57,15 @@ class RhymeFinderExampleTests {
     assertRhymeListContnainsRhymeSet(rhymes, parts.toList)
   }
 
-  private def assertRhymeListContnainsRhymeSet(rhymes: List[Rhyme], parts: List[String]) = {
-    if (parts.isEmpty) assertTrue(rhymes.isEmpty)
-    else assertTrue(rhymes.find(r => {r.parts.forall(p => parts.contains(p))}).isDefined)
+  private def assertRhymeListContnainsRhymeSet(rhymes: List[Rhyme], expectedParts: List[String]) = {
+    if (expectedParts.isEmpty){ assertTrue(rhymes.isEmpty)
+    }else {
+      null
+    }
+      // each rhyme in the list must have an equlivalent
+      //assertTrue(rhymes.find(r => {r.parts.forall(p => parts.contains(p))}).isDefined)
+
+    // foreach
   }
 
   private def printRhymes(found: List[Rhyme], required: List[List[String]]) = {
@@ -69,15 +75,26 @@ class RhymeFinderExampleTests {
     required.sort((a, b) => a(0)(0) < b(0)(0)).foreach(r => println(r))
   }
 
-  private def testRhyme(lines: List[String], rhymesToFind: List[String]*) = {
+  private def testRhyme(lines: List[String], rhymesSetsToFind: List[String]*) = {
     val rhymes: List[Rhyme] = reader.findRhymesInLines(lines)
-    rhymes.foreach(println)
-    if (rhymes.size != rhymesToFind.toList.size) {
-      printRhymes(rhymes, rhymesToFind.toList)
-    }
 
-    assertEquals("rhymes were not of equal size", rhymes.size, rhymesToFind.toList.size)
-    rhymesToFind.foreach(toFind => assertRhymeListContnainsRhymeSet(rhymes, toFind))
+    // for each rhyme, it's parts must appear in one of the lists entries
+    //val first: List[String] = rhymesSetsToFind.toList.first
+
+    rhymesSetsToFind.foreach(rhymeSet => {
+      val exists = rhymes.exists(rhyme => {
+        rhymeSet.forall(part => rhyme.parts.contains(part))
+      })
+      assertTrue("Did not find expected rhyme "+rhymeSet+" in rhyme results "+rhymes.map(_.parts), exists)
+    })
+
+//    rhymes.foreach(println)
+//    if (rhymes.size != rhymesSetsToFind.toList.size) {
+//      printRhymes(rhymes, rhymesSetsToFind.toList)
+//    }
+//
+    //assertEquals("rhymes were not of equal size", rhymes.size, rhymesSetsToFind.toList.size)
+//    rhymesSetsToFind.foreach(setToFind => assertRhymeListContnainsRhymeSet(rhymes, setToFind))
   }
 
   @Test def empd4() {

@@ -18,7 +18,7 @@ object FollowOnProcessor {
   }
 
   //TODO does not support a rhymeLeaf containing muliple rhyme sets
-  def isFollowOn(rhyme: RhymeLeaf): boolean = {
+  def isFollowOn(rhyme: RhymeLeaf): Boolean = {
     val words: List[String] = individualWords(rhyme.lines)
     //val line:String = rhyme.lines.foldLeft(""){_+_}
     val nextWords:ListBuffer[String] = new ListBuffer[String]
@@ -36,7 +36,7 @@ object FollowOnProcessor {
     areAllWordsEqual(nextWords.toList)
   }
 
-  def areAllWordsEqual(words:List[String]):boolean={
+  def areAllWordsEqual(words:List[String]):Boolean={
     words.size > 1 && words.removeDuplicates.size == 1
   }
 

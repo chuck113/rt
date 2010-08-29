@@ -24,6 +24,10 @@ object IO {
     List.fromArray(javaList.toArray).asInstanceOf[List[String]]
   }
 
+  def readLine(in:InputStream):String={
+    IOUtils.toString(in)
+  }
+
   def streamFromUrl(url:String):InputStream ={
     val connection:HttpURLConnection = URI.create(url).toURL.openConnection.asInstanceOf[HttpURLConnection]
     connection.getInputStream
@@ -38,6 +42,10 @@ object IO {
 
   def readLinesFromClassPathFile(classpathFile: String): List[String] = {
     readLines(streamFromClasspath(classpathFile))
+  }
+
+  def readLineFromClassPathFile(classpathFile: String):String = {
+    readLine(streamFromClasspath(classpathFile))
   }
 
   def fileLines(in:InputStream):List[String]={

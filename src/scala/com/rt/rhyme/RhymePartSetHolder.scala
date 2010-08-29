@@ -48,11 +48,7 @@ class RhymePartSetHolder(val rhymeMap: RhymeMap){
   }
 
   def allRhymePartSets(): List[List[String]] = {
-    entries.foldLeft(List[List[String]]()) {
-      (list, entry) => {
-        list + entry.parts
-      }
-    }
+    entries.map(_.parts)
   }
 
   def allRhymeParts(): List[String] = {
@@ -78,15 +74,15 @@ class RhymePartSetHolder(val rhymeMap: RhymeMap){
     entry.parts.exists(p => {rhymeMap.doWordsRhyme(part, p)})
   }
 
-  private def containsForAny(entry: Entry, parts: List[String]): boolean = {
+  private def containsForAny(entry: Entry, parts: List[String]): Boolean = {
     parts.exists(part => {contains(entry, part)})
   }
 
-  def containsEntryForEither(pair: (String, String)): boolean = {
+  def containsEntryForEither(pair: (String, String)): Boolean = {
     containsEntryFor(pair._1) || containsEntryFor(pair._2)
   }
 
-  def containsEntryFor(part: String): boolean = {
+  def containsEntryFor(part: String): Boolean = {
     entries.exists(e => {contains(e, part)})
   }
 

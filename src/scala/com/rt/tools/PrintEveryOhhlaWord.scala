@@ -4,9 +4,9 @@ import com.rt.indexing.persistence.Constants
 import com.rt.ohhla.OhhlaConfig
 import java.lang.String
 import java.io.{FileFilter, File}
-import com.rt.util.{MapUtils, NameMapper, IO}
+import com.rt.util.{ScalaConversions, NameMapper, IO}
 import java.util.{Set => jSet}
-import com.rt.rhyme.{CmuDictRhymeMap, Song, RapSheetReader}
+import com.rt.rhyme.{SongFileParser, CmuDictRhymeMap, Song, RapSheetReader}
 
 class PrintEveryOhhlaWord{
 
@@ -22,7 +22,7 @@ class PrintEveryOhhlaWord{
     val cmuDict: scala.collection.Set[String] = allCmuDictWords()
     val javaSet:jSet[String] = new java.util.HashSet[String]()
     val targetLocation: String = OhhlaConfig.rawTargetLocation
-    val reader:RapSheetReader = new RapSheetReader(null, null, null)
+    val reader:SongFileParser = new SongFileParser();
     val folders: List[File] = foldersInDir(new File(targetLocation))
     folders.foreach(artistFolder =>{
       val albumFolders: List[File] = foldersInDir(artistFolder)      

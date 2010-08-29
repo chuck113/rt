@@ -23,10 +23,10 @@ object HierarchicalIndexerObj{
 
     //persistIndex(indexer.makeArtistsHierarchy(toIndex))
 
-    val node:AlbumNode = indexer.makeAlbumNodeForOneSong("C:\\data\\projects\\rapAttack\\rapAttack\\olhha\\NOTORIOUS_BIG\\READY_TO_DIE", 5);
-    println(node)
+    //val node:AlbumNode = indexer.makeAlbumNodeForOneSong("C:\\data\\projects\\rapAttack\\rapAttack\\olhha\\NOTORIOUS_BIG\\READY_TO_DIE", 5);
+    //println(node)
 
-    //val hierarchy: Map[String, ArtistNode] = indexer.makeArtistHierarchyWithAllWords(toIndex).index
+    val hierarchy: Map[String, ArtistNode] = indexer.makeArtistHierarchyWithAllWords(toIndex).index
 
 
     //
@@ -63,7 +63,7 @@ object HierarchicalIndexerObj{
 
   def bestRhymes(rhymes:List[RhymeLeaf]):List[RhymeLeaf]={
     val sorted = rhymes.sort((a,b) => a.rating > b.rating)
-    sorted.foreach(println)
+    //sorted.foreach(println)
     sorted
   }
 
@@ -119,9 +119,9 @@ object HierarchicalIndexerObj{
     rhymeBuffer.toList
   }
 
-  def createArtistIndex(artistFolders:List[String]):Map[String, ArtistNode]={
-    indexer.makeArtistsHierarchy(artistFolders)
-  }
+//  def createArtistIndex(artistFolders:List[String]):Map[String, ArtistNode]={
+//    indexer.makeArtistsHierarchy(artistFolders)
+//  }
 
 //  private def persistAllText(artistNodes:List[ArtistNode])=List[String]{
 //   val file = System.getProperty("java.io.tmpdir")+"/allLines.txt"

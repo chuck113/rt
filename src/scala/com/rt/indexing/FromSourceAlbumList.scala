@@ -3,7 +3,7 @@ package com.rt.indexing
 import java.io.File
 import java.lang.String
 import collection.immutable.Map
-import com.rt.util.{NameMapper, IO, MapUtils}
+import com.rt.util.{NameMapper, IO, ScalaConversions}
 import com.rt.ohhla.{OhhlaPersister, OhhlaStreamBuilderImpl, AnonymousAlbumGrabber, OhhlaConfig}
 
 /**
@@ -31,9 +31,9 @@ object FromSourceAlbumList {
   def main(args: Array[String]): Unit = {
     val file: File = new File("""C:\data\projects\rapAttack\rapAttack\etc\sourceGreatestAlbums.txt""")
     val artists: List[String] = IO.fileLines(file).map(f => f.substring(0, f.indexOf('-'))).removeDuplicates ++ extras()
-    val artistsToFolderNames: Map[String, String] = MapUtils.toMap(artists, ((s: String) => NameMapper.nUnder(s)))
+    val artistsToFolderNames: Map[String, String] = ScalaConversions.toMap(artists, ((s: String) => NameMapper.nUnder(s)))
     //val files: Map[String, File] = OhhlaConfig.allTransformedArtistNamesToFiles()
-    val files: Map[String, File] = OhhlaConfig.allArtistFoldersToFiles()
+    val files: Map[String, File] = OhhlaConfig.allTransformedArtistNamesToFiles()
 
     val aliases: Map[String, String] = Map(
       "A_TRIBE_CALLED_QUEST" -> "ATCQ",

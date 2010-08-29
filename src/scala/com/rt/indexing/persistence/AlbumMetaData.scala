@@ -4,6 +4,7 @@ import java.io._
 import reflect.BeanInfo
 import sjson.json.{Serializer, JSONTypeHint}
 import org.apache.commons.io.IOUtils
+import annotation.target.field
 // how can we use traits here? Don't want AlbumMetaData to know about xml so it should be wrapped in a trait
 // that knows how to persist it.
 
@@ -15,7 +16,7 @@ case class AlbumMetaData(
         artist: String,
         title: String,
         year: Int,
-        @JSONTypeHint(classOf[AlbumTrack]) tracks: List[AlbumTrack]){
+        @(JSONTypeHint @field)(value = classOf[AlbumTrack]) tracks: List[AlbumTrack]){
   
   private def this() = this(null, null, -1, null)
 

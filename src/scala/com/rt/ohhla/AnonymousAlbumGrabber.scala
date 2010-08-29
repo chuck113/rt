@@ -7,7 +7,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.lang.String
 import com.rt.indexing.persistence.{Album, AlbumTrack, ArtistAlbums, AlbumMetaData}
-import com.rt.util.{IO, MapUtils}
+import com.rt.util.{IO, ScalaConversions}
 
 
 class AnonymousAlbumGrabber(val streamBuilder: OhhlaStreamBuilder) extends AbstractGrabber {

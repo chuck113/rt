@@ -1,12 +1,7 @@
 package com.rt.rhyme
 
-import collection.mutable.{HashMap, MultiMap}
-import scala.collection.mutable.Set
-import io.Source
-import org.apache.commons.io.IOUtils
 import java.io.{FileReader, FilenameFilter, File}
 import java.lang.String
-import util.IO
 import com.rt.indexing.{RhymeLines, SongMetaData}
 import com.rt.util.IO
 
@@ -86,21 +81,23 @@ class RapSheetReader(lines: List[String], songMetaData: SongMetaData, rhymeFinde
   }
 
   /** not sure why we need this, it is checking the whole line which sounds wrong. */
-  def isAllowedWord(word: String): boolean = {
+  def isAllowedWord(word: String): Boolean = {
     word.toCharArray.exists(_.isLetter)
   }
 
   def getRhymesFromStrings(strings: List[String], lineNumbers: List[List[Int]]): List[RhymeLines] = {
-    lineNumbers.foldLeft(List[RhymeLines]()) {
-      (result, ints) => {
-        result + new RhymeLines(this.songMetaData, getStrings(strings, ints))
-      }
-    }
+    lineNumbers.map(ln => new RhymeLines(this.songMetaData, getStrings(strings, ln)))
+//    lineNumbers.foldLeft(List[RhymeLines]()) {
+//      (result, ints) => {
+//        result + new RhymeLines(this.songMetaData, getStrings(strings, ints))
+//      }
+//    }
   }
 
   def getStrings(strings:List[String], lineNumbers:List[Int]):List[String]={
     lineNumbers.foldLeft(List[String]()){(list, i) => {
-      list + strings(i)
+      //list ++ strings(i)
+      strings(i) :: list
     }}
   }
 

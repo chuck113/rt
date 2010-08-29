@@ -1,6 +1,5 @@
 package com.rt.rhyme
 
-import com.rt.util.MapUtils
 import collection.mutable.{ListBuffer, Map => MutableMap}
 import java.lang.String
 import com.rt.Properties
@@ -173,12 +172,12 @@ class RhymeFinder(val rhymeMap: RhymeMap) {
     val foundRhymes: ListBuffer[Rhyme] = new ListBuffer[Rhyme]()
     val linesInPlay: ListBuffer[String] = new ListBuffer[String]()
 
-    var setsInPlay: RhymePartSetHolder = new RhymePartSetHolder(rhymeMap)
+    val setsInPlay: RhymePartSetHolder = new RhymePartSetHolder(rhymeMap)
 
     val rhymePairsInPlay: ListBuffer[(String, String)] = new ListBuffer[(String, String)]()
 
-    for (line <- lines + "") { // append one to flush data structures at end
-      println("iterating " + line)
+    (lines ::: List("")).foreach(line => { // append one to flush data structures at end
+      //lprintln("iterating " + line)
       linesInPlay.append(line)
       //val rhymePairs: List[(String, String)] = findRhymePairs(linesInPlay.toList)
       val rhymePairsMap: Map[(String, String), List[String]] = findRhymePairs(linesInPlay.toList)
@@ -216,7 +215,7 @@ class RhymeFinder(val rhymeMap: RhymeMap) {
       // updates the buffer - removes lines that do not contain any parts in setsInPlay
       // but NOT the last one because the next line may rhyme with words in it
       removeLinesNotContaingParts(linesInPlay, setsInPlay);
-    }
+    })
     foundRhymes.toList
   }
 
@@ -349,7 +348,7 @@ class RhymeFinder(val rhymeMap: RhymeMap) {
    * rhyme sets with unique parts in each
    */
   private def getRhymes(pairs: List[(String, String)]): List[List[String]] = {
-    var uniqueRhymeParts: List[List[String]] = List[List[String]]()
+    val uniqueRhymeParts: List[List[String]] = List[List[String]]()
 
     val rhymeSet: RhymePartSetHolder = new RhymePartSetHolder(rhymeMap)
     pairs.foreach(pair => {

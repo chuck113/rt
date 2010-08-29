@@ -9,7 +9,7 @@ import java.lang.String
 import collection.immutable.Map
 import java.io.{Serializable, FileInputStream, FileFilter, File}
 import com.rt.rhyme.RapSheetReader
-import com.rt.util.MapUtils
+import com.rt.util.ScalaConversions
 
 
 /**holds one or more rhyme lines and associated data about the containing track */
@@ -22,7 +22,7 @@ case class RhymeIndexEntry(rhymes: List[RhymeLines], score: Int)
 case class RhymeLines(val song:SongMetaData, val lines: List[String]){
 
   def linesAsJavaList():java.util.List[String]={
-    MapUtils.toJavaList(lines)
+    ScalaConversions.toJavaList(lines)
   }
 }
 
@@ -62,7 +62,7 @@ class Indexer {
     var indexMap: Map[String, List[RhymeLines]] = Map[String, List[RhymeLines]]()
 
     artistFolders.foreach(artistFolder => {
-      indexMap = MapUtils.mergeListMaps(indexMap, indexArtist(rootFolder + "/" + artistFolder))
+      indexMap = ScalaConversions.mergeListMaps(indexMap, indexArtist(rootFolder + "/" + artistFolder))
     })
     indexMap
   }
@@ -73,7 +73,7 @@ class Indexer {
 
     println("ArtistAlbums = " + artist)
     artist.albums.foreach(album => {
-      indexMap = MapUtils.mergeListMaps(indexMap, indexAlbum(artistFolder + "/" + album.fileInfo.fileName))
+      indexMap = ScalaConversions.mergeListMaps(indexMap, indexAlbum(artistFolder + "/" + album.fileInfo.fileName))
     })
     indexMap
   }
@@ -93,7 +93,7 @@ class Indexer {
 
     println("ArtistAlbums = " + artist)
     artist.albums.foreach(album => {
-      indexMap = MapUtils.mergeListMaps(indexMap, indexAlbum(artistFolder + "/" + album.fileInfo.fileName))
+      indexMap = ScalaConversions.mergeListMaps(indexMap, indexAlbum(artistFolder + "/" + album.fileInfo.fileName))
     })
     indexMap
   }
@@ -118,7 +118,7 @@ class Indexer {
 //
 //    println("ArtistAlbums = " + artist)
 //    artist.albums.foreach(album => {
-//      indexMap = MapUtils.mergeListMaps(indexMap, indexAlbum(artistFolder + "/" + album.fileInfo.fileName))
+//      indexMap = ScalaConversions.mergeListMaps(indexMap, indexAlbum(artistFolder + "/" + album.fileInfo.fileName))
 //    })
 //    indexMap
 
@@ -160,7 +160,7 @@ class Indexer {
 
     album.tracks.foreach(track => {
       val file = albumFolder + "/" + track.number + ".txt"
-      indexMap = MapUtils.mergeListMaps(indexMap, indexTrack(file, makeSongMetaData(album, track)))
+      indexMap = ScalaConversions.mergeListMaps(indexMap, indexTrack(file, makeSongMetaData(album, track)))
     })
     Map[String, List[RhymeLines]](indexMap.toList: _*)
   }
@@ -173,7 +173,7 @@ class Indexer {
   def buildScoringIndex(indexMap: Map[String, List[RhymeLines]]): Map[String, List[RhymeIndexEntry]] = {
     indexMap.elements.foldLeft(Map[String, List[RhymeIndexEntry]]()) {
       (map, entry) => {
-        map(entry._1) = (map.getOrElse(entry._1, List[RhymeIndexEntry]()) + RhymeIndexEntry(entry._2, wordScore(entry._1, entry._2.size)))
+        map(entry._1) =  RhymeIndexEntry(entry._2, wordScore(entry._1, entry._2.size)) :: map.getOrElse(entry._1, List[RhymeIndexEntry]())
       }
     }
   }

@@ -1,6 +1,7 @@
 package com.rt.rhyme
 
 import com.rt.util.Strings
+import java.lang.String
 
 
 /**
@@ -18,13 +19,7 @@ object StringRhymeUtils{
   }
 
   def prepareWordForComparison(word:String):String={
-    replaceIns(Strings.removePunctuation(word))
-  }
-
-
-  def replaceIns(st:String):String={
-    if(st.endsWith("IN'"))st.substring(0, st.length-3)+"ING"
-    else st
+    Strings.removePunctuation(word)
   }
 
   def individualWords(line: String): List[String] = {
@@ -33,31 +28,18 @@ object StringRhymeUtils{
     line.split(" ").map(cleanWord).filter(_.length > 0).map(x => x.toUpperCase).toList
   }
 
-  //TODO not finished or used anywhere
   def removeBrackets(line:String):String={
-    //val tracksRegex = tracksStart + "[\\s\\S]+?" + tracksEnd
-    //val tracksIter = tracksRegex.r.findAllIn(albumHtml)
-    //val Name = """(.+?) - (.+?) [\\(\\)](.+?)[\\)\\)]""".r
+    removeBrackets(removeBrackets(removeBrackets(line, "[", "]"), "{", "}"), "(", ")")
+  }
 
-    //val regex = """(.+?) \\((.+?)\\) (.+?)""".r
-    //val regex = "[\\(]".r
-    //regex.findAllIn(line);
-    //println("find all in "+regex.findAllIn(line))
-    //null
-    //line match {
-    //  case
-      //case Name(a, t, y) => Some(new AlbumMetaData(a, t, removeNonNumberChars(y).toInt, tracks))
-      //case _ => LOG.warn("could not get album meta data from string '" + htmlTitle + "'"); None
-    //}
+  def containBrakets(line:String, open:String, close:String):Boolean={
+    (line.contains(open) && line.contains(close)) &&
+    (line.indexOf(open) < line.indexOf(close))
+  }
 
-    val open ='('
-    val close =')'
-    if(line.contains(open) && line.contains(close)){
-      if(line.indexOf(open) < line.indexOf(close)){
+  def removeBrackets(line:String, open:String, close:String):String={
+    if(containBrakets(line, open, close)){
         (line.substring(0, line.indexOf(open)).trim +" " + line.substring(line.indexOf(close)+1).trim).trim
-      }else{
-        line
-      }
     }else{
       line
     }
@@ -65,5 +47,23 @@ object StringRhymeUtils{
 
   def individualWords(lines: List[String]): List[String] = {
     lines.foldLeft(List[String]()) {(list, line) => {individualWords(line) ::: list}}
+  }
+
+
+  def areLinesSimilar(one:List[String], two:List[String]):Boolean ={
+    val oneWords: Set[String] = Set() ++ individualWords(one).filter(_.length > 2)
+    val twoWords: Set[String] = Set() ++ individualWords(two).filter(_.length > 2)
+
+    if(individualWords(one).size < 10 || individualWords(two).size < 10 ){
+      false
+    }else{
+      //if contains 90% of words over 3 letters, they are the same
+      val simialr:Boolean = oneWords.intersect(twoWords).size > (Math.min(oneWords.size, twoWords.size).toDouble * 0.8).toInt
+      if(simialr){
+        println("discovered similar lines "+one+" and "+two)
+      }
+
+      simialr
+    }
   }
 }

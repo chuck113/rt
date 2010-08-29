@@ -7,9 +7,10 @@ import collection.immutable.HashSet
 
 
 class RhymeZoneRhymeMap extends RhymeMap{
-
+  
   private val rhymeMap:Map[String,List[String]] = makeRhymeMap();
   private val aliasMap:Map[String, String] = makeAliasMap();
+  //private val aliasMap:Map[String, String] = Map[String, String]()//makeAliasMap();
 
   def makeRhymeMap(): Map[String, List[String]] = {
     println("setting up map...")
@@ -90,24 +91,24 @@ class RhymeZoneRhymeMap extends RhymeMap{
   }
 
   /** deal with words like 'singin' */
-  private def replaceIns(word:String):String ={
-    if(!rhymeMap.contains(word) && rhymeMap.contains(word+"G")){
-      word+"G"
-    }else{
-      StringRhymeUtils.replaceIns(word)
-    }
-  }
+//  private def replaceIns(word:String):String ={
+//    if(!rhymeMap.contains(word) && rhymeMap.contains(word+"G")){
+//      word+"G"
+//    }else{
+//      StringRhymeUtils.replaceIns(word)
+//    }
+//  }
 
-  override def doWordsRhyme(oneRawUncassed: String, twoRawUncassed: String): boolean = {
+  override def doWordsRhyme(oneRawUncassed: String, twoRawUncassed: String): Boolean = {
     val oneRaw = oneRawUncassed.toUpperCase
     val twoRaw = twoRawUncassed.toUpperCase
 
     val one:String = if(rhymeMap.contains(oneRaw)) oneRaw else aliasMap.getOrElse(oneRaw, oneRaw)
     val two:String = if(rhymeMap.contains(twoRaw)) twoRaw else aliasMap.getOrElse(twoRaw, twoRaw)
 
-    if(aliasMap.contains(one)){
-      println("found in alias");
-    }
+//    if(aliasMap.contains(one)){
+//      println("found in alias");
+//    }
 
     (rhymeMap.contains(one) && (rhymeMap(one).contains(two))) ||
     (rhymeMap.contains(two) && (rhymeMap(two).contains(one)))

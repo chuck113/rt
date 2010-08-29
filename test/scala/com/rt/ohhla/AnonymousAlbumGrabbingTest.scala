@@ -3,11 +3,8 @@ package com.rt.ohhla
 import java.lang.String
 import org.junit.{Before, Test}
 import org.junit.Assert._
-import java.net.URL
-import org.apache.commons.io.IOUtils
 import com.rt.indexing.SongMetaData
-import java.io.{FileInputStream, InputStream, InputStreamReader}
-import util.IO
+import java.io.InputStream
 import com.rt.indexing.persistence.{ArtistAlbums, AlbumTrack, AlbumMetaData}
 
 class AnonymousAlbumGrabbingTest  {

@@ -3,9 +3,25 @@ package com.rt.indexing
 import com.rt.rhyme.StringRhymeUtils._
 import java.lang.String
 import collection.mutable.ListBuffer
+import com.rt.util.IO
 
 object RhymeScoreCalculator{
 
+  private def MAX_ARTIST_SCORE = 5;
+  private def artistScores:Map[String, Int] = buildArtistScoreMap()
+
+  def calculate(rhymeLeaf:RhymeLeaf):RhymeLeaf={
+    calculate("", rhymeLeaf)
+  }
+
+  private def buildArtistScoreMap(): Map[String, Int] = {
+    IO.fileLines("artist-ratings.txt").foldLeft(Map[String, Int]()){
+      (map, line) => {
+        val split = line.split(":")
+        map(split(1).trim) = split(0).toInt
+      }
+    }
+  }
 
   // rate lowly rhymes with a low part-to-word number ratio -
   //   apply the ratio to the result
@@ -13,7 +29,7 @@ object RhymeScoreCalculator{
   // rate highly lines that rhyme muliple rhyme sets
   // rate highly rhymes that are followon - more follow-ons the better
   // Dont include the same word rhymed twice
-  def calculate(rhymeLeaf:RhymeLeaf):RhymeLeaf={
+  def calculate(artist:String, rhymeLeaf:RhymeLeaf):RhymeLeaf={
     val lines: List[String] = rhymeLeaf.lines
     val parts: List[String] = rhymeLeaf.parts;
 
@@ -33,7 +49,7 @@ object RhymeScoreCalculator{
     if(isEachLastLineWordAPart(rhymeLeaf) && rhymeLeaf.lines.size > 1){
       //println("last word was rhyme: "+lines +" - "+parts)
       lastWordLineAddition = 10 * oneMillion;
-      println("last word rhymes: "+ rhymeLeaf.lines)
+      //println("last word rhymes: "+ rhymeLeaf.lines)
     }else if(hasLastWordAsPart(rhymeLeaf)){
       lastWordLineAddition = oneMillion
     }
@@ -53,8 +69,11 @@ object RhymeScoreCalculator{
       suitability = 0;
     }
 
+    result = calulcateScoreWithArtistScore(artist, result)
+
     val finalResult = (result * suitability).toInt + lastWordLineAddition;
     //println("ratio is "+partToWordsRatio(parts, asLine(lines))+", parts length is "+parts.length+" ave parts: "+averagePartSize(parts) )
+    
     return new RhymeLeaf(rhymeLeaf.word, rhymeLeaf.lines, rhymeLeaf.parts, finalResult, suitability, 0);
   }
 
@@ -72,6 +91,15 @@ object RhymeScoreCalculator{
       //res
     })
     return res
+  }
+
+  def calulcateScoreWithArtistScore(artist:String, score:Double):Double={
+    if(artistScores.contains(artist)){
+      return score * (artistScores(artist).toDouble * (2.0/MAX_ARTIST_SCORE))
+    } else{
+      println("No entry for artist: "+artist)
+      return score
+    }
   }
 
   // nees to include follow-on rhymes

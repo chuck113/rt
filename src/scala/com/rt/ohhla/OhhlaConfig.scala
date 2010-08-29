@@ -1,19 +1,23 @@
 package com.rt.ohhla
 
-import util.IO
 import java.io.File
-import com.rt.util.{MapUtils, Folders, IO}
+import com.rt.util.{Folders, IO}
 
 
 object OhhlaConfig{
   val ohhlaUrl = "http://ohhla.com/"  
   val rawTargetLocation = """C:\data\projects\rapAttack\rapAttack\olhha"""
+  val testRoot = """C:\data\projects\rapAttack\rapAttack\olhha-testdata"""
   val ohhlaLocalSiteStart = "ohhla-site/all.html"
   val ohhlaLocalSiteRoot = "ohhla-site"
   val ohhlaLocalSiteAll: List[String] = List("all.html", "all_two.html", "all_three.html", "all_four.html", "all_five.html")
 
   def allArtistFolderNames():List[String]={
     Folders.folderNamesInFolder(rawTargetLocation)
+  }
+
+  def allArtistFolderNames(folderLocation:String):List[String]={
+    Folders.folderNamesInFolder(folderLocation)
   }
 
   def albumFolderExists(artistFolderName:String, albumFolderName:String):Boolean={
@@ -28,6 +32,10 @@ object OhhlaConfig{
 //    }
   }
 
+  def albumNamesForArist(artistName:String):List[String]={
+    new File(rawTargetLocation+"/"+artistName).listFiles.toList.map(_.getName)      
+  }
+
   private def folderExists(folder:String):Option[String]={
     new File(rawTargetLocation+"/"+folder).exists match{
       case true => Some(rawTargetLocation+"/"+folder)
@@ -39,9 +47,10 @@ object OhhlaConfig{
     folderExists(artistFolderName)
   }
 
-  def allArtistFoldersToFiles():Map[String, File]={
-    MapUtils.toMap(Folders.foldersInDir(rawTargetLocation), ((f:File) => f.getName))
-  }
+//  def allArtistFoldersToFiles():Map[String, File]={
+//    val names:List[String] = Folders.foldersInDir(rawTargetLocation).map(_.getName);
+//    ScalaConversions.toMap(Folders.foldersInDir(rawTargetLocation), ((f:File) => f.getName))
+//  }
 
   def allArtistFolders():List[String]={
     Folders.foldersInDir(rawTargetLocation).map(_.getAbsolutePath)
