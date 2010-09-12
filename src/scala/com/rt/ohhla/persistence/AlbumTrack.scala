@@ -1,4 +1,4 @@
-package com.rt.indexing.persistence
+package com.rt.ohhla.persistence
 
 import reflect.BeanInfo
 

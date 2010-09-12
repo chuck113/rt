@@ -3,7 +3,7 @@
 //import _root_.rt.dsl.AlbumSpec._
 //import _root_.rt.dsl.{Album, ArtistAlbums}
 //import java.lang.String
-//import com.rt.ohhla.OhhlaConfig
+//import com.rt.ohhla.OhhlaFiles
 //import com.rt.util.{NameMapper}
 //import com.rt.indexing.persistence.{ArtistAlbums => AAlbums}
 //import com.rt.indexing.{ArtistNode, HierarchicalIndexer}
@@ -23,7 +23,7 @@
 //  def load():List[ArtistAlbums]
 //
 //  private def filterExistingFolders(artist:String, folders:List[String]):(List[String], List[String])={
-//    folders.partition(OhhlaConfig.albumFolderExists(artist, _))
+//    folders.partition(OhhlaFiles.albumFolderExists(artist, _))
 //  }
 //
 //  private def warnAboutAlbumsNotFound(artist:String, albumsNotFound:List[String])={
@@ -32,14 +32,14 @@
 //
 //  private def folderName(artist:ArtistAlbums):Option[String]={
 //    val neutralizedName:String = NameMapper.nUnder(artist.artist)
-//    //OhhlaConfig.artistFolder(neutralizedName).getOrElse(OhhlaConfig.artistFolder(NameMapper.neutralizeWithUnderscores(artist.alias)))
+//    //OhhlaFiles.artistFolder(neutralizedName).getOrElse(OhhlaFiles.artistFolder(NameMapper.neutralizeWithUnderscores(artist.alias)))
 //
 //    //TODO wierdness here, we get the full artist folder but only retrn the name of the folder, not the new path
-//    OhhlaConfig.artistFolder(neutralizedName) match{
+//    OhhlaFiles.artistFolder(neutralizedName) match{
 //      case Some(x) => Some(neutralizedName)
 //      case None =>{
 //        val neutralizedAlias: String = NameMapper.nUnder(artist.alias)
-//        OhhlaConfig.artistFolder(neutralizedAlias) match{
+//        OhhlaFiles.artistFolder(neutralizedAlias) match{
 //          case Some(x) => Some(neutralizedAlias)
 //          case None => None
 //        }

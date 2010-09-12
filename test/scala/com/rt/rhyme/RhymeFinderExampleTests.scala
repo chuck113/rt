@@ -78,15 +78,19 @@ class RhymeFinderExampleTests {
   private def testRhyme(lines: List[String], rhymesSetsToFind: List[String]*) = {
     val rhymes: List[Rhyme] = reader.findRhymesInLines(lines)
 
+    if(rhymesSetsToFind.size == 0){
+      assertEquals(rhymes.toString, 0, rhymes.size)
+    }else{
     // for each rhyme, it's parts must appear in one of the lists entries
     //val first: List[String] = rhymesSetsToFind.toList.first
 
-    rhymesSetsToFind.foreach(rhymeSet => {
-      val exists = rhymes.exists(rhyme => {
-        rhymeSet.forall(part => rhyme.parts.contains(part))
+      rhymesSetsToFind.foreach(rhymeSet => {
+        val exists = rhymes.exists(rhyme => {
+          rhymeSet.forall(part => rhyme.parts.contains(part))
+        })
+        assertTrue("Did not find expected rhyme "+rhymeSet+" in rhyme results "+rhymes.map(_.parts), exists)
       })
-      assertTrue("Did not find expected rhyme "+rhymeSet+" in rhyme results "+rhymes.map(_.parts), exists)
-    })
+    }
 
 //    rhymes.foreach(println)
 //    if (rhymes.size != rhymesSetsToFind.toList.size) {
@@ -97,6 +101,18 @@ class RhymeFinderExampleTests {
 //    rhymesSetsToFind.foreach(setToFind => assertRhymeListContnainsRhymeSet(rhymes, setToFind))
   }
 
+  //But I still feel sad that I put her on time-out
+
+  @Test def eminem1() {
+    testRhyme(
+      lines(
+        "But for now we'll just say mama was real real bad",
+        "She was bein mean to dad and made him real real mad",
+        "But I still feel sad that I put her on time-out",
+        "Sit back in your chair honey, quit tryin to climb out (WAHH!)")
+      )
+  }
+  
   @Test def empd4() {
     testRhyme(
       lines("No hopes folks, I quote note for note ",

@@ -4,7 +4,7 @@ import org.apache.commons.io.FileUtils
 import collection.mutable.MultiMap
 import persistence.{ArtistAlbums, AlbumTrack, AlbumMetaData}
 import xml.{XML, Elem}
-import com.rt.ohhla.OhhlaConfig
+import com.rt.ohhla.OhhlaFiles
 import java.lang.String
 import collection.immutable.Map
 import java.io.{Serializable, FileInputStream, FileFilter, File}
@@ -179,7 +179,7 @@ class Indexer {
   }
 
 //  def indexAll(): Map[String, List[RhymeLines]] = {
-//    val all = foldersInDir(new File(OhhlaConfig.rawTargetLocation))
+//    val all = foldersInDir(new File(OhhlaFiles.rawTargetLocation))
 //    var indexMap: collection.mutable.HashMap[String, List[RhymeLines]] = new collection.mutable.HashMap[String, List[RhymeLines]]()
 //    println("will index: " + all.toList)
 //    val dir = all.head

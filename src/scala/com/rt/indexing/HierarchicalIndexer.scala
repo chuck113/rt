@@ -1,22 +1,31 @@
 package com.rt.indexing
 
-import com.rt.ohhla.OhhlaConfig
+import com.rt.ohhla.OhhlaFiles
 import com.rt.dto.DataMapper
-import persistence.{AlbumTrack, AlbumMetaData, ArtistAlbums, Constants}
 import org.apache.commons.io.FileUtils
 import java.lang.String
-import collection.immutable.{Map, Set => MutableSet}
-import collection.mutable.{MultiMap, ListBuffer}
-import com.rt.rhyme.{StringRhymeUtils, Rhyme, RapSheetReader}
+import collection.immutable.Map
+import collection.mutable.{Map => MutableMap}
 import java.io._
-import com.rt.util.{Logger, NameMapper}
+import com.rt.util.NameMapper
 import collection.JavaConversions._
-import reflect.BeanProperty
+import com.rt.ohhla.persistence.Constants
 
-// This contains all of the items the iphone will need and are added after the
-// object is created which is pretty but simple for the moment
-case class RhymeLeaf(word: String, lines: List[String], parts: List[String], rating: Int, suitability: Int, artistScore: Int) extends Serializable {
-  def this(word: String, lines: List[String], parts: List[String]) = this (word, lines, parts, 0, 0, 0)
+trait Node extends Serializable{
+  private val properties:MutableMap[String,String] = MutableMap()
+
+  def getProp(key:String):Option[String]=properties.get(key)
+  def setProp(key:String, value:String)=properties += key -> value
+}
+
+object RhymeLeaf{
+  def apply(parent:SongNode)(word: String, lines: List[String], parts: List[String]):RhymeLeaf={
+    new RhymeLeaf(parent, word, lines, parts)
+  }
+}
+
+case class RhymeLeaf(parent:SongNode, word: String, lines: List[String], parts: List[String] = List(), rating:Int) extends Node {
+  def this(parent:SongNode, word: String, lines: List[String], parts: List[String]) = this (parent, word, lines, parts, 0)
 
   def linesJList(): java.util.List[String] = {
     asList(lines.toSeq)
@@ -27,88 +36,66 @@ case class RhymeLeaf(word: String, lines: List[String], parts: List[String], rat
   }
 }
 
-case class SongNode(title: String, trackNo: Int, rhymes: List[RhymeLeaf]) extends Serializable {
+object SongNode{
+  def apply(parent:AlbumNode)(title: String, trackNo: Int):SongNode={
+    new SongNode(parent, title, trackNo)
+  }
+}
+
+case class SongNode(parent:AlbumNode, title: String, trackNo: Int, rhymes: List[RhymeLeaf] = List()) extends Node {
   def rhymesJList(): java.util.List[RhymeLeaf] = {
     asList(rhymes.toSeq)
   }
+
+  def addLeaves(childFactories: List[(SongNode => RhymeLeaf)]):SongNode={
+    new SongNode(parent, title, trackNo, childFactories.map(_(this)))  
+  }
 }
 
+object AlbumNode{
+  def apply (parent:ArtistNode)(artist: String, title: String, year: Int):AlbumNode={
+    new AlbumNode(parent, artist, title, year)
+  }
+}
 
-case class AlbumNode(artist: String, title: String, year: Int, children: List[SongNode]) extends Serializable {
+case class AlbumNode(parent:ArtistNode, artist: String, title: String, year: Int, children: List[SongNode] = List()) extends Node {
   def childrenJList(): java.util.List[SongNode] = {
     asList(children.toSeq)
   }
+
+  def addChildren(childFactories:List[(AlbumNode) => SongNode]):AlbumNode={
+    new AlbumNode(parent, artist, title, year, childFactories.map(_(this)))
+  }
 }
 
-case class ArtistNode(children: List[AlbumNode]) extends Serializable {
+
+case class ArtistNode(name:String, fileName:String, children: List[AlbumNode] = List()) extends Node {
   def childrenJList(): java.util.List[AlbumNode] = {
     asList(children.toSeq)
   }
-}
 
-case class HierarchicalIndexerResult(index: Map[String, ArtistNode], foundWords: Set[String]) extends Serializable {
-  def bestRhymes(): List[RhymeLeaf] = {
-    val sorted = rhymeList(index.values.toList).sort((a, b) => a.rating > b.rating)
-    //sorted.foreach(println)
-    sorted
-  }
-
-  def rhymeList(artistNodes: List[ArtistNode]): List[RhymeLeaf] = {
-    val rhymeBuffer: ListBuffer[RhymeLeaf] = new ListBuffer[RhymeLeaf]();
-    artistNodes.foreach(artist => {
-      artist.children.foreach(album => {
-        album.children.foreach(song => {
-          song.rhymes.foreach(rhyme => {
-            rhymeBuffer.append(rhyme)
-            //                 rhyme.lines.foreach(line =>{
-            //                   out.println(line)
-            //                 })
-            //listBuffer.appendAll(rhyme.parts)
-          })
-        })
-      })
-    })
-    rhymeBuffer.toList
+  def addChildren(childFactories:List[(ArtistNode) => AlbumNode]):ArtistNode={
+    new ArtistNode(name, fileName, childFactories.map(_(this)))
   }
 }
+
+
 
 class ArtistFolderNotFoundException(msg: String) extends RuntimeException(msg)
 
 class HierarchicalIndexer() {
-  //def this()={this(Map[String, Int]())}
 
-  class ProgressPrinter {
-    var count = 0
-    val newLineCount = 50
-    val tenChar = "X"
-
-    def done() {println()}
-
-    def inc() {
-      if (count == 0) {
-        print(".")
-      } else if (count % newLineCount == 0) {
-        println(".(" + newLineCount + ")")
-      } else if (count % 10 == 0) {
-        println(tenChar)
-      } else {
-        print(".")
-      }
-    }
-  }
-
-
-  def makeArtistHierarchyWithAllWords(artists: List[String], rootFolder: String): HierarchicalIndexerResult = {
-    val hierarchy: Map[String, ArtistNode] = applyToRhymeParts(HierarchyBuilder.makeArtistsHierarchy(artists, rootFolder), RhymeScoreCalculator.calculate)
-    val allWords: Set[String] = Set() ++ getAllRhymeParts(hierarchy.values.toList)
-    HierarchicalIndexerResult(hierarchy, allWords)
-  }
-
-  def makeArtistHierarchyWithAllWords(artists: List[String]): HierarchicalIndexerResult = {
-    val hierarchy: Map[String, ArtistNode] = applyToRhymeParts(HierarchyBuilder.makeArtistsHierarchy(artists, OhhlaConfig.rawTargetLocation), RhymeScoreCalculator.calculate)
-    val allWords: Set[String] = Set() ++ getAllRhymeParts(hierarchy.values.toList)
-    HierarchicalIndexerResult(hierarchy, allWords)
-  }
+//  def makeArtistHierarchyWithAllWords(artists: List[String], rootFolder: String): HierarchicalIndexerResult = {
+//    val hierarchy: Map[String, ArtistNode] = applyToRhymeParts(HierarchyBuilder.makeArtistsHierarchy(artists, rootFolder), RhymeScoreCalculator.calculate)
+//    val allWords: Set[String] = Set() ++ getAllRhymeParts(hierarchy.values.toList)
+//    HierarchicalIndexerResult(hierarchy, allWords)
+//  }
+//
+//  def makeArtistHierarchyWithAllWords(artists: List[String]): HierarchicalIndexerResult = {
+//    val hierarchy: Map[String, ArtistNode] = applyToRhymeParts(HierarchyBuilder.makeArtistsHierarchy(artists, OhhlaFiles.rawTargetLocation), RhymeScoreCalculator.calculate)
+//    val allWords: Set[String] = Set() ++ getAllRhymeParts(hierarchy.values.toList)
+//    HierarchicalIndexerResult(hierarchy, allWords)
+//  }
 
 
   //  def removeSimilarRhymes(hierarchy: Map[String, ArtistNode]):Map[String, ArtistNode]={
@@ -131,15 +118,15 @@ class HierarchicalIndexer() {
   //  }
 
   def applyToRhymeParts(artistFileName: String, song: SongNode, func: (String, RhymeLeaf) => RhymeLeaf): SongNode = {
-    new SongNode(song.title, song.trackNo, song.rhymes.map(song => func(artistFileName, song)));
+    new SongNode(song.parent, song.title, song.trackNo, song.rhymes.map(song => func(artistFileName, song)));
   }
 
   def applyToRhymeParts(artistFileName: String, album: AlbumNode, func: (String, RhymeLeaf) => RhymeLeaf): AlbumNode = {
-    new AlbumNode(album.artist, album.title, album.year, album.children.map(s => applyToRhymeParts(artistFileName, s, func)))
+    new AlbumNode(album.parent, album.artist, album.title, album.year, album.children.map(s => applyToRhymeParts(artistFileName, s, func)))
   }
 
   def applyToRhymeParts(artistFileName: String, artist: ArtistNode, func: (String, RhymeLeaf) => RhymeLeaf): ArtistNode = {
-    new ArtistNode(artist.children.map(a => applyToRhymeParts(artistFileName, a, func)))
+    new ArtistNode(artist.name, artistFileName, artist.children.map(a => applyToRhymeParts(artistFileName, a, func)))
   }
 
   def applyToRhymeParts(hierarchy: Map[String, ArtistNode], func: (String, RhymeLeaf) => RhymeLeaf): Map[String, ArtistNode] = {
@@ -150,136 +137,39 @@ class HierarchicalIndexer() {
     }
   }
 
-  def getAllRhymeParts(artistNodes: List[ArtistNode]): List[String] = {
-    val listBuffer: ListBuffer[String] = new ListBuffer[String]()
-    artistNodes.foreach(artist => {
-      print(".")
-      artist.children.foreach(album => {
-        album.children.foreach(song => {
-          song.rhymes.foreach(rhyme => {
-            listBuffer.appendAll(rhyme.parts)
-          })
-        })
-      })
-    })
-    println()
-
-    listBuffer.toList.removeDuplicates
-  }
+//  def getAllRhymeParts(artistNodes: List[ArtistNode]): List[String] = {
+//    val listBuffer: ListBuffer[String] = new ListBuffer[String]()
+//    artistNodes.foreach(artist => {
+//      print(".")
+//      artist.children.foreach(album => {
+//        album.children.foreach(song => {
+//          song.rhymes.foreach(rhyme => {
+//            listBuffer.appendAll(rhyme.parts)
+//          })
+//        })
+//      })
+//    })
+//    println()
+//
+//    listBuffer.toList.removeDuplicates
+//  }
 
   def makeArtistHierarchy(artist: String): Map[String, ArtistNode] = {
-    HierarchyBuilder.makeArtistsHierarchy(List(artist), OhhlaConfig.rawTargetLocation)
-    //new Map1(artist, makeArtistNode(OhhlaConfig.rawTargetLocation + "/" + artist))
+    HierarchyBuilder.makeArtistsHierarchy(List(artist), OhhlaFiles.root)
+    //new Map1(artist, makeArtistNode(OhhlaFiles.rawTargetLocation + "/" + artist))
   }
 
   //  def makeArtistAlbumsHierarchy(artistFolder: String, albums: List[String]): ArtistNode = {
-  //    makeArtistNode(applyParentFolderNameToFolderNames(OhhlaConfig.rawTargetLocation + "/" + artistFolder, albums))
+  //    makeArtistNode(applyParentFolderNameToFolderNames(OhhlaFiles.rawTargetLocation + "/" + artistFolder, albums))
   //  }
 
   def applyParentFolderNameToFolderNames(parentFolderName: String, list: List[String]): List[String] = {
     list.map(parentFolderName + "/" + _)
   }
 
-  private object HierarchyBuilder {
+  object HierarchyBuilder {
     def makeArtistsHierarchy(artists: List[String], rootArtistFolder: String): Map[String, ArtistNode] = {
       return new HierarchyBuilder(rootArtistFolder).makeArtistsHierarchy(artists: List[String])
-    }
-  }
-
-  class HierarchyBuilder(rootFolder: String) {
-    private def checkFoldersExist(artists: List[String]) {
-      artists.foreach(artist => {
-        if (!new File(rootFolder + "/" + artist).exists) {
-          throw new ArtistFolderNotFoundException("for artist '" + artist + "' in " + rootFolder)
-        }
-      })
-    }
-
-    def makeArtistsHierarchy(artists: List[String]): Map[String, ArtistNode] = {
-      checkFoldersExist(artists)
-      val printer: ProgressPrinter = new ProgressPrinter()
-      Logger.progress("building artist heirarchy")
-      artists.foldLeft(Map[String, ArtistNode]()) {
-        (map, artist) => {
-          printer.inc
-          map(artist) = makeArtistNode(rootFolder + "/" + artist)
-        }
-      }
-    }
-
-    private def makeArtistNode(artistFolder: String): ArtistNode = {
-      val artist = ArtistAlbums.fromFolder(artistFolder)
-      ArtistNode(artist.albums.foldLeft(List[AlbumNode]()) {
-        (list, album) => {
-          makeAlbumNode(artistFolder + "/" + album.fileInfo.fileName) :: list
-        }
-      })
-    }
-
-    private def makeArtistNode(albumFolder: List[String]): ArtistNode = {
-      ArtistNode(albumFolder.foldLeft(List[AlbumNode]()) {
-        (list, albumFolder) => {
-          makeAlbumNode(albumFolder) :: list
-        }
-      })
-    }
-
-    private def makeAlbumNode(albumFolder: String): AlbumNode = {
-      val md: AlbumMetaData = AlbumMetaData.fromFolder(albumFolder)
-      val songNodes = md.tracks.foldLeft(List[SongNode]()) {
-        (list, track) => {
-          val file = albumFolder + "/" + track.number + ".txt"
-          makeSongNode(file, makeSongMetaData(md, track)) :: list
-        }
-      }
-      AlbumNode(md.artist, md.title, md.year, songNodes)
-    }
-
-    private def makeSongNode(trackFile: String, song: SongMetaData): SongNode = {
-      val rhymes: List[Rhyme] = indexTrack(trackFile, song)
-      val leaves: List[RhymeLeaf] = rhymes.foldLeft(List[RhymeLeaf]()) {
-        (leafList, rhyme) => {
-          buildRhymeLeaves(rhyme) ::: leafList
-        }
-      }
-      SongNode(song.title, song.track, leaves)
-    }
-
-    private def buildRhymeLeaves(rhyme: Rhyme): List[RhymeLeaf] = {
-      rhyme.parts.foldLeft(List[RhymeLeaf]()) {
-        (leafList, part) => {
-          new RhymeLeaf(part, rhyme.lines, rhyme.parts) :: leafList
-        }
-      }
-    }
-
-    private def indexTrack(trackFile: String, song: SongMetaData): List[Rhyme] = {
-      RapSheetReader.findRhymes(trackFile, song);
-    }
-
-    /**
-     * Used for testing when we find an error in a rhyme in a song
-     */
-    def makeAlbumNodeForOneSong(albumFolder: String, trackNumber: Int): AlbumNode = {
-      val md: AlbumMetaData = AlbumMetaData.fromFolder(albumFolder)
-      val file = albumFolder + "/" + trackNumber + ".txt"
-      val node: SongNode = makeSongNode(file, makeSongMetaData(md, AlbumTrack("title", trackNumber, "url")))
-      //printSongNodesDetailed(List(node), "")
-      AlbumNode(md.artist, md.title, md.year, List(node))
-    }
-
-    def rhymeExists(rhyme: Rhyme, knownRhymes: List[Rhyme]): Boolean = {
-      if (knownRhymes.size == 0) {
-        return false
-      } else {
-        knownRhymes.forall(known => StringRhymeUtils.areLinesSimilar(rhyme.lines, known.lines))
-      }
-    }
-
-    def removeSimilarRhymes(newRhymes: List[Rhyme], knownRhymes: List[Rhyme]): List[Rhyme] = {
-      newRhymes.filter(r => {
-        !rhymeExists(r, knownRhymes)
-      })
     }
   }
 
@@ -343,11 +233,6 @@ class HierarchicalIndexer() {
 
     FileUtils.copyFile(new File(Constants.serialisedIndexHierarchyZipFile), new File(Constants.gaeIndexZipFile))
     DataMapper.unzip(Constants.gaeIndexZipFile, Constants.gaeIndexFolder)
-  }
-
-  //TODO this is in Indxer too, put into abstract class
-  private def makeSongMetaData(album: AlbumMetaData, track: AlbumTrack): SongMetaData = {
-    new SongMetaData(track.title, album.artist, album.year, album.title, track.number)
   }
 
   /**for java compatibility */

@@ -15,7 +15,7 @@ class Grabber(val streamBuilder: OhhlaStreamBuilder) {
   //<a href="YFA_nas.html#firm">Firm, The</a>
   //<a href="anonymous/fixxers/">Fixxers, The</a>
   def getArtistAlbums(artist: String): Option[ArtistAlbums] = {
-    OhhlaConfig.urlForArtist(artist).flatMap(artistAlbumsFromUrl(artist, _))
+    OhhlaFiles.urlForArtist(artist).flatMap(artistAlbumsFromUrl(artist, _))
   }
 
   private def artistAlbumsFromUrl(artist: String, artistUrl: String): Option[ArtistAlbums] = {
@@ -28,7 +28,7 @@ class Grabber(val streamBuilder: OhhlaStreamBuilder) {
   }
 
   //  def urlForArtist(artistName: String): Option[String] = {
-  //    def res = OhhlaConfig.allOhhlaIndexes.filter(_.contains(">" + artistName + "<"));
+  //    def res = OhhlaFiles.allOhhlaIndexes.filter(_.contains(">" + artistName + "<"));
   //    res.length match {
   //      case 0 => None
   //      case 1 => Some(ParsingUtils.betweenFirstAndLastQuotes(res.head))

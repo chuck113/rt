@@ -1,12 +1,11 @@
 package util;
 
-import com.rt.util.Logger;
 
 public class Levenshtein {
     public static int matches(String s, String t) {
         if (s == null || t == null) {
             //throw new IllegalArgumentException("Strings must not be null");
-            Logger.debug("got null input for matches: "+s+" and "+t);
+            System.out.println("got null input for matches: "+s+" and "+t);
             return 20;
         }
 

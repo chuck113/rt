@@ -62,7 +62,7 @@ class AnonymousAlbumGrabbingTest  {
 
   @Test def getArtistAlbumsFromArtistName(){
     val artist:String = "Public Enemy"
-    val url:String = OhhlaConfig.urlForArtist(artist).get
+    val url:String = OhhlaFiles.urlForArtist(artist).get
     val artistAlbums: ArtistAlbums = grabber.getArtistAlbumsFromUrl(url, artist).get
     assertEquals(2, artistAlbums.albums.size)
     assertEquals(artist, artistAlbums.artist)

@@ -10,9 +10,9 @@ object FollowOnProcessor {
 //          List[String]("She'll invite me, politely, to fight G, And then we lie together, cry together, I swear to God I hope we fuckin die together"),
 //          List[String]("lie", "cry", "die"), 0, 0)
 //
-    val leaf = RhymeLeaf("shoot",
+    val leaf = RhymeLeaf(null, "shoot",
           List[String]("Not stories by Aesop, place your loot up, parties I shoot up"),
-          List[String]("loot", "shoot"), 0, 0, 0)
+          List[String]("loot", "shoot"), 0)
 
     println(isFollowOn(leaf))
   }

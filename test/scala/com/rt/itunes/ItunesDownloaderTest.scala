@@ -4,7 +4,7 @@ import org.junit.{Before, Test, Assert}
 import org.junit.Assert._
 import java.lang.String
 import org.hamcrest.core.IsNot
-import com.rt.ohhla.OhhlaConfig
+import com.rt.ohhla.OhhlaFiles
 import com.rt.indexing.persistence.{Album, ArtistAlbums, AlbumTrack, AlbumMetaData}
 import java.io.File
 import util.Levenshtein
@@ -38,13 +38,13 @@ class ItunesDownloaderTest {
 
   @Test
   def shouldGetAFewArtists = {
-    itunesDownloader.downloadForArtists(OhhlaConfig.rawTargetLocation)
+    itunesDownloader.downloadForArtists(OhhlaFiles.root)
     //itunesDownloader.downloadForArtists("""C:\data\projects\rapAttack\rapAttack\olhha-testdata\methodman-test""")
 
     //   val artists: List[String] = List[String]("THE_GENIUSGZA", "NOTORIOUS_BIG", "GANGSTARR", "KRSONE", "MADVILLAIN")
 
     //    artists.foreach(artistName => {
-    //      val artistAlbums: ArtistAlbums = ArtistAlbums.fromFolder(new File(OhhlaConfig.rawTargetLocation, artistName).getAbsolutePath)
+    //      val artistAlbums: ArtistAlbums = ArtistAlbums.fromFolder(new File(OhhlaFiles.rawTargetLocation, artistName).getAbsolutePath)
     //      artistAlbums.albums.foreach(album => {
     //        val artist: String = artistAlbums.artist
     //        val albumName:String = album.metaData.title
@@ -62,7 +62,7 @@ class ItunesDownloaderTest {
   //    val itunesDownloader: ItunesDownloader = new ItunesDownloader
   //    val itunesSerializer: ItunesSerializer = new ItunesSerializer
   //
-  //    val artistFolder: String = new File(OhhlaConfig.testRoot, "wutang-itunes-test").listFiles()(0).getAbsolutePath
+  //    val artistFolder: String = new File(OhhlaFiles.testRoot, "wutang-itunes-test").listFiles()(0).getAbsolutePath
   //
   //    val artistAlbums: ArtistAlbums = ArtistAlbums.fromFolder(artistFolder)
   //    val artist: String = artistAlbums.artist

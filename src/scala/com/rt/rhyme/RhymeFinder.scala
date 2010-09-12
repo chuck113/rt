@@ -207,7 +207,7 @@ class RhymeFinder(val rhymeMap: RhymeMap) {
       removedParts.foreach(p => {
         val lines: List[String] = findLinesContainingParts(linesInPlay.toList, p)
         foundRhymes.append(Rhyme(p, lines))
-        //println("new rhyme: " + Rhyme(p, lines))
+        println("new rhyme: " + Rhyme(p, lines))
       })
 
       setsInPlay.addParts(newRhymes)

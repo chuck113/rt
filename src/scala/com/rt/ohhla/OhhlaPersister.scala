@@ -17,7 +17,7 @@ class OhhlaPersister{
     val artistAlbumsList: List[ArtistAlbums] = buildActualArtistAlbums(info)
 
     artistAlbumsList.foreach(artistAlbums => {
-      val targetFolder = OhhlaConfig.rawTargetLocation+"/"+NameMapper.nUnder(artistAlbums.artist)
+      val targetFolder = OhhlaFiles.root+"/"+NameMapper.nUnder(artistAlbums.artist)
       new File(targetFolder).mkdirs
       artistAlbums.writeToFolder(targetFolder)
       artistAlbums.albums.foreach(album => {
@@ -38,7 +38,7 @@ class OhhlaPersister{
   }
 
 //  private def persistAlbums(albums: List[Album], targetArtistFolder: String):Unit = {
-//    val targetFolder = OhhlaConfig.rawTargetLocation+"/"+NameMapper.neutralizeWithUnderscores()
+//    val targetFolder = OhhlaFiles.rawTargetLocation+"/"+NameMapper.neutralizeWithUnderscores()
 //    albums.foreach(album => persistAlbum(album, targetArtistFolder))
 //  }
 
@@ -47,7 +47,7 @@ class OhhlaPersister{
     val targetFolder = targetArtistFolder+"/"+NameMapper.nUnder(album.fileInfo.fileName)//toFileName(album.metaData.title)
     new File(targetFolder).mkdirs;
     album.metaData.writeToFolder(targetFolder)
-    downloadTracks(album.metaData.tracks, targetFolder, OhhlaConfig.ohhlaUrl)
+    downloadTracks(album.metaData.tracks, targetFolder, OhhlaFiles.ohhlaUrl)
   }
 
   private def downloadTracks(tracks: List[com.rt.indexing.persistence.AlbumTrack], targetFolder: String, ohhlaRootUrl: String): Unit = {
@@ -58,9 +58,9 @@ class OhhlaPersister{
         println("starting download for "+ohhlaRootUrl+"/"+track.url +" to " + fileName)
         if(!new File(fileName).exists){
 
-          //IOUtils.copy(new URL(OhhlaConfig.ohhlaUrl+"/"+track.url).openStream, new FileWriter(fileName))
+          //IOUtils.copy(new URL(OhhlaFiles.ohhlaUrl+"/"+track.url).openStream, new FileWriter(fileName))
           val writer = new BufferedWriter(new FileWriter(fileName))
-          //Source.fromURL(OhhlaConfig.ohhlaUrl+"/"+track.url).getLines.foreach(line =>{
+          //Source.fromURL(OhhlaFiles.ohhlaUrl+"/"+track.url).getLines.foreach(line =>{
           try{
             Source.fromURL(ohhlaRootUrl+"/"+track.url).getLines.foreach(line =>{
               writer.write(line)

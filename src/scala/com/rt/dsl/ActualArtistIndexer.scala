@@ -1,7 +1,7 @@
 //package com.rt.indexing
 //
 //import java.io.File
-//import com.rt.ohhla.OhhlaConfig
+//import com.rt.ohhla.OhhlaFiles
 //import java.lang.String
 //import collection.immutable.Map
 //import persistence.{FileNameUtils, Album, ArtistAlbums}
@@ -26,7 +26,7 @@
 //   * returns all the found artists mapped to a pair of the artist folder and their albums
 //   */
 ////  def artistAlbumsFromMetaData():Map[String, (String, List[Album])]={
-////    val list: List[String] = OhhlaConfig.allArtistFolders
+////    val list: List[String] = OhhlaFiles.allArtistFolders
 ////    list.foldLeft(Map[String, (String, List[Album])]()){(map, folder)=>{
 ////      val albums:List[Album] = ArtistAlbums.fromFolderWithAlbumMetadata(folder).albums
 ////      val albumsArtists:Map[String, List[Album]] = getAlbumArtist(albums)
@@ -39,7 +39,7 @@
 //   * artists album
 //   */
 //  def artistAlbumFoldersFromMetaData():Map[String, List[String]]={
-//    val list: List[String] = OhhlaConfig.allArtistFolders
+//    val list: List[String] = OhhlaFiles.allArtistFolders
 //    list.foldLeft(Map[String, List[String]]()){(map, folder)=>{
 //      val albums:List[Album] = ArtistAlbums.fromFolderWithAlbumMetadata(folder).albums
 //      val albumsArtists:Map[String, List[String]] = getAlbumArtistMappedToFolders(albums)

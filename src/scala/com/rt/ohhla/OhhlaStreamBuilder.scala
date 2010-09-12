@@ -16,7 +16,7 @@ abstract class OhhlaStreamBuilder{
 
 class OhhlaStreamBuilderImpl extends OhhlaStreamBuilder{
   def fromUrlPrefix(urlPrefix: String):InputStream = {
-    IO.streamFromUrl(OhhlaConfig.ohhlaUrl+urlPrefix)
+    IO.streamFromUrl(OhhlaFiles.ohhlaUrl+urlPrefix)
   }
 
   def fromUrlFolder(folderUrl: String):InputStream = {

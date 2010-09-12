@@ -3,7 +3,7 @@ package com.rt.indexing.persistence
 import org.junit.Test
 import junit.framework.Assert
 import java.io.StringWriter
-
+import com.rt.ohhla.persistence.{AlbumTrack, AlbumMetaData, Album, ArtistAlbums}
 
 class ArtistAlbumsTest{
    @Test def testPersistence()={

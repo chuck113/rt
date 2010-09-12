@@ -2,7 +2,8 @@ package com.rt.indexing.persistence
 
 import java.io.StringWriter
 import org.junit.{Assert, Before, Test}
-import xml.PrettyPrinter
+import com.rt.ohhla.persistence
+import persistence.{AlbumMetaData, AlbumTrack}
 
 class AlbumMetaDataTest{
 

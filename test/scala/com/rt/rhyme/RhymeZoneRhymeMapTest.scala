@@ -15,6 +15,11 @@ class RhymeZoneRhymeMapTest {
     assertTrue(rhymeMap.doWordsRhyme("MISSIN", "HISSING"))
   }
 
+  @Test def york(){
+    assertFalse(rhymeMap.doWordsRhyme("FLY", "FLY"))
+    assertFalse(rhymeMap.doWordsRhyme("YORK", "YORK"))
+  }
+
   @Test def testRemovesDash() {
     val lines: List[String] = List("We got determination - bass and highs", "White Castle fries only come in one size")
     val rhymeFinder: RhymeFinder = new RhymeFinder(rhymeMap)

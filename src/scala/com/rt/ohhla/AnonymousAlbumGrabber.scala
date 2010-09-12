@@ -36,7 +36,7 @@ class AnonymousAlbumGrabber(val streamBuilder: OhhlaStreamBuilder) extends Abstr
       case None => LOG.warn("no album urls from artist url: '" + url + "'"); None
       case Some(urls: List[String]) => Some(new ArtistAlbums(artist, newAlbumsList(urls))) //getAlbumMetaDataFromUrl(albumUrl)
     }
-    //    getArtistFolderUrlFromArtistName(artist, OhhlaConfig.allOhhlaIndexes) match{
+    //    getArtistFolderUrlFromArtistName(artist, OhhlaFiles.allOhhlaIndexes) match{
     //      case None => LOG.warn("no artist folder for artist: '"+artist+"'");None
     //      case Some(url)=> println("url is "+url);{
     //        getAlbumUrlsFromArtistIndex(url) match{

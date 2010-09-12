@@ -17,7 +17,7 @@ class RhymeZoneRhymeMap extends RhymeMap{
     IO.fileLines("rhymeZone.txt").foldLeft(Map[String, List[String]]()){
       (map, line) => {
         val key = line.split("-")(0)
-        val entries = line.substring(key.length+1, line.length-1).trim
+        val entries = line.substring(key.length+1, line.length).trim
         map(key) = List.fromString(entries, ',').map(_.toUpperCase)
         //map(key) = List.fromString(line.split("-")(1).trim, ',').map(_.toUpperCase)
       }
@@ -109,6 +109,11 @@ class RhymeZoneRhymeMap extends RhymeMap{
 //    if(aliasMap.contains(one)){
 //      println("found in alias");
 //    }
+
+//    println(one+" one: "+rhymeMap(one))
+//
+//    println("doWordsRhyme: "+ one+", "+two+" rhymes: "+((rhymeMap.contains(one) && (rhymeMap(one).contains(two))) ||
+//      (rhymeMap.contains(two) && (rhymeMap(two).contains(one)))))
 
     (rhymeMap.contains(one) && (rhymeMap(one).contains(two))) ||
     (rhymeMap.contains(two) && (rhymeMap(two).contains(one)))

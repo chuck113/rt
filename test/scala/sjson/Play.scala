@@ -1,12 +1,9 @@
 package sjson
 
-import json.TestBeans.Address
-import json.{DefaultConstructor, JsBean, Serializer}
+import json.{Serializer}
 import org.junit.{Assert, Test}
 import scala.reflect._
-import dispatch.json.Js
 import com.rt.indexing.persistence._
-import scala.Option
 
 @BeanInfo
 case class TestClass(p1: String) {

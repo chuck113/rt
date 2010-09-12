@@ -4,7 +4,7 @@ import org.apache.commons.io.IOUtils
 import java.net.{URLEncoder, URI}
 import java.lang.String
 import collection.JavaConversions._
-import com.rt.ohhla.OhhlaConfig
+import com.rt.ohhla.OhhlaFiles
 import com.rt.indexing.persistence.ArtistAlbums
 import java.io.{FileOutputStream, File, InputStream}
 import util.Levenshtein
@@ -13,7 +13,7 @@ import com.rt.util.NameMapper
 class ItunesDownloader(itunesSerializer: ItunesSerializer) {
   def downloadForArtists(artistRootFile: String) = {
 
-    OhhlaConfig.allArtistFolderNames(artistRootFile).sortWith((a, b) => a < b).foreach(aritstFolderName => {
+    OhhlaFiles.allArtistFolderNames(artistRootFile).sortWith((a, b) => a < b).foreach(aritstFolderName => {
       val artistFolder: File = new File(artistRootFile, aritstFolderName)
       val artistAlbums: ArtistAlbums = ArtistAlbums.fromFolder(artistFolder.getAbsolutePath)
       artistAlbums.albums.foreach(album => {

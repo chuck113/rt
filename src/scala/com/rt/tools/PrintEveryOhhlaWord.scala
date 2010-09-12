@@ -1,7 +1,7 @@
 package com.rt.tools
 
 import com.rt.indexing.persistence.Constants
-import com.rt.ohhla.OhhlaConfig
+import com.rt.ohhla.OhhlaFiles
 import java.lang.String
 import java.io.{FileFilter, File}
 import com.rt.util.{ScalaConversions, NameMapper, IO}
@@ -21,7 +21,7 @@ class PrintEveryOhhlaWord{
   def printEveryWord()={
     val cmuDict: scala.collection.Set[String] = allCmuDictWords()
     val javaSet:jSet[String] = new java.util.HashSet[String]()
-    val targetLocation: String = OhhlaConfig.rawTargetLocation
+    val targetLocation: String = OhhlaFiles.root
     val reader:SongFileParser = new SongFileParser();
     val folders: List[File] = foldersInDir(new File(targetLocation))
     folders.foreach(artistFolder =>{

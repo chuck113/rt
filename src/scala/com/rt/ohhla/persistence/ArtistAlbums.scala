@@ -1,4 +1,4 @@
-package com.rt.indexing.persistence
+package com.rt.ohhla.persistence
 
 import java.io._
 import sjson.json.{JsBean, DefaultConstructor, Serializer}
@@ -52,15 +52,6 @@ object ArtistAlbums{
   def fromFolder(folder:String):ArtistAlbums ={
      fromJsonWithAlbumMetadata(IOUtils.toString(new FileInputStream(folder+"/"+Constants.artistMetaDataFileName)), folder)
   }
-
-
-//  def fromFolder(folder:String):ArtistAlbums ={
-//     fromJson(IOUtils.toString(new FileInputStream(folder+"/"+Constants.artistMetaDataFileName)))
-//  }
-//
-//  def fromFolderWithAlbumMetadata(folder:String):ArtistAlbums ={
-//     fromJsonWithAlbumMetadata(IOUtils.toString(new FileInputStream(folder+"/"+Constants.artistMetaDataFileName)), folder)
-//  }
 
   def fromJsonWithAlbumMetadata(json:String, folder:String):ArtistAlbums ={
     val aaJson:ArtistAlbumsJson = jsBean.fromJSON(Js(json), Some(classOf[ArtistAlbumsJson])).asInstanceOf[ArtistAlbumsJson]

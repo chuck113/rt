@@ -1,6 +1,6 @@
 package com.rt.indexing
 
-import com.rt.ohhla.OhhlaConfig
+import com.rt.ohhla.OhhlaFiles
 import java.lang.String
 import com.rt.rhyme.RapSheetReader
 import collection.immutable.Map
@@ -12,7 +12,7 @@ object HierarchicalIndexerObj{
 
   def main(args:Array[String]):Unit={
 
-    //val toIndex: List[String] = OhhlaConfig.allArtistFolderNames
+    //val toIndex: List[String] = OhhlaFiles.allArtistFolderNames
     val toIndex = List("NOTORIOUS_BIG")
     //val toIndex = List("EPMD")
     //val toIndex = List("BEASTIE_BOYS")
@@ -26,7 +26,7 @@ object HierarchicalIndexerObj{
     //val node:AlbumNode = indexer.makeAlbumNodeForOneSong("C:\\data\\projects\\rapAttack\\rapAttack\\olhha\\NOTORIOUS_BIG\\READY_TO_DIE", 5);
     //println(node)
 
-    val hierarchy: Map[String, ArtistNode] = indexer.makeArtistHierarchyWithAllWords(toIndex).index
+    //val hierarchy: Map[String, ArtistNode] = indexer.makeArtistHierarchyWithAllWords(toIndex).index
 
 
     //
@@ -67,22 +67,22 @@ object HierarchicalIndexerObj{
     sorted
   }
 
-  def orderOnSuitability(artistNodes:List[ArtistNode]):List[RhymeLeaf]={
-    //var list = rhymeList(artistNodes).sort((a,b) => a.suitability > b.suitability)
-    //list.foreach(r => {println(r.suitability+", "+r.lines)})
-
-    val group: MultiMap[Int, RhymeLeaf] = groupBySuitabiliy(artistNodes)
-    val orderedSuitabiliyt:List[(Int, MutableSet[RhymeLeaf])] = group.elements.toList.sort((a,b) => a._1 > b._1)
-    orderedSuitabiliyt.foldLeft(List[RhymeLeaf]()){(list, e) =>
-      list ++ bestRhymes(e._2.toList)
-    }
-  }
-
-  private def groupBySuitabiliy(artistNodes:List[ArtistNode]):MultiMap[Int, RhymeLeaf]={
-    val m = new scala.collection.mutable.HashMap[Int, MutableSet[RhymeLeaf]] with scala.collection.mutable.MultiMap[Int, RhymeLeaf]
-    rhymeList(artistNodes).foreach(r => m.add(r.suitability, r))
-    m
-  }
+//  def orderOnSuitability(artistNodes:List[ArtistNode]):List[RhymeLeaf]={
+//    //var list = rhymeList(artistNodes).sort((a,b) => a.suitability > b.suitability)
+//    //list.foreach(r => {println(r.suitability+", "+r.lines)})
+//
+//    val group: MultiMap[Int, RhymeLeaf] = groupBySuitabiliy(artistNodes)
+//    val orderedSuitabiliyt:List[(Int, MutableSet[RhymeLeaf])] = group.elements.toList.sort((a,b) => a._1 > b._1)
+//    orderedSuitabiliyt.foldLeft(List[RhymeLeaf]()){(list, e) =>
+//      list ++ bestRhymes(e._2.toList)
+//    }
+//  }
+//
+//  private def groupBySuitabiliy(artistNodes:List[ArtistNode]):MultiMap[Int, RhymeLeaf]={
+//    val m = new scala.collection.mutable.HashMap[Int, MutableSet[RhymeLeaf]] with scala.collection.mutable.MultiMap[Int, RhymeLeaf]
+//    rhymeList(artistNodes).foreach(r => m.add(r.suitability, r))
+//    m
+//  }
 
   def rhymeStats(artistNodes:List[ArtistNode])={
     var rhymeCount:Int = 0
@@ -143,6 +143,7 @@ object HierarchicalIndexerObj{
 //  }
 
   private def getAllRhymeParts(artistNodes:List[ArtistNode]):List[String]={
-    indexer.getAllRhymeParts(artistNodes)
+    //indexer.getAllRhymeParts(artistNodes)
+    List()
   }
 }

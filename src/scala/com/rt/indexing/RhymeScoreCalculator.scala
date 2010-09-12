@@ -72,9 +72,10 @@ object RhymeScoreCalculator{
     result = calulcateScoreWithArtistScore(artist, result)
 
     val finalResult = (result * suitability).toInt + lastWordLineAddition;
-    //println("ratio is "+partToWordsRatio(parts, asLine(lines))+", parts length is "+parts.length+" ave parts: "+averagePartSize(parts) )
-    
-    return new RhymeLeaf(rhymeLeaf.word, rhymeLeaf.lines, rhymeLeaf.parts, finalResult, suitability, 0);
+
+    val res:RhymeLeaf = RhymeLeaf(rhymeLeaf.parent, rhymeLeaf.word, rhymeLeaf.lines, rhymeLeaf.parts, finalResult)
+    res.setProp(PipeLine.RHYME_SCORE_KEY, finalResult.toString)
+    res
   }
 
   def calculateRhymeSocre(rhymeLeaf:RhymeLeaf):Int={

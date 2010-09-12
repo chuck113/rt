@@ -57,7 +57,7 @@ object GrabberObj{
   }
 
   def findAllArtistsWithYFA(): Map[String, String] = {
-    val pairs = OhhlaConfig.allOhhlaIndexes.filter(_.contains("YFA_")).map(ParsingUtils.hrefLinkAndtitle)
+    val pairs = OhhlaFiles.allOhhlaIndexes.filter(_.contains("YFA_")).map(ParsingUtils.hrefLinkAndtitle)
     pairs.foldLeft(Map[String, String]()) {(map, pair) => {map(pair._1) = pair._2}};
   }
 

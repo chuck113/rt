@@ -4,16 +4,16 @@ import java.io.File
 import com.rt.util.{Folders, IO}
 
 
-object OhhlaConfig{
+object OhhlaFiles{
   val ohhlaUrl = "http://ohhla.com/"  
-  val rawTargetLocation = """C:\data\projects\rapAttack\rapAttack\olhha"""
+  val root = """C:\data\projects\rapAttack\rapAttack\olhha"""
   val testRoot = """C:\data\projects\rapAttack\rapAttack\olhha-testdata"""
   val ohhlaLocalSiteStart = "ohhla-site/all.html"
   val ohhlaLocalSiteRoot = "ohhla-site"
   val ohhlaLocalSiteAll: List[String] = List("all.html", "all_two.html", "all_three.html", "all_four.html", "all_five.html")
 
   def allArtistFolderNames():List[String]={
-    Folders.folderNamesInFolder(rawTargetLocation)
+    Folders.folderNamesInFolder(root)
   }
 
   def allArtistFolderNames(folderLocation:String):List[String]={
@@ -21,7 +21,7 @@ object OhhlaConfig{
   }
 
   def albumFolderExists(artistFolderName:String, albumFolderName:String):Boolean={
-    new File(rawTargetLocation+"/"+artistFolderName+"/"+albumFolderName).exists
+    new File(root+"/"+artistFolderName+"/"+albumFolderName).exists
   }
 
   def albumFolder(artistAlbumFolderName:String):Option[String]={
@@ -33,12 +33,12 @@ object OhhlaConfig{
   }
 
   def albumNamesForArist(artistName:String):List[String]={
-    new File(rawTargetLocation+"/"+artistName).listFiles.toList.map(_.getName)      
+    new File(root+"/"+artistName).listFiles.toList.map(_.getName)
   }
 
   private def folderExists(folder:String):Option[String]={
-    new File(rawTargetLocation+"/"+folder).exists match{
-      case true => Some(rawTargetLocation+"/"+folder)
+    new File(root+"/"+folder).exists match{
+      case true => Some(root+"/"+folder)
       case false => None
     }
   }
@@ -47,17 +47,12 @@ object OhhlaConfig{
     folderExists(artistFolderName)
   }
 
-//  def allArtistFoldersToFiles():Map[String, File]={
-//    val names:List[String] = Folders.foldersInDir(rawTargetLocation).map(_.getName);
-//    ScalaConversions.toMap(Folders.foldersInDir(rawTargetLocation), ((f:File) => f.getName))
-//  }
-
   def allArtistFolders():List[String]={
-    Folders.foldersInDir(rawTargetLocation).map(_.getAbsolutePath)
+    Folders.foldersInDir(root).map(_.getAbsolutePath)
   }
 
   def allTransformedArtistNamesToFiles():Map[String,File]={
-    Folders.folderNamesInFolderToFiles(rawTargetLocation, fileNameTransformer)
+    Folders.folderNamesInFolderToFiles(root, fileNameTransformer)
   }
 
   private def fileNameTransformer(s:String):String={
@@ -69,7 +64,7 @@ object OhhlaConfig{
    * files into one list of stirngs
    */
   def allOhhlaIndexes():List[String]={
-    val cpResources = OhhlaConfig.ohhlaLocalSiteAll.map(l => IO.readLinesFromClassPathFile(OhhlaConfig.ohhlaLocalSiteRoot + "/" + l))
+    val cpResources = OhhlaFiles.ohhlaLocalSiteAll.map(l => IO.readLinesFromClassPathFile(OhhlaFiles.ohhlaLocalSiteRoot + "/" + l))
     cpResources.foldLeft(List[String]()) {(list, lines) => {list ::: lines}}
   }
 

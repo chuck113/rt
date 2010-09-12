@@ -1,10 +1,11 @@
-package com.rt.indexing
+package com.rt.tools
 
 import java.io.File
 import java.lang.String
 import collection.immutable.Map
-import com.rt.util.{NameMapper, IO, ScalaConversions}
-import com.rt.ohhla.{OhhlaPersister, OhhlaStreamBuilderImpl, AnonymousAlbumGrabber, OhhlaConfig}
+import com.rt.ohhla.{OhhlaPersister, OhhlaStreamBuilderImpl, AnonymousAlbumGrabber, OhhlaFiles}
+import com.rt.util.{ScalaConversions, NameMapper, IO}
+
 
 /**
  * Reads the albums on the Source's greatest albums list and downloads all extra artists. Assumes
@@ -32,8 +33,8 @@ object FromSourceAlbumList {
     val file: File = new File("""C:\data\projects\rapAttack\rapAttack\etc\sourceGreatestAlbums.txt""")
     val artists: List[String] = IO.fileLines(file).map(f => f.substring(0, f.indexOf('-'))).removeDuplicates ++ extras()
     val artistsToFolderNames: Map[String, String] = ScalaConversions.toMap(artists, ((s: String) => NameMapper.nUnder(s)))
-    //val files: Map[String, File] = OhhlaConfig.allTransformedArtistNamesToFiles()
-    val files: Map[String, File] = OhhlaConfig.allTransformedArtistNamesToFiles()
+    //val files: Map[String, File] = OhhlaFiles.allTransformedArtistNamesToFiles()
+    val files: Map[String, File] = OhhlaFiles.allTransformedArtistNamesToFiles()
 
     val aliases: Map[String, String] = Map(
       "A_TRIBE_CALLED_QUEST" -> "ATCQ",
@@ -111,7 +112,7 @@ object FromSourceAlbumList {
       )
 
     notFound.foreach(a => {
-      //val urlForArtist: Option[String] = OhhlaConfig.urlForArtist(a)
+      //val urlForArtist: Option[String] = OhhlaFiles.urlForArtist(a)
       getArtistUrl(a, anonAliasMap) match {
         case None => println("didn't find artist for " + a)
         case Some(url) => {downloadArtistFromUrl(a, url)} //println(" -----  found "+a)
@@ -131,15 +132,7 @@ object FromSourceAlbumList {
 
   private def getArtistUrl(rawName:String, aliases:Map[String, String]):Option[String]={
    val name = aliases.getOrElse(rawName, rawName)
-   OhhlaConfig.urlForArtist(name)
-//   val urlForArtist: Option[String] = OhhlaConfig.urlForArtist(name)
-//      urlForArtist match {
-//        case None => println("no alias for: "+name);None
-//        case Some(url) => {
-//          //println(" -----  found through alias"+url);Some(url)
-//          grabber.getArtistAlbumsFromUrl(name, url).map
-//        }
-//      }
+   OhhlaFiles.urlForArtist(name)
   }
 
   private def getFolder(artist: String, ohhlaFiles: Map[String, File], aliases: Map[String, String]): File = {
